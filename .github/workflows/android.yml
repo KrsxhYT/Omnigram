@@ -34,6 +34,13 @@ jobs:
           yes | "$SDKMANAGER" --sdk_root="$SDK_ROOT" --licenses >/dev/null || true
           "$SDKMANAGER" --sdk_root="$SDK_ROOT" "platform-tools" "platforms;android-36" "build-tools;36.0.0" "ndk;27.2.12479018" "cmake;3.22.1"
 
+      - name: Use my Firebase google-services.json
+        run: |
+          test -f TMessagesProj/google-services.json || (echo "TMessagesProj/google-services.json not found" && exit 1)
+          cp TMessagesProj/google-services.json TMessagesProj_App/google-services.json
+          echo "Packages in google-services.json:"
+          grep -o '"package_name": *"[^"]*"' TMessagesProj_App/google-services.json
+
       - name: Restore private signing key and inject Telegram API credentials
         env:
           RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
