@@ -66,13 +66,13 @@ jobs:
           source = build_vars.read_text(encoding="utf-8")
 
           source, id_count = re.subn(
-              r'public static int APP_ID = Integer\\.parseInt\\(System\\.getenv\\("TELEGRAM_API_ID"\\)\\);',
+              r'public static int APP_ID = Integer\.parseInt\\(System\.getenv\\("TELEGRAM_API_ID"\\)\\);',
               f'public static int APP_ID = {api_id};',
               source,
               count=1
           )
           source, hash_count = re.subn(
-              r'public static String APP_HASH = System\\.getenv\\("TELEGRAM_API_HASH"\\);',
+              r'public static String APP_HASH = System\.getenv\\("TELEGRAM_API_HASH"\\);',
               'public static String APP_HASH = ' + json.dumps(api_hash) + ';',
               source,
               count=1
