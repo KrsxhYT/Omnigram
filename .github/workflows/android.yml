@@ -45,7 +45,6 @@ jobs:
           import json
           import os
           import pathlib
-          import re
 
           encoded = os.environ.get("RELEASE_KEYSTORE_BASE64", "").strip()
           api_id = os.environ.get("TELEGRAM_API_ID", "").strip()
@@ -65,21 +64,15 @@ jobs:
           build_vars = pathlib.Path("TMessagesProj/src/main/java/org/telegram/messenger/BuildVars.java")
           source = build_vars.read_text(encoding="utf-8")
 
-          source, id_count = re.subn(
-              r'public static int APP_ID = Integer\.parseInt\\(System\.getenv\\("TELEGRAM_API_ID"\\)\\);',
-              f'public static int APP_ID = {api_id};',
-              source,
-              count=1
-          )
-          source, hash_count = re.subn(
-              r'public static String APP_HASH = System\.getenv\\("TELEGRAM_API_HASH"\\);',
-              'public static String APP_HASH = ' + json.dumps(api_hash) + ';',
-              source,
-              count=1
-          )
-
-          if id_count != 1 or hash_count != 1:
+          old_id = 'public static int APP_ID = Integer.parseInt(System.getenv("TELEGRAM_API_ID"));'
+          old_hash = 'public static String APP_HASH = System.getenv("TELEGRAM_API_HASH");'
+          if source.count(old_id) != 1 or source.count(old_hash) != 1:
               raise SystemExit("Could not safely inject API credentials into BuildVars.java; source format did not match")
+
+          source = source.replace(old_id, f'public static int APP_ID = {api_id};')
+          source = source.replace(old_hash, 'public static String APP_HASH = ' + json.dumps(api_hash) + ';')
+          id_count = hash_count = 1
+
           build_vars.write_text(source, encoding="utf-8")
           print("Private signing key restored and API credentials injected.")
           PY
