@@ -1,11 +1,1 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="AppName">Omnigram</string>
-    <string name="AppNameBeta">Omnigram Beta</string>
-    <string name="LanguageName">English</string>
-    <string name="English">English</string>
-    <string name="LanguageNameInEnglish">English</string>
-    <string name="LanguageCode">en</string>
-    <string name="ContinueOnThisLanguage">Continue in English</string>
-    <!-- NOTE: Full strings.xml is very large. Only key branding strings changed in this commit. -->
-</resources>
+PLACEHOLDER - TOO LARGE
