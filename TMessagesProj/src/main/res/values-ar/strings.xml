@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="AppName">تيليجرام</string>
-    <string name="AppNameBeta">(Beta) تيليجرام</string>
+    <string name="AppName">Omnigram</string>
+    <string name="AppNameBeta">Omnigram Beta</string>
     <string name="LanguageName">العربية</string>
     <string name="English">الإنجليزية</string>
     <string name="LanguageNameInEnglish">Arabic</string>
@@ -180,8 +180,8 @@
     <string name="NotificationGroupFew">أرسل %1$s %3$s لمجموعة %2$s</string>
     <string name="NotificationGroupAlbum">أرسل %1$s حُزمة وسائط لمجموعة %2$s</string>
     <string name="NotificationGroupForwardedFew">أعاد %1$s تحويل %3$s لمجموعة %2$s</string>
-    <string name="NotificationHiddenName">تيليجرام</string>
-    <string name="NotificationHiddenChatName">تيليجرام</string>
+    <string name="NotificationHiddenName">Omnigram</string>
+    <string name="NotificationHiddenChatName">Omnigram</string>
     <string name="NotificationHiddenChatUserName">مستخدم</string>
     <string name="NotificationHiddenMessage">رسالة جديدة</string>
     <string name="Reply">رد</string>
@@ -245,7 +245,7 @@
     <string name="NotificationActionPinnedGeoLiveUser">ثبّت %1$s موقعًا مباشرًا</string>
     <string name="NotificationActionPinnedGifUser">ثبّت %1$s صورة متحركة</string>
     <string name="NotificationActionPinnedMusicUser">ثبّت %1$s ملفًا صوتيًا</string>
-    <string name="SecretChatName">تيليجرام</string>
+    <string name="SecretChatName">Omnigram</string>
     <!--usernames-->
     <string name="Username">اسم المستخدم</string>
     <string name="UsernameAlso">أيضًا %1$s</string>
@@ -1191,18 +1191,18 @@
     <string name="TosUpdateDecline">للأسف، لا توجد خيارات أخرى. على عكس التطبيقات الأخرى؛ لا تستخدم تيليجرام بيانات المستخدمين لاستهدافهم بالإعلانات أو لأغراض تجارية أخرى. يخزن تيليجرام فقط المعلومات التي يحتاجها للعمل كخدمة سحابية غنية بالميزات. يمكنك ضبط كيفية استخدام بياناتك في إعدادات الخصوصية والأمان.\n\nإذا لم تكن مرتاحًا لاحتياجات تيليجرام المتواضعة؛ لن نتمكن من تزويدك بهذه الخدمة.</string>
     <string name="TosDeclineDeleteAccount">تحذير، سيؤدي هذا إلى حذف حسابك في تيليجرام بشكل نهائي بالإضافة لجميع البيانات التي تخزنها في سحابة تيليجرام.\n\nهام: يمكنك الإلغاء الآن وتصدير بياناتك قبل حذف حسابك عوضًا عن خسارتها كلها. (للقيام بذلك، افتح النسخة الأخيرة من تيليجرام لسطح المكتب وتوجه إلى الإعدادات &gt; إعدادات متقدمة &gt; تصدير بيانات تيليجرام).</string>
     <!--Intro view-->
-    <string name="Page1Title">تيليجرام</string>
+    <string name="Page1Title">Omnigram</string>
     <string name="Page2Title">سريع</string>
     <string name="Page3Title">مجاني</string>
     <string name="Page4Title">آمن</string>
     <string name="Page5Title">قوي</string>
     <string name="Page6Title">تخزين سحابي</string>
     <string name="Page1Message">تطبيق المراسلة **الأسرعُ** عالميًّا.\nإنه **مجانيٌّ** و**آمنٌ** كذلك.</string>
-    <string name="Page2Message">**تيليجرام** يوصل الرسائل\nأسرع من أي تطبيق آخر.</string>
-    <string name="Page3Message">**تيليجرام** يقدم تخزينًا سحابيًا مجانيًا\nغير محدود للمحادثات والوسائط.</string>
-    <string name="Page4Message">يحمي **تيليجرام** رسائلك\nمن هجمات المخترقين.</string>
-    <string name="Page5Message">لا يفرض **تيليجرام** قيودًا على\nحجم وسائطك ومحادثاتك.</string>
-    <string name="Page6Message">**تيليجرام** يتيح لك الوصول\nلرسائلك من أجهزة متعددة.</string>
+    <string name="Page2Message">**Omnigram** يوصل الرسائل\nأسرع من أي تطبيق آخر.</string>
+    <string name="Page3Message">**Omnigram** يقدم تخزينًا سحابيًا مجانيًا\nغير محدود للمحادثات والوسائط.</string>
+    <string name="Page4Message">يحمي **Omnigram** رسائلك\nمن هجمات المخترقين.</string>
+    <string name="Page5Message">لا يفرض **Omnigram** قيودًا على\nحجم وسائطك ومحادثاتك.</string>
+    <string name="Page6Message">**Omnigram** يتيح لك الوصول\nلرسائلك من أجهزة متعددة.</string>
     <string name="StartMessaging">بدء المراسلة</string>
     <!--date formatters-->
     <string name="formatterBoostExpired">MMM dd, yyyy</string>

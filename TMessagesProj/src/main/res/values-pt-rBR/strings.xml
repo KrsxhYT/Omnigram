@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="AppName">Telegram</string>
-    <string name="AppNameBeta">Telegram Beta</string>
+    <string name="AppName">Omnigram</string>
+    <string name="AppNameBeta">Omnigram Beta</string>
     <string name="LanguageName">Português (Brasil)</string>
     <string name="English">Inglês</string>
     <string name="LanguageNameInEnglish">Portuguese (Brazil)</string>
@@ -180,8 +180,8 @@
     <string name="NotificationGroupFew">%1$s enviou %3$s ao grupo %2$s</string>
     <string name="NotificationGroupAlbum">%1$s enviou um álbum para o grupo %2$s</string>
     <string name="NotificationGroupForwardedFew">%1$s encaminhou %3$s ao grupo %2$s</string>
-    <string name="NotificationHiddenName">Telegram</string>
-    <string name="NotificationHiddenChatName">Telegram</string>
+    <string name="NotificationHiddenName">Omnigram</string>
+    <string name="NotificationHiddenChatName">Omnigram</string>
     <string name="NotificationHiddenChatUserName">Usuário</string>
     <string name="NotificationHiddenMessage">Nova mensagem</string>
     <string name="Reply">Responder</string>
@@ -245,13 +245,13 @@
     <string name="NotificationActionPinnedGeoLiveUser">%1$s fixou uma localização ao vivo</string>
     <string name="NotificationActionPinnedGifUser">%1$s fixou um GIF</string>
     <string name="NotificationActionPinnedMusicUser">%1$s fixou um arquivo de áudio</string>
-    <string name="SecretChatName">Telegram</string>
+    <string name="SecretChatName">Omnigram</string>
     <!--contacts view-->
     <string name="SelectContact">Selecione um Contato</string>
     <string name="ShareContactTitle">Compartilhar Contato</string>
     <string name="AddContactPhonebookTitle">Adicionar Contato</string>
     <string name="NoContacts">Ainda não há contatos.</string>
-    <string name="InviteText2">Eu uso o Telegram para conversar. Baixa também: %1$s</string>
+    <string name="InviteText2">Eu uso o Omnigram para conversar. Baixa também: %1$s</string>
     <string name="TodayAt">às</string>
     <string name="YesterdayAt">ontem às</string>
     <string name="TodayAtFormatted">às %1$s</string>
@@ -273,8 +273,8 @@
     <string name="ALongTimeAgo">visto há muito tempo</string>
     <string name="NewMessageTitle">Nova Mensagem</string>
     <string name="InviteFriendsHelp">Selecione os contatos para convidar ao Telegram</string>
-    <string name="InviteToTelegram">CONVIDAR PARA O TELEGRAM</string>
-    <string name="ShareTelegram">Compartilhar o Telegram...</string>
+    <string name="InviteToTelegram">CONVIDAR PARA O Omnigram</string>
+    <string name="ShareTelegram">Compartilhar o Omnigram...</string>
     <string name="UpdateContactsTitle">Atualizar contatos?</string>
     <string name="UpdateContactsMessage">O Telegram detectou muitos contatos não sincronizados, deseja sincronizá-los agora? Escolha \'OK\' se você está usando seu próprio celular, cartão SIM e conta do Google.</string>
     <string name="SortedByName">Listado por Nome</string>
@@ -1192,18 +1192,18 @@
     <string name="PermissionDrawAboveOtherAppsTitle">Picture-in-Picture</string>
     <string name="PermissionDrawAboveOtherAppsGroupCallTitle">Chat de vídeo flutuante</string>
     <!--Intro view-->
-    <string name="Page1Title">Telegram</string>
+    <string name="Page1Title">Omnigram</string>
     <string name="Page2Title">Rápido</string>
     <string name="Page3Title">Gratuito</string>
     <string name="Page4Title">Seguro</string>
     <string name="Page5Title">Poderoso</string>
     <string name="Page6Title">Baseado em Nuvem</string>
     <string name="Page1Message">O aplicativo de mensagem mais **rápido** do mundo.\nÉ **gratuito** e **seguro**.</string>
-    <string name="Page2Message">O **Telegram** entrega mensagens mais rápido que qualquer outro app.</string>
-    <string name="Page3Message">O **Telegram** oferece espaço em\nnuvem ilimitado e gratuito para\nchats e mídias.</string>
-    <string name="Page4Message">O **Telegram** mantém suas mensagens\nseguras contra ataques de hackers.</string>
-    <string name="Page5Message">O **Telegram** não tem limites no\ntamanho das suas mídias e chats.</string>
-    <string name="Page6Message">O **Telegram** permite que você\nacesse suas mensagens\nem vários dispositivos.</string>
+    <string name="Page2Message">O **Omnigram** entrega mensagens mais rápido que qualquer outro app.</string>
+    <string name="Page3Message">O **Omnigram** oferece espaço em\nnuvem ilimitado e gratuito para\nchats e mídias.</string>
+    <string name="Page4Message">O **Omnigram** mantém suas mensagens\nseguras contra ataques de hackers.</string>
+    <string name="Page5Message">O **Omnigram** não tem limites no\ntamanho das suas mídias e chats.</string>
+    <string name="Page6Message">O **Omnigram** permite que você\nacesse suas mensagens\nem vários dispositivos.</string>
     <string name="StartMessaging">Comece a Conversar</string>
     <!--contacts shortcuts-->
     <string name="ContactShortcutMessage">Mensagem para %1$s</string>
