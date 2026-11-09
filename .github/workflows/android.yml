@@ -1,0 +1,52 @@
+name: OmniGram Beta APK
+on:
+  workflow_dispatch:
+  push:
+    branches: [omnigram-work]
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+      - uses: android-actions/setup-android@v3
+      - name: Install Android SDK components
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0" "ndk;27.2.12479018" "cmake;3.22.1"
+      - name: Build beta APK
+        env:
+          TELEGRAM_API_ID: ${{ secrets.TELEGRAM_API_ID }}
+          TELEGRAM_API_HASH: ${{ secrets.TELEGRAM_API_HASH }}
+        run: |
+          python3 - <<'PY'
+          import os, pathlib, re
+          api_id = os.environ.get("TELEGRAM_API_ID", "").strip()
+          api_hash = os.environ.get("TELEGRAM_API_HASH", "").strip()
+          if not api_id.isdigit() or not re.fullmatch(r"[0-9a-fA-F]{32}", api_hash):
+              raise SystemExit("Set valid TELEGRAM_API_ID and TELEGRAM_API_HASH repository secrets.")
+          p = pathlib.Path("TMessagesProj/src/main/java/org/telegram/messenger/BuildVars.java")
+          s = p.read_text()
+          s, n1 = re.subn(r"public static int APP_ID = 0;", f"public static int APP_ID = {api_id};", s, count=1)
+          s, n2 = re.subn(r'public static String APP_HASH = "";', f'public static String APP_HASH = "{api_hash}";', s, count=1)
+          if n1 != 1 or n2 != 1:
+              raise SystemExit("BuildVars API placeholders not found.")
+          p.write_text(s)
+          PY
+          test -s TMessagesProj/google-services.json
+          test -s TMessagesProj/config/release.keystore
+          chmod +x ./gradlew
+          ./gradlew :TMessagesProj_App:assembleAfatDebug --no-daemon --stacktrace --max-workers=2 -Dorg.gradle.jvmargs="-Xmx5g -XX:MaxMetaspaceSize=1g"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: omnigram-beta-debug
+          path: TMessagesProj_App/build/outputs/apk/afat/debug/app.apk
+          if-no-files-found: error
+          retention-days: 14
