@@ -671,6 +671,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     private int userInfoRow;
     private int channelInfoRow;
     private int usernameRow;
+    private int userOrChatIdRow;
+    private int regDateRow;
     private int notificationsDividerRow;
     private int notificationsRow;
     private int bizHoursRow;
@@ -3813,6 +3815,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
 //        sharedMediaLayout.setBackgroundColor(getThemedColor(Theme.key_windowBackgroundWhite));
         if (userId == 0 || imageUpdater == null || myProfile) {
             musicView = new ProfileMusicView(context, resourcesProvider);
+            try { musicView.setBackgroundColor(0xFF38506A); } catch (Throwable ignore) {}
             balanceView = new ProfileBalanceView(context, resourcesProvider);
             musicView.setTrailingView(balanceView);
             if (buttonsGlass != null) {
@@ -4452,6 +4455,17 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 onMemberClick(participant, false, view);
             } else if (position == addMemberRow) {
                 openAddMember();
+            } else if (position == userOrChatIdRow) {
+                long idv = userId != 0 ? userId : chatId;
+                AndroidUtilities.addToClipboard(String.valueOf(idv));
+                BulletinFactory.of(ProfileActivity.this).createSimpleBulletin(R.raw.copy, "ID copied").show();
+            } else if (position == regDateRow) {
+                long idv = userId != 0 ? userId : chatId;
+                new org.telegram.ui.ActionBar.AlertDialog.Builder(getParentActivity())
+                        .setTitle("Registered")
+                        .setMessage("Approximate registration: " + org.telegram.ui.Components.OmnigramRegDate.estimate(idv) + "\n\nBased on Telegram ID ranges.")
+                        .setPositiveButton("OK", null)
+                        .show();
             } else if (position == usernameRow) {
                 processOnClickOrPress(position, view, x, y);
             } else if (position == linkedCommunityRow) {
@@ -7429,7 +7443,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     }
 
     private boolean processOnClickOrPress(final int position, final View view, final float x, final float y) {
-        if (position == usernameRow || position == setUsernameRow) {
+        if (position == usernameRow || position == setUsernameRow || position == userOrChatIdRow || position == regDateRow) {
             final String username;
             final TLRPC.TL_username usernameObj;
             if (userId != 0) {
@@ -10774,6 +10788,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         locationRow = -1;
         channelInfoRow = -1;
         usernameRow = -1;
+        userOrChatIdRow = -1;
+        regDateRow = -1;
         settingsTimerRow = -1;
         settingsKeyRow = -1;
         notificationsDividerRow = -1;
@@ -10967,6 +10983,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 }
                 if (user != null && username != null) {
                     usernameRow = rowCount++;
+                    userOrChatIdRow = rowCount++;
+                    regDateRow = rowCount++;
                 }
                 if (userInfo != null) {
                     if (userInfo.birthday != null) {
@@ -11092,6 +11110,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 }
             }
             usernameRow = rowCount++;
+            userOrChatIdRow = rowCount++;
+            regDateRow = rowCount++;
             if (actionsView == null) {
                 notificationsSimpleRow = rowCount++;
             }
@@ -11125,6 +11145,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 }
                 if (ChatObject.isPublic(currentChat)) {
                     usernameRow = rowCount++;
+                    userOrChatIdRow = rowCount++;
+                    regDateRow = rowCount++;
                 }
             }
             if (emptyRow < 0 && emptyRow2 < 0) {
@@ -11666,8 +11688,14 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 if (user.scam || user.fake) {
                     nameTextView.setRightDrawable2(getScamDrawable(user.scam ? 0 : 1));
                     nameTextViewRightDrawable2ContentDescription = LocaleController.getString(R.string.ScamMessage);
-                } else if (user.verified) {
-                    nameTextView.setRightDrawable2(getVerifiedCrossfadeDrawable());
+                } else if (user.verified || org.telegram.ui.Components.OmnigramVerified.isVerified(userId)) {
+                    if (user.verified) {
+                        nameTextView.setRightDrawable2(getVerifiedCrossfadeDrawable());
+                    } else {
+                        android.graphics.drawable.Drawable omniBadge = getContext().getResources().getDrawable(R.drawable.ic_verified_omnigram).mutate();
+                        omniBadge.setBounds(0, 0, org.telegram.messenger.AndroidUtilities.dp(16), org.telegram.messenger.AndroidUtilities.dp(16));
+                        nameTextView.setRightDrawable2(omniBadge);
+                    }
                     nameTextViewRightDrawable2ContentDescription = LocaleController.getString(R.string.AccDescrVerified);
                 } else {
                     nameTextView.setRightDrawable2(null);
@@ -13576,6 +13604,12 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                             getString(R.string.ProfileNotesInfo),
                             false
                         );
+                    } else if (position == userOrChatIdRow) {
+                        long idv = userId != 0 ? userId : chatId;
+                        detailCell.setTextAndValue(String.valueOf(idv), userId != 0 ? "User ID" : "Chat ID", true);
+                    } else if (position == regDateRow) {
+                        long idv = userId != 0 ? userId : chatId;
+                        detailCell.setTextAndValue(org.telegram.ui.Components.OmnigramRegDate.estimate(idv), "Registered", true);
                     } else if (position == usernameRow) {
                         String username = null;
                         CharSequence text;
@@ -14340,7 +14374,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 int position = holder.getAdapterPosition();
                 return position == notificationRow || position == numberRow || position == privacyRow ||
                         position == languageRow || position == setUsernameRow || position == bioRow ||
-                        position == versionRow || position == dataRow || position == chatRow ||
+                        position == versionRow || position == userOrChatIdRow || position == regDateRow || position == dataRow || position == chatRow ||
                         position == questionRow || position == devicesRow || position == filtersRow || position == stickersRow ||
                         position == faqRow || position == policyRow || position == sendLogsRow || position == sendLastLogsRow ||
                         position == clearLogsRow || position == switchBackendRow || position == setAvatarRow ||
@@ -14374,9 +14408,9 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             if (position == infoHeaderRow || position == membersHeaderRow || position == settingsSectionRow2 ||
                     position == numberSectionRow || position == helpHeaderRow || position == debugHeaderRow || position == botPermissionsHeader) {
                 return VIEW_TYPE_HEADER;
-            } else if (position == phoneRow || position == locationRow || position == numberRow || position == birthdayRow) {
+            } else if (position == phoneRow || position == locationRow || position == numberRow || position == userOrChatIdRow || position == regDateRow || position == birthdayRow) {
                 return VIEW_TYPE_TEXT_DETAIL;
-            } else if (position == usernameRow || position == setUsernameRow) {
+            } else if (position == usernameRow || position == setUsernameRow || position == userOrChatIdRow || position == regDateRow) {
                 return VIEW_TYPE_TEXT_DETAIL_MULTILINE;
             } else if (position == noteRow) {
                 return VIEW_TYPE_TEXT_DETAIL_MULTILINE_2;
