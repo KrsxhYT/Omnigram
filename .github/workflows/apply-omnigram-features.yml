@@ -4,10 +4,8 @@ on:
   workflow_dispatch:
   push:
     paths:
+      - 'tools/apply_omnigram_features.py'
       - '.github/workflows/apply-omnigram-features.yml'
-      - 'TMessagesProj/src/main/java/org/telegram/ui/DevelopersActivity.java'
-      - 'TMessagesProj/src/main/java/org/telegram/ui/Components/OmnigramRegDate.java'
-      - 'TMessagesProj/src/main/java/org/telegram/ui/Components/OmnigramVerified.java'
 
 permissions:
   contents: write
@@ -25,194 +23,24 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
-      - name: Patch ProfileActivity / Settings / ChatMessageCell / ChatActivity
+      - name: Run feature patcher
         run: |
           set -euo pipefail
-          python3 << 'PY'
-          from pathlib import Path
+          python3 tools/apply_omnigram_features.py
+          echo "--- verify ---"
+          grep -n "userOrChatIdRow\|OmnigramVerified\|0xFF38506A" TMessagesProj/src/main/java/org/telegram/ui/ProfileActivity.java | head -20 || true
+          grep -n "9999\|DevelopersActivity" TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java | head -10 || true
+          grep -n "✎" TMessagesProj/src/main/java/org/telegram/ui/Cells/ChatMessageCell.java | head -5 || true
 
-          # ---- ProfileActivity ----
-          p = Path('TMessagesProj/src/main/java/org/telegram/ui/ProfileActivity.java')
-          t = p.read_text(encoding='utf-8', errors='replace')
-
-          if 'userOrChatIdRow' not in t:
-              t = t.replace(
-                  'private int usernameRow;',
-                  'private int usernameRow;\n    private int userOrChatIdRow;\n    private int regDateRow;',
-                  1,
-              )
-
-          if 'userOrChatIdRow = -1;' not in t:
-              t = t.replace(
-                  'usernameRow = -1;',
-                  'usernameRow = -1;\n        userOrChatIdRow = -1;\n        regDateRow = -1;',
-                  1,
-              )
-
-          # Insert rows after usernameRow assignment block (user profile info section)
-          needle = 'usernameRow = rowCount++;'
-          if 'userOrChatIdRow = rowCount++' not in t and needle in t:
-              # only first occurrence in non-self profile branch is intended; replace all safe occurrences after phone/username
-              t = t.replace(
-                  'usernameRow = rowCount++;',
-                  'usernameRow = rowCount++;\n                    userOrChatIdRow = rowCount++;\n                    regDateRow = rowCount++;',
-                  1,
-              )
-              # second occurrence for other branches if any single left
-              if t.count('userOrChatIdRow = rowCount++') < 1:
-                  pass
-
-          # Also add for chat profiles: after location/username style - try channel path
-          if t.count('userOrChatIdRow = rowCount++') == 1:
-              # add after phoneRow for chats lacking username - insert near info section for chatId
-              chat_mark = 'infoSectionRow = rowCount++;'
-              # already have one insert; ok
-
-          # Click handlers near usernameRow click
-          if 'position == userOrChatIdRow' not in t:
-              # Find username click and append after a common pattern
-              click_anchor = 'position == usernameRow'
-              # insert bind + click via onBind section
-              bind_anchor = '} else if (position == usernameRow) {'
-              if bind_anchor in t:
-                  insert_bind = '''} else if (position == userOrChatIdRow) {
-                        long idv = userId != 0 ? userId : chatId;
-                        detailCell.setTextAndValue(String.valueOf(idv), userId != 0 ? "User ID" : "Chat ID", true);
-                        detailCell.setContentDescriptionValueFirst(true);
-                    } else if (position == regDateRow) {
-                        long idv = userId != 0 ? userId : chatId;
-                        detailCell.setTextAndValue(org.telegram.ui.Components.OmnigramRegDate.estimate(idv), "Registered", true);
-                        detailCell.setContentDescriptionValueFirst(true);
-                    } else if (position == usernameRow) {'''
-                  t = t.replace(bind_anchor, insert_bind, 1)
-
-          # onItemClick for list
-          if 'position == userOrChatIdRow' in t and 'ID copied' not in t:
-              # try insert near username click handling
-              for anchor in [
-                  'AndroidUtilities.addToClipboard(user.username)',
-                  'BulletinFactory.of(ProfileActivity.this).createCopyBulletin',
-                  'position == usernameRow',
-              ]:
-                  pass
-              # Append click handling before a known method end is hard; inject into listView setOnItemClickListener body
-              click_code = '''
-            } else if (position == userOrChatIdRow) {
-                long idv = userId != 0 ? userId : chatId;
-                AndroidUtilities.addToClipboard(String.valueOf(idv));
-                BulletinFactory.of(ProfileActivity.this).createSimpleBulletin(R.raw.copy, "ID copied").show();
-            } else if (position == regDateRow) {
-                long idv = userId != 0 ? userId : chatId;
-                String approx = org.telegram.ui.Components.OmnigramRegDate.estimate(idv);
-                new org.telegram.ui.ActionBar.AlertDialog.Builder(getParentActivity())
-                        .setTitle("Registered")
-                        .setMessage("Approximate registration: " + approx + "\\n\\nBased on Telegram ID ranges (same method as classic Zoxgram).")
-                        .setPositiveButton("OK", null)
-                        .show();
-'''
-              # Find "} else if (position == usernameRow)" in click listener - different from bind
-              # Use a unique click pattern
-              import re
-              m = re.search(r'(listView\.setOnItemClickListener\(.*?\}\);)', t, re.S)
-              # simpler: after first "if (position == usernameRow)" in file that has Clipboard
-              if 'ID copied' not in t:
-                  t2 = t.replace(
-                      '} else if (position == usernameRow) {',
-                      click_code + '            } else if (position == usernameRow) {',
-                      1,
-                  )
-                  # only if we didn't already replace bind with double
-                  if t2.count('position == usernameRow') >= t.count('position == usernameRow'):
-                      t = t2
-
-          # Omnigram verified badge
-          if 'OmnigramVerified' not in t:
-              old = '''} else if (user.verified) {
-                    nameTextView.setRightDrawable2(getVerifiedCrossfadeDrawable());
-                    nameTextViewRightDrawable2ContentDescription = LocaleController.getString(R.string.AccDescrVerified);
-                } else {
-                    nameTextView.setRightDrawable2(null);
-                    nameTextViewRightDrawable2ContentDescription = null;
-                }'''
-              new = '''} else if (user.verified || org.telegram.ui.Components.OmnigramVerified.isVerified(userId)) {
-                    nameTextView.setRightDrawable2(user.verified ? getVerifiedCrossfadeDrawable() : getContext().getResources().getDrawable(R.drawable.ic_verified_omnigram).mutate());
-                    nameTextViewRightDrawable2ContentDescription = LocaleController.getString(R.string.AccDescrVerified);
-                } else {
-                    nameTextView.setRightDrawable2(null);
-                    nameTextViewRightDrawable2ContentDescription = null;
-                }'''
-              if old in t:
-                  t = t.replace(old, new, 1)
-
-          # music card tint
-          if 'musicView.setBackgroundColor(0xFF38506A)' not in t and 'musicView = new ProfileMusicView' in t:
-              t = t.replace(
-                  'musicView = new ProfileMusicView(context, resourcesProvider);',
-                  'musicView = new ProfileMusicView(context, resourcesProvider);\n            musicView.setBackgroundColor(0xFF38506A);',
-                  1,
-              )
-
-          p.write_text(t, encoding='utf-8')
-          print('ProfileActivity patched')
-
-          # ---- SettingsActivity ----
-          s = Path('TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java')
-          st = s.read_text(encoding='utf-8', errors='replace')
-          if 'DevelopersActivity' not in st:
-              st = st.replace(
-                  'items.add(SettingCell.Factory.of(19, IconBackgroundColors.GREEN.top, IconBackgroundColors.GREEN.bottom, R.drawable.settings_policy, getString(R.string.PrivacyPolicy)));',
-                  'items.add(SettingCell.Factory.of(19, IconBackgroundColors.GREEN.top, IconBackgroundColors.GREEN.bottom, R.drawable.settings_policy, getString(R.string.PrivacyPolicy)));\n        items.add(SettingCell.Factory.of(9999, 0xFF62B0F0, 0xFF1B242F, R.drawable.msg_info, "Developers", "Omnigram Team"));',
-                  1,
-              )
-              st = st.replace(
-                  'case 19:\n                Browser.openUrl(getParentActivity(), LocaleController.getString(R.string.PrivacyPolicyUrl));\n                break;',
-                  'case 19:\n                Browser.openUrl(getParentActivity(), LocaleController.getString(R.string.PrivacyPolicyUrl));\n                break;\n            case 9999:\n                presentFragment(new DevelopersActivity());\n                break;',
-                  1,
-              )
-              s.write_text(st, encoding='utf-8')
-              print('SettingsActivity patched')
-          else:
-              print('SettingsActivity already has Developers')
-
-          # ---- ChatMessageCell: pencil instead of Edited text ----
-          c = Path('TMessagesProj/src/main/java/org/telegram/ui/Cells/ChatMessageCell.java')
-          ct = c.read_text(encoding='utf-8', errors='replace')
-          old_ed = 'return getString(R.string.EditedMessage) + " " + LocaleController.getInstance().getFormatterDay().format((long) (message.messageOwner.date) * 1000);'
-          new_ed = 'return "\\u270E " + LocaleController.getInstance().getFormatterDay().format((long) (message.messageOwner.date) * 1000);'
-          if old_ed in ct:
-              ct = ct.replace(old_ed, new_ed, 1)
-              c.write_text(ct, encoding='utf-8')
-              print('ChatMessageCell edited marker patched')
-          else:
-              print('ChatMessageCell edited pattern not found')
-
-          # ---- ChatActivity: To Beginning in header if present ----
-          ca = Path('TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java')
-          cat = ca.read_text(encoding='utf-8', errors='replace')
-          if 'OPTION_TO_BEGINNING' not in cat:
-              # add constant near other OPTION_
-              cat = cat.replace(
-                  'public final static int OPTION_REPLY = 8;',
-                  'public final static int OPTION_REPLY = 8;\n    public final static int OPTION_TO_BEGINNING = 9001;\n    public final static int OPTION_MSG_DETAILS = 9002;',
-                  1,
-              )
-              ca.write_text(cat, encoding='utf-8')
-              print('ChatActivity constants added')
-          else:
-              print('ChatActivity already patched')
-
-          print('DONE')
-          PY
-
-      - name: Commit patches
+      - name: Commit and push
         run: |
           set -euo pipefail
           git config user.name "omnigram-bot"
           git config user.email "bot@omnigram.local"
           git add -A
           if git diff --cached --quiet; then
-            echo "No changes"
+            echo "No changes to commit"
           else
-            git commit -m "Apply Omnigram features: profile ID/reg date, verified, Developers, edited pencil"
+            git commit -m "UI: Profile User ID + Registered, Developers settings, verified badge, edited pencil"
             git push origin HEAD:master
           fi
