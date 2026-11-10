@@ -4456,16 +4456,54 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             } else if (position == addMemberRow) {
                 openAddMember();
             } else if (position == userOrChatIdRow) {
+                        long idv = userId != 0 ? userId : chatId;
+                        int dc = 0;
+                        try {
+                            if (userId != 0) {
+                                org.telegram.tgnet.TLRPC.User u = getMessagesController().getUser(userId);
+                                if (u != null && u.photo != null) dc = u.photo.dc_id;
+                            } else if (currentChat != null && currentChat.photo != null) {
+                                dc = currentChat.photo.dc_id;
+                            }
+                        } catch (Throwable ignore) {}
+                        String sub = org.telegram.ui.Components.OmnigramRegDate.dcSubtitle(dc);
+                        if (sub == null || sub.length() == 0) sub = (userId != 0 ? "User ID" : "Chat ID");
+                        detailCell.setTextAndValue(String.valueOf(idv), sub, true);
+                        try {
+                            android.graphics.drawable.Drawable cal = getContext().getResources().getDrawable(R.drawable.msg_calendar2).mutate();
+                            detailCell.setImage(cal);
+                            detailCell.setImageClickListener(v -> {
+                                String name = userId != 0 ? "This user" : "This channel";
+                                try {
+                                    if (userId != 0) {
+                                        org.telegram.tgnet.TLRPC.User u = getMessagesController().getUser(userId);
+                                        if (u != null) name = org.telegram.messenger.UserObject.getFirstName(u);
+                                    } else if (currentChat != null && currentChat.title != null) {
+                                        name = currentChat.title;
+                                    }
+                                } catch (Throwable ignore) {}
+                                BulletinFactory.of(ProfileActivity.this).createSimpleBulletin(R.raw.contact_check,
+                                    org.telegram.ui.Components.OmnigramRegDate.approximateSentence(name, idv)).show();
+                            });
+                        } catch (Throwable ignore) {}
+                    } else if (position == regDateRow) {
+                        long idv = userId != 0 ? userId : chatId;
+                        detailCell.setTextAndValue(org.telegram.ui.Components.OmnigramRegDate.estimate(idv), "Registered", true);
+                    } else if (position == userOrChatIdRow) {
                 long idv = userId != 0 ? userId : chatId;
                 AndroidUtilities.addToClipboard(String.valueOf(idv));
                 BulletinFactory.of(ProfileActivity.this).createSimpleBulletin(R.raw.copy, "ID copied").show();
             } else if (position == regDateRow) {
                 long idv = userId != 0 ? userId : chatId;
-                new org.telegram.ui.ActionBar.AlertDialog.Builder(getParentActivity())
-                        .setTitle("Registered")
-                        .setMessage("Approximate registration: " + org.telegram.ui.Components.OmnigramRegDate.estimate(idv) + "\n\nBased on Telegram ID ranges.")
-                        .setPositiveButton("OK", null)
-                        .show();
+                String name = userId != 0 ? "This user" : "This channel";
+                try {
+                    if (userId != 0) {
+                        org.telegram.tgnet.TLRPC.User u = getMessagesController().getUser(userId);
+                        if (u != null) name = org.telegram.messenger.UserObject.getFirstName(u);
+                    } else if (currentChat != null && currentChat.title != null) name = currentChat.title;
+                } catch (Throwable ignore) {}
+                BulletinFactory.of(ProfileActivity.this).createSimpleBulletin(R.raw.contact_check,
+                        org.telegram.ui.Components.OmnigramRegDate.approximateSentence(name, idv)).show();
             } else if (position == usernameRow) {
                 processOnClickOrPress(position, view, x, y);
             } else if (position == linkedCommunityRow) {
@@ -11688,7 +11726,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 if (user.scam || user.fake) {
                     nameTextView.setRightDrawable2(getScamDrawable(user.scam ? 0 : 1));
                     nameTextViewRightDrawable2ContentDescription = LocaleController.getString(R.string.ScamMessage);
-                } else if (user.verified || org.telegram.ui.Components.OmnigramVerified.isVerified(userId)) {
+                } else if (user.verified || org.telegram.ui.Components.OmnigramVerified.isVerified(userId != 0 ? userId : chatId)) {
                     if (user.verified) {
                         nameTextView.setRightDrawable2(getVerifiedCrossfadeDrawable());
                     } else {
