@@ -15526,6 +15526,13 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
      * before a cell lays it out (RichWidgetBlock#estimateSafeArea).
      */
     public static String timeString(MessageObject current, MessageObject message, boolean edited, int editDate) {
+        try {
+            if (message != null && org.telegram.ui.Components.OmnigramDeleted.isDeleted(message.getDialogId(), message.getId())) {
+                String tm = LocaleController.getInstance().getFormatterDay().format((long) (message.messageOwner.date) * 1000);
+                return "\uD83D\uDDD1 " + tm;
+            }
+        } catch (Throwable ignore) {}
+
         if (current.notime || current.isSponsored() || current.isQuickReply() || current.isWelcomeMessage()) {
             return "";
         } else if (current.scheduled && current.messageOwner.date == 0x7FFFFFFE) {
@@ -15539,9 +15546,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                 if (editDate == 0 && current.isEditing()) {
                     editDate = ConnectionsManager.getInstance(current.currentAccount).getCurrentTime();
                 }
-                String omniT = LocaleController.getInstance().getFormatterDay().format((long) (message.messageOwner.date) * 1000);
-            try { if (message != null && org.telegram.ui.Components.OmnigramDeleted.isDeleted(message.getDialogId(), message.getId())) return "\uD83D\uDDD1 " + omniT; } catch (Throwable ignore) {}
-            return "\u270E " + omniT;
+                return "\u270E " + LocaleController.getInstance().getFormatterDay().format((long) (message.messageOwner.date) * 1000);
             }
             return "✎ " + LocaleController.getInstance().getFormatterDay().format((long) (message.messageOwner.date) * 1000);
         } else if (current.isSaved && current.messageOwner.fwd_from != null && (current.messageOwner.fwd_from.date != 0 || current.messageOwner.fwd_from.saved_date != 0)

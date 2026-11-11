@@ -502,7 +502,26 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
     }
 
     @Override
+    private void omnigramRefreshAvatar() {
+        try {
+            org.telegram.tgnet.TLRPC.User user = getUserConfig().getCurrentUser();
+            if (user != null && avatarView != null) {
+                if (avatarDrawable != null) avatarDrawable.setInfo(currentAccount, user);
+                avatarView.setForUserOrChat(user, avatarDrawable);
+                avatarView.invalidate();
+            }
+        } catch (Throwable ignore) {}
+    }
+
     public void didReceivedNotification(int id, int account, Object... args) {
+        try {
+            if (id == NotificationCenter.mainUserInfoChanged
+                    || id == NotificationCenter.updateInterfaces
+                    || id == NotificationCenter.userInfoDidLoad) {
+                omnigramRefreshAvatar();
+            }
+        } catch (Throwable ignore) {}
+
         if (id == NotificationCenter.starBalanceUpdated) {
             setInfo();
             if (listView != null) {
