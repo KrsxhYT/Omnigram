@@ -1,0 +1,43 @@
+name: Omnigram ToBeginning+Deleted+Welcome
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/omnigram_tobegin_deleted_welcome.py'
+      - '.github/workflows/omnigram-tobegin-welcome.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: omnigram-tobegin-welcome
+  cancel-in-progress: true
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Apply patches
+        run: |
+          set -euo pipefail
+          python3 tools/omnigram_tobegin_deleted_welcome.py
+
+      - name: Commit sources only
+        run: |
+          set -euo pipefail
+          git config user.name "omnigram-bot"
+          git config user.email "bot@omnigram.local"
+          git add TMessagesProj/ || true
+          git reset HEAD -- .github 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "No source changes"
+          else
+            git commit -m "Features: To Beginning in 3-dot menu, durable deleted msgs (local), welcome Omnigram"
+            git push origin HEAD:master
+          fi
