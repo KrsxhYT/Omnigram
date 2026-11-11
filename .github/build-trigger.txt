@@ -1,2 +1,1 @@
-build-trigger: 2026-11-11
-reason: rebuild after ProfileActivity click-handler repair commit 1b734e7
+force-fix 2026-11-11T06:38:02Z

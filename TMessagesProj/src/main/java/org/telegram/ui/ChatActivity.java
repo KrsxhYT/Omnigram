@@ -46663,6 +46663,17 @@ public class ChatActivity extends BaseFragment implements
                     options.add(OPTION_COPY);
                     icons.add(R.drawable.msg_copy);
                 }
+                // Omnigram Part2
+                if (!selectedObject.isSponsored()) {
+                    items.add("Details");
+                    options.add(OPTION_OMNI_MSG_DETAILS);
+                    icons.add(R.drawable.msg_info);
+                }
+                if (selectedObject.isVoice() || selectedObject.isRoundVideo()) {
+                    items.add("Download voice");
+                    options.add(OPTION_OMNI_VOICE_DL);
+                    icons.add(R.drawable.msg_download);
+                }
                 if (!isThreadChat() && chatMode != MODE_SCHEDULED && currentChat != null && primaryMessage != null && (currentChat.has_link || primaryMessage.hasReplies()) && currentChat.megagroup && primaryMessage.canViewThread()) {
                     if (primaryMessage.hasReplies()) {
                         items.add(LocaleController.formatPluralString("ViewReplies", primaryMessage.getRepliesCount()));

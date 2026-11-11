@@ -6212,31 +6212,46 @@ public class ChatActivityEnterView extends FrameLayout implements
     }
 
 
-    /** Omnigram: if user types e.g. 7+8= show answer after = */
+    
+
+
+    private boolean omnigramCalcBusy;
+
     private void omnigramMaybeEvalMath() {
+        if (omnigramCalcBusy || messageEditText == null) return;
         try {
-            if (messageEditText == null) return;
             CharSequence cs = messageEditText.getText();
             if (cs == null) return;
             String s = cs.toString();
             int eq = s.lastIndexOf('=');
-            if (eq < 0 || eq != s.length() - 1) return;
+            if (eq <= 0) return;
+            if (eq != s.length() - 1) return;
             String expr = s.substring(0, eq).trim();
-            if (expr.isEmpty()) return;
-            if (!expr.matches("[0-9+\\-*/().\\s]+")) return;
-            double val = omnigramEvalExpr(expr);
+            if (expr.length() == 0) return;
+            for (int k = 0; k < expr.length(); k++) {
+                char ch = expr.charAt(k);
+                if (!(Character.isDigit(ch) || ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == 'x' || ch == 'X'
+                        || ch == '(' || ch == ')' || ch == '.' || ch == ' ' || ch == '%')) {
+                    return;
+                }
+            }
+            String norm = expr.replace('x', '*').replace('X', '*');
+            double val = omnigramEvalExpr(norm);
             if (Double.isNaN(val) || Double.isInfinite(val)) return;
             String ans;
-            if (Math.abs(val - Math.rint(val)) < 1e-9) {
-                ans = String.valueOf((long) Math.rint(val));
-            } else {
-                ans = String.valueOf(val);
+            if (Math.abs(val - Math.rint(val)) < 1e-9) ans = String.valueOf((long) Math.rint(val));
+            else {
+                ans = String.format(java.util.Locale.US, "%.8f", val).replaceAll("0+$", "").replaceAll("\\.$", "");
             }
             String next = expr + "=" + ans;
             if (next.equals(s)) return;
+            omnigramCalcBusy = true;
             messageEditText.setText(next);
             messageEditText.setSelection(next.length());
-        } catch (Throwable ignore) {}
+        } catch (Throwable ignore) {
+        } finally {
+            omnigramCalcBusy = false;
+        }
     }
 
     private double omnigramEvalExpr(String expr) {
@@ -6249,20 +6264,20 @@ public class ChatActivityEnterView extends FrameLayout implements
             if (c == '(') { ops.push(c); i++; continue; }
             if (c == ')') {
                 while (!ops.isEmpty() && ops.peek() != '(') output.add(String.valueOf(ops.pop()));
-                if (!ops.isEmpty() && ops.peek() == '(') ops.pop();
+                if (!ops.isEmpty()) ops.pop();
                 i++; continue;
             }
             if (c == '+' || c == '-' || c == '*' || c == '/') {
-                if (c == '-' && (output.isEmpty() || (!ops.isEmpty() && (ops.peek() == '(')))) {
+                if (c == '-' && (output.isEmpty() || (!ops.isEmpty() && ops.peek() == '('))) {
                     output.add("0");
                 }
                 while (!ops.isEmpty()) {
                     char top = ops.peek();
-                    if ((c == '+' || c == '-') && (top == '+' || top == '-' || top == '*' || top == '/')) {
-                        output.add(String.valueOf(ops.pop()));
-                    } else if ((c == '*' || c == '/') && (top == '*' || top == '/')) {
-                        output.add(String.valueOf(ops.pop()));
-                    } else break;
+                    boolean pop = false;
+                    if ((c == '+' || c == '-') && (top == '+' || top == '-' || top == '*' || top == '/')) pop = true;
+                    if ((c == '*' || c == '/') && (top == '*' || top == '/')) pop = true;
+                    if (!pop) break;
+                    output.add(String.valueOf(ops.pop()));
                 }
                 ops.push(c); i++; continue;
             }
@@ -6287,7 +6302,7 @@ public class ChatActivityEnterView extends FrameLayout implements
                     case '/': st.push(b == 0 ? Double.NaN : a / b); break;
                 }
             } else {
-                st.push(Double.parseDouble(tok));
+                try { st.push(Double.parseDouble(tok)); } catch (Exception e) { return Double.NaN; }
             }
         }
         return st.isEmpty() ? Double.NaN : st.pop();
