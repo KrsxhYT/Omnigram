@@ -34343,12 +34343,6 @@ public class ChatActivity extends BaseFragment implements
                 presentFragment(fragment);
                 break;
             }
-            case OPTION_OMNI_MSG_DETAILS:
-                return "Details";
-            case OPTION_OMNI_VOICE_DL:
-                return "Download voice";
-            case OPTION_OMNI_TO_BEGINNING:
-                return "To Beginning";
             case OPTION_COPY: {
                 final TL_iv.RichMessage copyRichMessage = selectedObject.messageOwner != null ? selectedObject.messageOwner.rich_message : null;
                 if (selectedObject.isDice()) {
