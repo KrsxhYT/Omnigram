@@ -1,0 +1,47 @@
+name: HARD compile fix
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/omnigram_hard_compile_fix.py'
+      - '.github/workflows/omnigram-hard-fix.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: omnigram-hard-fix
+  cancel-in-progress: true
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Apply hard fixes
+        run: |
+          set -euo pipefail
+          python3 tools/omnigram_hard_compile_fix.py
+          echo "--- verify ---"
+          grep -n "OPTION_OMNI_TO_BEGINNING" TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java | head -3
+          grep -n "icon.premium" TMessagesProj/src/main/java/org/telegram/ui/Components/Premium/PremiumAppIconsPreviewView.java || echo "no icon.premium OK"
+          grep -n "omnigramRefreshAvatar" -n TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java | head -5
+
+      - name: Commit sources
+        run: |
+          set -euo pipefail
+          git config user.name "omnigram-bot"
+          git config user.email "bot@omnigram.local"
+          git add TMessagesProj/
+          git reset HEAD -- .github 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "No changes - already fixed"
+          else
+            git commit -m "HARD FIX compile: msg_arrow_back, Settings override, no icon.premium"
+            git push origin HEAD:master
+          fi
