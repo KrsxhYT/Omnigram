@@ -3434,11 +3434,8 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             } else {
                 statusDrawable = new AnimatedEmojiDrawable.SwapAnimatedEmojiDrawable(null, dp(26));
                 statusDrawable.center = true;
-                logoDrawable = null; // Omnigram
-                logoDrawable.setBounds(0, dp(2), logoDrawable.getIntrinsicWidth(), dp(2) + logoDrawable.getIntrinsicHeight());
-                // a new drawable (also when the view is recreated after a theme switch made elsewhere): remember its tint, the
-                // theme hook only recolors when the color differs from the last one applied
-                logoDrawable.setColorFilter(lastLogoDrawableColor = getThemedColor(Theme.key_telegram_color_dialogsLogo), PorterDuff.Mode.MULTIPLY);
+                // Omnigram: no Telegram word-logo; show account name only
+                logoDrawable = null;
                 org.telegram.tgnet.TLRPC.User meTitle = UserConfig.getInstance(currentAccount).getCurrentUser();
                 String titleName = meTitle != null ? UserObject.getUserName(meTitle) : getString(R.string.AppName);
                 if (titleName == null || titleName.length() == 0) titleName = getString(R.string.AppName);
