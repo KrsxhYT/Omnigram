@@ -1,0 +1,45 @@
+name: Fix logo NPE and rebuild
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/fix_logo_npe.py'
+      - '.github/workflows/fix-logo-npe.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Fix null logoDrawable calls
+        run: |
+          set -euo pipefail
+          python3 tools/fix_logo_npe.py
+          # verify no setBounds on null path
+          if grep -n "logoDrawable = null" -A3 TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java | grep -q setBounds; then
+            echo "STILL HAS setBounds after null"
+            exit 1
+          fi
+          echo OK
+
+      - name: Commit
+        run: |
+          set -euo pipefail
+          git config user.name "omnigram-bot"
+          git config user.email "bot@omnigram.local"
+          date -u +"rebuild %Y-%m-%dT%H:%M:%SZ" > .github/build-trigger.txt
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "Fix DialogsActivity: do not call methods on null logoDrawable"
+            git push origin HEAD:master
+          fi
