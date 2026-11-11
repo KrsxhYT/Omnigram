@@ -3845,7 +3845,7 @@ public class ChatActivity extends BaseFragment implements
                         return;
                     }
                     showDialog(AlertsCreator.createTTLAlert(getParentActivity(), currentEncryptedChat, themeDelegate).create());
-                } else if (id == clear_history || id == delete_chat || id == auto_delete_timer) {
+                } else if (id == OPTION_OMNI_TO_BEGINNING || id == clear_history || id == delete_chat || id == auto_delete_timer) {
                     if (getParentActivity() == null) {
                         return;
                     }
@@ -4419,7 +4419,8 @@ public class ChatActivity extends BaseFragment implements
                 headerItem.lazilyAddSubItem(add_shortcut, R.drawable.msg_home, LocaleController.getString(R.string.AddShortcut));
             }
             if (!isTopic && !ChatObject.isMonoForum(currentChat)) {
-                clearHistoryItem = headerItem.lazilyAddSubItem(clear_history, R.drawable.msg_clear,
+                headerItem.lazilyAddSubItem(OPTION_OMNI_TO_BEGINNING, R.drawable.msg_up, "To Beginning");
+            clearHistoryItem = headerItem.lazilyAddSubItem(clear_history, R.drawable.msg_clear,
                     LocaleController.getString(UserObject.isBotForum(currentUser) ? R.string.ClearAllHistory : R.string.ClearHistory));
             }
             boolean addedSettings = false;
@@ -34240,13 +34241,35 @@ public class ChatActivity extends BaseFragment implements
         MediaController.saveFile(path, getParentActivity(), messageObject.isVideo() ? 1 : 0, null, null);
     }
 
-    private void processSelectedOption(int option) {
-        if (option == OPTION_OMNI_TO_BEGINNING) {
+    private void omnigramGoToBeginning() {
+        try {
+            org.telegram.ui.Components.OmnigramDeleted.warm(dialog_id);
+            // Load history from the oldest side, then scroll to first loaded
+            getMessagesController().loadMessages(
+                dialog_id, mergeDialogId, false, 30, 1, 0, true, 0, classGuid,
+                3, 0, chatMode, threadMessageId, replyMaxReadId, lastLoadIndex++, isTopic);
+            if (chatListView != null && messages != null && !messages.isEmpty()) {
+                int target = messages.size() - 1;
+                chatListView.stopScroll();
+                chatLayoutManager.scrollToPositionWithOffset(target, 0);
+            }
+            if (getParentActivity() != null) {
+                org.telegram.ui.Components.BulletinFactory.of(this)
+                    .createSimpleBulletin(org.telegram.messenger.R.raw.contact_check, "Jumping to beginning...")
+                    .show();
+            }
+        } catch (Throwable e) {
             try {
                 if (chatListView != null && messages != null && !messages.isEmpty()) {
                     chatListView.scrollToPosition(messages.size() - 1);
                 }
             } catch (Throwable ignore) {}
+        }
+    }
+
+    private void processSelectedOption(int option) {
+        if (option == OPTION_OMNI_TO_BEGINNING) {
+            try { omnigramGoToBeginning(); } catch (Throwable ignore) {}
             return;
         }
         if (option == OPTION_OMNI_VOICE_DL) {
@@ -34310,7 +34333,7 @@ public class ChatActivity extends BaseFragment implements
             case OPTION_DELETE:
                 try {
                     if (selectedObject != null) {
-                        org.telegram.ui.Components.OmnigramDeleted.mark(dialog_id, selectedObject.getId());
+                        org.telegram.ui.Components.OmnigramDeleted.markAndSave(selectedObject);
                         if (selectedObjectGroup != null && selectedObjectGroup.messages != null) {
                             for (int gi = 0; gi < selectedObjectGroup.messages.size(); gi++) {
                                 MessageObject mo = selectedObjectGroup.messages.get(gi);
