@@ -1,0 +1,44 @@
+name: Fix ChatActivity compile returns
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/fix_chatactivity_returns.py'
+      - '.github/workflows/fix-chatactivity-returns.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Fix invalid returns
+        run: |
+          set -euo pipefail
+          python3 tools/fix_chatactivity_returns.py
+          if grep -n 'return "Details"' TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java; then
+            echo "STILL HAS return Details"
+            exit 1
+          fi
+          echo OK
+
+      - name: Commit
+        run: |
+          set -euo pipefail
+          git config user.name "omnigram-bot"
+          git config user.email "bot@omnigram.local"
+          date -u +"fix-returns %Y-%m-%dT%H:%M:%SZ" > .github/build-trigger.txt
+          git add -A
+          if git diff --cached --quiet; then
+            echo No changes
+          else
+            git commit -m "Fix compile: remove invalid String returns from void switch in ChatActivity"
+            git push origin HEAD:master
+          fi
