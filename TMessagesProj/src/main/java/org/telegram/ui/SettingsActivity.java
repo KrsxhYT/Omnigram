@@ -501,7 +501,6 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         }
     }
 
-    @Override
     private void omnigramRefreshAvatar() {
         try {
             org.telegram.tgnet.TLRPC.User user = getUserConfig().getCurrentUser();
@@ -513,6 +512,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         } catch (Throwable ignore) {}
     }
 
+    @Override
     public void didReceivedNotification(int id, int account, Object... args) {
         try {
             if (id == NotificationCenter.mainUserInfoChanged
