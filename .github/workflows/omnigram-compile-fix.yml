@@ -1,0 +1,47 @@
+name: Omnigram ONE compile fix
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/omnigram_compile_fix.py'
+      - '.github/workflows/omnigram-compile-fix.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: omnigram-compile-fix
+  cancel-in-progress: true
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Apply compile fixes
+        run: |
+          set -euo pipefail
+          python3 tools/omnigram_compile_fix.py
+          # verify
+          ! grep -n 'R.drawable.msg_up' TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java || true
+          ! grep -n 'icon.premium' TMessagesProj/src/main/java/org/telegram/ui/Components/Premium/PremiumAppIconsPreviewView.java || true
+          ! grep -n '@Override' -A1 TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java | grep -q 'private void omnigramRefreshAvatar' || true
+
+      - name: Commit sources only
+        run: |
+          set -euo pipefail
+          git config user.name "omnigram-bot"
+          git config user.email "bot@omnigram.local"
+          git add TMessagesProj/ || true
+          git reset HEAD -- .github 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "No source changes"
+          else
+            git commit -m "Fix compile: msg_rate_up drawable, Settings @Override, LauncherIcon.premium removed"
+            git push origin HEAD:master
+          fi
