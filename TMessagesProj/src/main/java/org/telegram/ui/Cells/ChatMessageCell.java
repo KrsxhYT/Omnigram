@@ -15539,7 +15539,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                 if (editDate == 0 && current.isEditing()) {
                     editDate = ConnectionsManager.getInstance(current.currentAccount).getCurrentTime();
                 }
-                return LocaleController.formatPmEditedDate(editDate);
+                return "\u270E " + LocaleController.getInstance().getFormatterDay().format((long) (message.messageOwner.date) * 1000);
             }
             return "✎ " + LocaleController.getInstance().getFormatterDay().format((long) (message.messageOwner.date) * 1000);
         } else if (current.isSaved && current.messageOwner.fwd_from != null && (current.messageOwner.fwd_from.date != 0 || current.messageOwner.fwd_from.saved_date != 0)

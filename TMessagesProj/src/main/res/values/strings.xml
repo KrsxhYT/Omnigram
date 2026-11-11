@@ -1475,7 +1475,7 @@
     <string name="PinnedMessage">Pinned Message</string>
     <string name="PinnedCall">Pinned Call</string>
     <string name="PreviousPinnedMessage">Previous Message</string>
-    <string name="EditedMessage">edited</string>
+    <string name="EditedMessage"></string>
     <string name="EditMessage">Edit Message</string>
     <string name="EditCaption">Edit Caption</string>
     <string name="EditMessageMedia">Tap to edit media</string>
