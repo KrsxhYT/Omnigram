@@ -1,0 +1,46 @@
+name: Omnigram Part2 and UI fixes
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/omnigram_part2_and_fixes.py'
+      - '.github/workflows/omnigram-part2-fixes.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: omnigram-part2
+  cancel-in-progress: true
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Apply fixes
+        run: |
+          set -euo pipefail
+          python3 tools/omnigram_part2_and_fixes.py
+          echo "--- verify ---"
+          grep -n "omnigramUserTitle\|logoAlpha = 0" TMessagesProj/src/main/java/org/telegram/ui/Stories/DialogStoriesCell.java | head -10 || true
+          grep -n "dcSubtitle" TMessagesProj/src/main/java/org/telegram/ui/ProfileActivity.java | head || echo "DC gone OK"
+          grep -n "omnigramMaybeEvalMath" TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivityEnterView.java | head || true
+
+      - name: Commit
+        run: |
+          set -euo pipefail
+          git config user.name "omnigram-bot"
+          git config user.email "bot@omnigram.local"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "UI: always user name (no Telegram logo), no DC line, inline calc, Part2 chat hooks"
+            git push origin HEAD:master
+          fi
