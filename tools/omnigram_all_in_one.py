@@ -154,17 +154,12 @@ public final class OmnigramDeleted {
             mc.write_text(mt, encoding="utf-8")
     print("deleted ok")
 
-def android_paths():
-    p = ROOT / ".github/workflows/android.yml"
-    t = p.read_text(encoding="utf-8", errors="replace")
-    if "TMessagesProj/**" in t: return
-    t = t.replace("on:\n  push:\n    branches:\n      - master\n  workflow_dispatch:",
-                  "on:\n  push:\n    branches:\n      - master\n    paths:\n      - 'TMessagesProj/**'\n      - 'TMessagesProj_App/**'\n      - 'build.gradle'\n      - 'settings.gradle'\n      - 'gradle/**'\n  workflow_dispatch:", 1)
-    p.write_text(t, encoding="utf-8")
-    print("android paths ok")
-
 def main():
-    fix_calculator(); fix_verified(); pin_official(); deleted_ui(); android_paths()
-    print("ALL DONE")
+    fix_calculator()
+    fix_verified()
+    pin_official()
+    deleted_ui()
+    print("ALL DONE (no workflow edits)")
+
 if __name__ == "__main__":
     main()
