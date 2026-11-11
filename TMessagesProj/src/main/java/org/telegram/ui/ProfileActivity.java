@@ -13621,9 +13621,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                                 dc = currentChat.photo.dc_id;
                             }
                         } catch (Throwable ignore) {}
-                        String sub = org.telegram.ui.Components.OmnigramRegDate.dcSubtitle(dc);
-                        if (sub == null || sub.length() == 0) sub = (userId != 0 ? "User ID" : "Chat ID");
-                        detailCell.setTextAndValue(String.valueOf(idv), sub, true);
+                        detailCell.setTextAndValue(String.valueOf(idv), userId != 0 ? "User ID" : "Chat ID", true);
                         try {
                             android.graphics.drawable.Drawable cal = getContext().getResources().getDrawable(R.drawable.msg_calendar2).mutate();
                             detailCell.setImage(cal);

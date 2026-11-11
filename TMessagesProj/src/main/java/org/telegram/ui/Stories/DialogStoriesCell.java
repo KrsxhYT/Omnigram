@@ -627,15 +627,16 @@ public class DialogStoriesCell extends FrameLayout implements NotificationCenter
                     currentTitle = str;
                 }
             } else {
-                currentTitle = menuItemsOffset < dp(50) ? null :
+                currentTitle = menuItemsOffset < dp(50) ? omnigramUserTitle() :
                     LocaleController.getString(R.string.MyStory);
             }
         } else {
-            currentTitle = menuItemsOffset < dp(50) ? null :
+            currentTitle = menuItemsOffset < dp(50) ? omnigramUserTitle() :
                 LocaleController.formatPluralString("Stories", totalCount);
         }
 
         if (!hasOverlayText) {
+            if (TextUtils.isEmpty(currentTitle)) currentTitle = omnigramUserTitle();
             titleView.setText(currentTitle, animated && !LocaleController.isRTL);
         }
 
@@ -2221,24 +2222,35 @@ public class DialogStoriesCell extends FrameLayout implements NotificationCenter
         }
     }
 
+
+    private CharSequence omnigramUserTitle() {
+        try {
+            org.telegram.tgnet.TLRPC.User me = org.telegram.messenger.UserConfig.getInstance(currentAccount).getCurrentUser();
+            if (me != null) {
+                String n = org.telegram.messenger.UserObject.getUserName(me);
+                if (n != null && n.length() > 0) return n;
+            }
+        } catch (Throwable ignore) {}
+        return org.telegram.messenger.LocaleController.getString(org.telegram.messenger.R.string.AppName);
+    }
+
     private void checkUi_titleVisibility() {
         final float progress = MathUtils.clamp(Math.min(collapsedProgress, collapsedProgress2), 0, 1);
-        final float titleVisibility = animatorHasTitleText.getFloatValue();
-        final float logoVisibility = 1f - titleVisibility;
-        final float titleAlpha = titleVisibility * progress;
-        final float logoAlpha = logoVisibility * progress;
+        // Omnigram: never show Telegram word-logo; always show account name as title
+        final float titleAlpha = progress;
+        final float logoAlpha = 0f;
 
         if (titleView != null) {
             titleView.setAlpha(titleAlpha);
             titleView.setVisibility(titleAlpha > 0 ? VISIBLE : GONE);
         }
         if (telegramLogoView != null) {
-            telegramLogoView.setAlpha(logoAlpha);
-            telegramLogoView.setVisibility(logoAlpha > 0 ? VISIBLE : GONE);
+            telegramLogoView.setAlpha(0f);
+            telegramLogoView.setVisibility(GONE);
         }
         if (emojiStatusView != null) {
-            emojiStatusView.setAlpha(logoAlpha);
-            emojiStatusView.setVisibility(logoAlpha > 0 ? VISIBLE : GONE);
+            emojiStatusView.setAlpha(titleAlpha);
+            emojiStatusView.setVisibility(titleAlpha > 0 ? VISIBLE : GONE);
         }
         if (subtitleOverlayContainer != null) {
             subtitleOverlayContainer.setAlpha(progress);

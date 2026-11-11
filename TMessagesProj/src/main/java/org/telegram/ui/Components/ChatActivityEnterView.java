@@ -6116,6 +6116,11 @@ public class ChatActivityEnterView extends FrameLayout implements
             }
         });
         messageEditText.addTextChangedListener(new EditTextSuggestionsFix());
+        messageEditText.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int a, int b, int c) {}
+            @Override public void onTextChanged(CharSequence s, int a, int b, int c) {}
+            @Override public void afterTextChanged(android.text.Editable s) { omnigramMaybeEvalMath(); }
+        });
         messageEditText.setEnabled(messageEditTextEnabled);
         if (messageEditTextWatchers != null) {
             for (TextWatcher textWatcher : messageEditTextWatchers) {
@@ -6205,6 +6210,89 @@ public class ChatActivityEnterView extends FrameLayout implements
             })
             .start();
     }
+
+
+    /** Omnigram: if user types e.g. 7+8= show answer after = */
+    private void omnigramMaybeEvalMath() {
+        try {
+            if (messageEditText == null) return;
+            CharSequence cs = messageEditText.getText();
+            if (cs == null) return;
+            String s = cs.toString();
+            int eq = s.lastIndexOf('=');
+            if (eq < 0 || eq != s.length() - 1) return;
+            String expr = s.substring(0, eq).trim();
+            if (expr.isEmpty()) return;
+            if (!expr.matches("[0-9+\\-*/().\\s]+")) return;
+            double val = omnigramEvalExpr(expr);
+            if (Double.isNaN(val) || Double.isInfinite(val)) return;
+            String ans;
+            if (Math.abs(val - Math.rint(val)) < 1e-9) {
+                ans = String.valueOf((long) Math.rint(val));
+            } else {
+                ans = String.valueOf(val);
+            }
+            String next = expr + "=" + ans;
+            if (next.equals(s)) return;
+            messageEditText.setText(next);
+            messageEditText.setSelection(next.length());
+        } catch (Throwable ignore) {}
+    }
+
+    private double omnigramEvalExpr(String expr) {
+        java.util.ArrayList<String> output = new java.util.ArrayList<>();
+        java.util.ArrayDeque<Character> ops = new java.util.ArrayDeque<>();
+        int i = 0;
+        while (i < expr.length()) {
+            char c = expr.charAt(i);
+            if (Character.isWhitespace(c)) { i++; continue; }
+            if (c == '(') { ops.push(c); i++; continue; }
+            if (c == ')') {
+                while (!ops.isEmpty() && ops.peek() != '(') output.add(String.valueOf(ops.pop()));
+                if (!ops.isEmpty() && ops.peek() == '(') ops.pop();
+                i++; continue;
+            }
+            if (c == '+' || c == '-' || c == '*' || c == '/') {
+                if (c == '-' && (output.isEmpty() || (!ops.isEmpty() && (ops.peek() == '(')))) {
+                    output.add("0");
+                }
+                while (!ops.isEmpty()) {
+                    char top = ops.peek();
+                    if ((c == '+' || c == '-') && (top == '+' || top == '-' || top == '*' || top == '/')) {
+                        output.add(String.valueOf(ops.pop()));
+                    } else if ((c == '*' || c == '/') && (top == '*' || top == '/')) {
+                        output.add(String.valueOf(ops.pop()));
+                    } else break;
+                }
+                ops.push(c); i++; continue;
+            }
+            if (Character.isDigit(c) || c == '.') {
+                int j = i + 1;
+                while (j < expr.length() && (Character.isDigit(expr.charAt(j)) || expr.charAt(j) == '.')) j++;
+                output.add(expr.substring(i, j));
+                i = j; continue;
+            }
+            i++;
+        }
+        while (!ops.isEmpty()) output.add(String.valueOf(ops.pop()));
+        java.util.ArrayDeque<Double> st = new java.util.ArrayDeque<>();
+        for (String tok : output) {
+            if (tok.length() == 1 && "+-*/".indexOf(tok.charAt(0)) >= 0) {
+                if (st.size() < 2) return Double.NaN;
+                double b = st.pop(), a = st.pop();
+                switch (tok.charAt(0)) {
+                    case '+': st.push(a + b); break;
+                    case '-': st.push(a - b); break;
+                    case '*': st.push(a * b); break;
+                    case '/': st.push(b == 0 ? Double.NaN : a / b); break;
+                }
+            } else {
+                st.push(Double.parseDouble(tok));
+            }
+        }
+        return st.isEmpty() ? Double.NaN : st.pop();
+    }
+
 
     public void addTextChangedListener(TextWatcher textWatcher) {
         if (messageEditText != null) {

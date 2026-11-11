@@ -1249,6 +1249,9 @@ public class ChatActivity extends BaseFragment implements
     public final static int OPTION_SHARE = 6;
     public final static int OPTION_SAVE_TO_GALLERY2 = 7;
     public final static int OPTION_REPLY = 8;
+    public final static int OPTION_OMNI_TO_BEGINNING = 9101;
+    public final static int OPTION_OMNI_MSG_DETAILS = 9102;
+    public final static int OPTION_OMNI_VOICE_DL = 9103;
     public final static int OPTION_ADD_TO_STICKERS_OR_MASKS = 9;
     public final static int OPTION_SAVE_TO_DOWNLOADS_OR_MUSIC = 10;
     public final static int OPTION_ADD_TO_GIFS = 11;
@@ -34238,6 +34241,42 @@ public class ChatActivity extends BaseFragment implements
     }
 
     private void processSelectedOption(int option) {
+        if (option == OPTION_OMNI_TO_BEGINNING) {
+            try {
+                if (chatListView != null && messages != null && !messages.isEmpty()) {
+                    chatListView.scrollToPosition(messages.size() - 1);
+                }
+            } catch (Throwable ignore) {}
+            return;
+        }
+        if (option == OPTION_OMNI_VOICE_DL) {
+            try {
+                if (selectedObject != null && selectedObject.isVoice()) {
+                    FileLoader.getInstance(currentAccount).loadFile(selectedObject.getDocument(), selectedObject, FileLoader.PRIORITY_HIGH, 0);
+                    BulletinFactory.of(this).createSimpleBulletin(R.raw.contact_check, "Downloading voice...").show();
+                }
+            } catch (Throwable ignore) {}
+            return;
+        }
+        if (option == OPTION_OMNI_MSG_DETAILS) {
+            try {
+                if (selectedObject != null) {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("Message ID: ").append(selectedObject.getId()).append("\n");
+                    sb.append("Date: ").append(LocaleController.formatDateAudio(selectedObject.messageOwner.date, true)).append("\n");
+                    if (selectedObject.messageOwner.views > 0) sb.append("Views: ").append(selectedObject.messageOwner.views).append("\n");
+                    sb.append("From ID: ").append(selectedObject.getFromChatId()).append("\n");
+                    sb.append("Dialog ID: ").append(dialog_id);
+                    new org.telegram.ui.ActionBar.AlertDialog.Builder(getParentActivity())
+                        .setTitle("Message Details")
+                        .setMessage(sb.toString())
+                        .setPositiveButton("OK", null)
+                        .show();
+                }
+            } catch (Throwable ignore) {}
+            return;
+        }
+
         if (selectedObject == null || getParentActivity() == null) {
             return;
         }
@@ -34304,6 +34343,12 @@ public class ChatActivity extends BaseFragment implements
                 presentFragment(fragment);
                 break;
             }
+            case OPTION_OMNI_MSG_DETAILS:
+                return "Details";
+            case OPTION_OMNI_VOICE_DL:
+                return "Download voice";
+            case OPTION_OMNI_TO_BEGINNING:
+                return "To Beginning";
             case OPTION_COPY: {
                 final TL_iv.RichMessage copyRichMessage = selectedObject.messageOwner != null ? selectedObject.messageOwner.rich_message : null;
                 if (selectedObject.isDice()) {
