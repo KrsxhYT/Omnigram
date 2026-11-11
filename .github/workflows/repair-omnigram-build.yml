@@ -1,0 +1,42 @@
+name: Repair Omnigram build
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/repair_omnigram_build.py'
+      - '.github/workflows/repair-omnigram-build.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: omnigram-repair
+  cancel-in-progress: true
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Repair compile + branding
+        run: |
+          set -euo pipefail
+          python3 tools/repair_omnigram_build.py
+
+      - name: Commit
+        run: |
+          set -euo pipefail
+          git config user.name "omnigram-bot"
+          git config user.email "bot@omnigram.local"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "Fix build: ProfileActivity click handler + Omnigram branding (chats title, version, pencil, verified list)"
+            git push origin HEAD:master
+          fi

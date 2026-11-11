@@ -2,46 +2,14 @@ name: Quick fix Omnigram UI
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - 'tools/quick_fix_omnigram.py'
-      - '.github/workflows/quick-fix-omnigram.yml'
-      - 'TMessagesProj/src/main/res/drawable/ic_verified_omnigram.xml'
 
 permissions:
   contents: write
-
-concurrency:
-  group: omnigram-quick-fix
-  cancel-in-progress: true
 
 jobs:
   fix:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0
-
-      - name: Apply quick fixes
-        run: |
-          set -euo pipefail
-          python3 tools/quick_fix_omnigram.py
-          echo "--- verify ---"
-          grep -n "titleName\|Omnigram for Android" TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java 2>/dev/null | head -20 || true
-          grep -n "formatPmEditedDate\|270E\|EditedMessage" TMessagesProj/src/main/java/org/telegram/ui/Cells/ChatMessageCell.java | head -15 || true
-          grep -n "OmnigramVerified" TMessagesProj/src/main/java/org/telegram/ui/Cells/DialogCell.java | head -10 || true
-
-      - name: Commit
-        run: |
-          set -euo pipefail
-          git config user.name "omnigram-bot"
-          git config user.email "bot@omnigram.local"
-          git add -A
-          if git diff --cached --quiet; then
-            echo "No changes"
-          else
-            git commit -m "Quick fix: chats user name, Omnigram branding, pencil edited, chat-list verified badge"
-            git push origin HEAD:master
-          fi
+      - name: Disabled - use repair-omnigram-build instead
+        run: echo "Use Repair Omnigram build workflow" && exit 0
