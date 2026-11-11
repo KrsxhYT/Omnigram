@@ -1,0 +1,48 @@
+name: Omnigram force fixes
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/omnigram_force_fixes.py'
+      - '.github/workflows/omnigram-force-fixes.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: omnigram-force
+  cancel-in-progress: true
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Apply force fixes
+        run: |
+          set -euo pipefail
+          python3 tools/omnigram_force_fixes.py
+          echo "VERIFY"
+          grep -n "setImageDrawable(null)\|omnigramUserTitle\|logoAlpha" TMessagesProj/src/main/java/org/telegram/ui/Stories/DialogStoriesCell.java | head -15 || true
+          grep -n "dcSubtitle" TMessagesProj/src/main/java/org/telegram/ui/ProfileActivity.java | head || echo DC_OK
+          grep -n "omnigramMaybeEvalMath\|omnigramCalcBusy" TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivityEnterView.java | head || true
+          grep -n "OPTION_OMNI_MSG_DETAILS\|Download voice\|items.add(\"Details\")" TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java | head -20 || true
+
+      - name: Commit patched sources
+        run: |
+          set -euo pipefail
+          git config user.name "omnigram-bot"
+          git config user.email "bot@omnigram.local"
+          date -u +"force-fix %Y-%m-%dT%H:%M:%SZ" > .github/build-trigger.txt
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "Force fix: user title always, no DC, any-math calc, Details/voice/ToBeginning in menus"
+            git push origin HEAD:master
+          fi
