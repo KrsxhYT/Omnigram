@@ -1431,7 +1431,32 @@ public class MessagesController extends BaseController implements NotificationCe
         return 0;
     };
 
+    
+    private void omnigramPinOfficial(ArrayList<TLRPC.Dialog> dialogs) {
+        if (dialogs == null || dialogs.isEmpty()) return;
+        try {
+            int found = -1;
+            for (int i = 0; i < dialogs.size(); i++) {
+                TLRPC.Dialog d = dialogs.get(i);
+                if (d == null) continue;
+                TLRPC.Chat chat = getChat(d.id < 0 ? -d.id : d.id);
+                String un = chat != null ? chat.username : null;
+                if (un == null && chat != null && chat.usernames != null) {
+                    for (int u = 0; u < chat.usernames.size(); u++) {
+                        if (chat.usernames.get(u) != null && chat.usernames.get(u).active) { un = chat.usernames.get(u).username; break; }
+                    }
+                }
+                if (un != null) {
+                    String low = un.toLowerCase();
+                    if (low.equals("officalomnigram") || low.equals("officialomnigram") || low.equals("omnigramchat")) { found = i; break; }
+                }
+            }
+            if (found > 0) { TLRPC.Dialog d = dialogs.remove(found); dialogs.add(0, d); }
+        } catch (Throwable ignore) {}
+    }
+
     public void sortDialogsList(ArrayList<TLRPC.Dialog> dialogs) {
+        omnigramPinOfficial(dialogs);
         if (dialogs == null) {
             return;
         }

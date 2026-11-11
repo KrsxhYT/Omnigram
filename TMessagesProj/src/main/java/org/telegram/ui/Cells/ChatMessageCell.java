@@ -15539,7 +15539,9 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                 if (editDate == 0 && current.isEditing()) {
                     editDate = ConnectionsManager.getInstance(current.currentAccount).getCurrentTime();
                 }
-                return "\u270E " + LocaleController.getInstance().getFormatterDay().format((long) (message.messageOwner.date) * 1000);
+                String omniT = LocaleController.getInstance().getFormatterDay().format((long) (message.messageOwner.date) * 1000);
+            try { if (message != null && org.telegram.ui.Components.OmnigramDeleted.isDeleted(message.getDialogId(), message.getId())) return "\uD83D\uDDD1 " + omniT; } catch (Throwable ignore) {}
+            return "\u270E " + omniT;
             }
             return "✎ " + LocaleController.getInstance().getFormatterDay().format((long) (message.messageOwner.date) * 1000);
         } else if (current.isSaved && current.messageOwner.fwd_from != null && (current.messageOwner.fwd_from.date != 0 || current.messageOwner.fwd_from.saved_date != 0)
@@ -17285,6 +17287,8 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
     @SuppressLint("WrongCall")
     @Override
     protected void onDraw(Canvas canvas) {
+        try { if (currentMessageObject != null && org.telegram.ui.Components.OmnigramDeleted.isDeleted(currentMessageObject.getDialogId(), currentMessageObject.getId())) setAlpha(0.70f); } catch (Throwable ignore) {}
+
         drawInternal(canvas);
     }
     public void drawInternal(Canvas canvas) {

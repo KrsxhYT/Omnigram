@@ -6223,35 +6223,23 @@ public class ChatActivityEnterView extends FrameLayout implements
             CharSequence cs = messageEditText.getText();
             if (cs == null) return;
             String s = cs.toString();
-            int eq = s.lastIndexOf('=');
-            if (eq <= 0) return;
-            if (eq != s.length() - 1) return;
-            String expr = s.substring(0, eq).trim();
-            if (expr.length() == 0) return;
+            if (s.isEmpty() || !s.endsWith("=")) return;
+            String expr = s.substring(0, s.length() - 1).trim();
+            if (expr.isEmpty()) return;
             for (int k = 0; k < expr.length(); k++) {
                 char ch = expr.charAt(k);
-                if (!(Character.isDigit(ch) || ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == 'x' || ch == 'X'
-                        || ch == '(' || ch == ')' || ch == '.' || ch == ' ' || ch == '%')) {
-                    return;
-                }
+                if (!(Character.isDigit(ch) || ch=='+'||ch=='-'||ch=='*'||ch=='/'||ch=='x'||ch=='X'||ch=='('||ch==')'||ch=='.'||ch==' '||ch=='%')) return;
             }
-            String norm = expr.replace('x', '*').replace('X', '*');
-            double val = omnigramEvalExpr(norm);
+            double val = omnigramEvalExpr(expr.replace('x','*').replace('X','*'));
             if (Double.isNaN(val) || Double.isInfinite(val)) return;
-            String ans;
-            if (Math.abs(val - Math.rint(val)) < 1e-9) ans = String.valueOf((long) Math.rint(val));
-            else {
-                ans = String.format(java.util.Locale.US, "%.8f", val).replaceAll("0+$", "").replaceAll("\\.$", "");
-            }
+            String ans = (Math.abs(val - Math.rint(val)) < 1e-9) ? String.valueOf((long)Math.rint(val)) : String.format(java.util.Locale.US, "%.8f", val).replaceAll("0+$","").replaceAll("\\.$","");
             String next = expr + "=" + ans;
             if (next.equals(s)) return;
             omnigramCalcBusy = true;
             messageEditText.setText(next);
             messageEditText.setSelection(next.length());
         } catch (Throwable ignore) {
-        } finally {
-            omnigramCalcBusy = false;
-        }
+        } finally { omnigramCalcBusy = false; }
     }
 
     private double omnigramEvalExpr(String expr) {
