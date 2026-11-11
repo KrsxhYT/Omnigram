@@ -28,12 +28,14 @@ jobs:
           set -euo pipefail
           python3 tools/omnigram_all_in_one.py
 
-      - name: Commit sources
+      - name: Commit only Java sources
         run: |
           set -euo pipefail
           git config user.name "omnigram-bot"
           git config user.email "bot@omnigram.local"
-          git add -A
+          # Never stage workflow files (GITHUB_TOKEN cannot update them)
+          git add TMessagesProj/ || true
+          git reset HEAD -- .github 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "No source changes"
           else
