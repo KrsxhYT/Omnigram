@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -19,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
@@ -74,7 +72,6 @@ public class AppIconsSelectorCell extends RecyclerListView implements Notificati
                 LauncherIconController.LauncherIcon icon = availableIcons.get(position);
                 holderView.bind(icon);
                 ThemeBind.selectorBackground(holderView.iconView, Theme.createSimpleSelectorRoundRectDrawable(AndroidUtilities.dp(ICONS_ROUND_RADIUS), Color.TRANSPARENT, Theme.getColor(Theme.key_listSelector), Color.BLACK), null, ThemeBind.of(Theme.key_listSelector));
-                holderView.iconView.setForeground(icon.foreground);
             }
 
             @Override
@@ -268,7 +265,7 @@ getAdapter().notifyDataSetChanged();
         }
 
         private void bind(LauncherIconController.LauncherIcon icon) {
-            iconView.setImageResource(icon.background);
+            iconView.setImageResource(icon.preview);
 
             titleView.setText(LocaleController.getString(icon.title));
             setSelected(LauncherIconController.isEnabled(icon), false);
@@ -276,18 +273,12 @@ getAdapter().notifyDataSetChanged();
     }
 
     public static class AdaptiveIconImageView extends ImageView {
-        private Drawable foreground;
         private Path path = new Path();
         private int outerPadding = AndroidUtilities.dp(5);
         private int backgroundOuterPadding = AndroidUtilities.dp(42);
 
         public AdaptiveIconImageView(Context context) {
             super(context);
-        }
-
-        public void setForeground(int res) {
-            foreground = ContextCompat.getDrawable(getContext(), res);
-            invalidate();
         }
 
         @Override
@@ -316,10 +307,6 @@ getAdapter().notifyDataSetChanged();
             super.draw(canvas);
             canvas.restore();
 
-            if (foreground != null) {
-                foreground.setBounds(-outerPadding, -outerPadding, getWidth() + outerPadding, getHeight() + outerPadding);
-                foreground.draw(canvas);
-            }
         }
 
         private void updatePath() {

@@ -5,70 +5,125 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 
 import org.telegram.messenger.ApplicationLoader;
+import org.telegram.messenger.FileLog;
 import org.telegram.messenger.R;
 
-public class LauncherIconController {
+public final class LauncherIconController {
+    private LauncherIconController() {}
+
+    /** Repairs launcher state left by older or interrupted icon switches. */
     public static void tryFixLauncherIconIfNeeded() {
+        Context context = ApplicationLoader.applicationContext;
+        if (context == null) return;
+
+        LauncherIcon selected = null;
         for (LauncherIcon icon : LauncherIcon.values()) {
             if (isEnabled(icon)) {
-                return;
+                selected = icon;
+                break;
             }
         }
-        setIcon(LauncherIcon.DEFAULT);
+        setIcon(selected == null ? LauncherIcon.DEFAULT : selected);
     }
 
     public static boolean isEnabled(LauncherIcon icon) {
-        Context ctx = ApplicationLoader.applicationContext;
-        int i = ctx.getPackageManager().getComponentEnabledSetting(icon.getComponentName(ctx));
-        return i == PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-                || (i == PackageManager.COMPONENT_ENABLED_STATE_DEFAULT && icon == LauncherIcon.DEFAULT);
-    }
-
-    public static void setIcon(LauncherIcon icon) {
-        Context ctx = ApplicationLoader.applicationContext;
-        PackageManager pm = ctx.getPackageManager();
-        for (LauncherIcon i : LauncherIcon.values()) {
-            pm.setComponentEnabledSetting(
-                    i.getComponentName(ctx),
-                    i == icon ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-                            : PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                    PackageManager.DONT_KILL_APP);
+        Context context = ApplicationLoader.applicationContext;
+        if (context == null || icon == null) return false;
+        try {
+            int state = context.getPackageManager().getComponentEnabledSetting(icon.getComponentName(context));
+            return state == PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                    || (state == PackageManager.COMPONENT_ENABLED_STATE_DEFAULT && icon == LauncherIcon.DEFAULT);
+        } catch (RuntimeException error) {
+            FileLog.e(error);
+            return false;
         }
     }
 
     /**
-     * All icons free. Labels come from strings.xml (Default, Itachi, Discord, Premium, Google, Imposter, Evil).
-     * Resource ids match the original Telegram/Omnigram assets that already exist in the project.
+     * Enable the new launcher alias first, then disable the old aliases.
+     * This prevents a transient state where Android has no launcher entry.
      */
-    public enum LauncherIcon {
-        DEFAULT("DefaultIcon", R.drawable.icon_background_sa, R.mipmap.icon_foreground_sa, R.string.AppIconDefault),
-        ITACHI("VintageIcon", R.drawable.icon_6_background_sa, R.mipmap.icon_6_foreground_sa, R.string.AppIconVintage),
-        DISCORD("AquaIcon", R.drawable.icon_4_background_sa, R.mipmap.icon_foreground_sa, R.string.AppIconAqua),
-        PREMIUM("PremiumIcon", R.drawable.icon_3_background_sa, R.mipmap.icon_3_foreground_sa, R.string.AppIconPremium),
-        GOOGLE("TurboIcon", R.drawable.icon_5_background_sa, R.mipmap.icon_5_foreground_sa, R.string.AppIconTurbo),
-        IMPOSTER("NoxIcon", R.mipmap.icon_2_background_sa, R.mipmap.icon_foreground_sa, R.string.AppIconNox),
-        // 7th slot: reuses Premium assets until custom Evil mipmaps are added; component still EvilIcon
-        EVIL("EvilIcon", R.drawable.icon_3_background_sa, R.mipmap.icon_3_foreground_sa, R.string.AppIconPremium);
+    public static void setIcon(LauncherIcon icon) {
+        Context context = ApplicationLoader.applicationContext;
+        if (context == null || icon == null) return;
 
-        public final String key;
-        public final int background;
-        public final int foreground;
-        public final int title;
-
-        private ComponentName componentName;
-
-        public ComponentName getComponentName(Context ctx) {
-            if (componentName == null) {
-                componentName = new ComponentName(ctx.getPackageName(), "org.telegram.messenger." + key);
-            }
-            return componentName;
+        PackageManager pm = context.getPackageManager();
+        try {
+            pm.setComponentEnabledSetting(
+                    icon.getComponentName(context),
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                    PackageManager.DONT_KILL_APP
+            );
+        } catch (RuntimeException error) {
+            FileLog.e(error);
+            recoverDefault(pm, context);
+            return;
         }
 
-        LauncherIcon(String key, int background, int foreground, int title) {
+        for (LauncherIcon other : LauncherIcon.values()) {
+            if (other == icon) continue;
+            try {
+                pm.setComponentEnabledSetting(
+                        other.getComponentName(context),
+                        PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                        PackageManager.DONT_KILL_APP
+                );
+            } catch (RuntimeException error) {
+                // Never crash Settings or disable the successfully enabled target.
+                FileLog.e(error);
+            }
+        }
+    }
+
+    private static void recoverDefault(PackageManager pm, Context context) {
+        try {
+            pm.setComponentEnabledSetting(
+                    LauncherIcon.DEFAULT.getComponentName(context),
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                    PackageManager.DONT_KILL_APP
+            );
+        } catch (RuntimeException error) {
+            FileLog.e(error);
+        }
+        for (LauncherIcon other : LauncherIcon.values()) {
+            if (other == LauncherIcon.DEFAULT) continue;
+            try {
+                pm.setComponentEnabledSetting(
+                        other.getComponentName(context),
+                        PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                        PackageManager.DONT_KILL_APP
+                );
+            } catch (RuntimeException error) {
+                FileLog.e(error);
+            }
+        }
+    }
+
+    public enum LauncherIcon {
+        DEFAULT("DefaultIcon", R.mipmap.ic_launcher, R.string.AppIconDefault),
+        ITACHI("VintageIcon", R.mipmap.icon_2_launcher, R.string.AppIconVintage),
+        DISCORD("AquaIcon", R.mipmap.icon_3_launcher, R.string.AppIconAqua),
+        PREMIUM("PremiumIcon", R.mipmap.icon_4_launcher, R.string.AppIconPremium),
+        GOOGLE("TurboIcon", R.mipmap.icon_5_launcher, R.string.AppIconTurbo),
+        IMPOSTER("NoxIcon", R.mipmap.icon_6_launcher, R.string.AppIconNox),
+        EVIL("EvilIcon", R.mipmap.icon_3_launcher, R.string.AppIconEvil);
+
+        public final String key;
+        public final int preview;
+        public final int title;
+        private ComponentName componentName;
+
+        LauncherIcon(String key, int preview, int title) {
             this.key = key;
-            this.background = background;
-            this.foreground = foreground;
+            this.preview = preview;
             this.title = title;
+        }
+
+        public ComponentName getComponentName(Context context) {
+            if (componentName == null) {
+                componentName = new ComponentName(context.getPackageName(), "org.telegram.messenger." + key);
+            }
+            return componentName;
         }
     }
 }
