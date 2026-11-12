@@ -112,22 +112,26 @@ public final class LauncherIconController {
     }
 
     public enum LauncherIcon {
-        DEFAULT("DefaultIcon", R.mipmap.ic_launcher, R.string.AppIconDefault),
-        ITACHI("VintageIcon", R.mipmap.icon_2_launcher, R.string.AppIconVintage),
-        DISCORD("AquaIcon", R.mipmap.icon_3_launcher, R.string.AppIconAqua),
-        PREMIUM("PremiumIcon", R.mipmap.icon_4_launcher, R.string.AppIconPremium),
-        GOOGLE("TurboIcon", R.mipmap.icon_5_launcher, R.string.AppIconTurbo),
-        IMPOSTER("NoxIcon", R.mipmap.icon_6_launcher, R.string.AppIconNox),
-        EVIL("EvilIcon", R.mipmap.icon_7_launcher, R.string.AppIconEvil);
+        DEFAULT("DefaultIcon", R.mipmap.ic_launcher, R.drawable.icon_background_sa, R.mipmap.icon_foreground_sa, R.string.AppIconDefault),
+        ITACHI("VintageIcon", R.mipmap.icon_2_launcher, R.drawable.icon_6_background_sa, R.mipmap.icon_6_foreground_sa, R.string.AppIconVintage),
+        DISCORD("AquaIcon", R.mipmap.icon_3_launcher, R.drawable.icon_4_background_sa, R.mipmap.icon_foreground_sa, R.string.AppIconAqua),
+        PREMIUM("PremiumIcon", R.mipmap.icon_4_launcher, R.drawable.icon_3_background_sa, R.mipmap.icon_3_foreground_sa, R.string.AppIconPremium),
+        GOOGLE("TurboIcon", R.mipmap.icon_5_launcher, R.drawable.icon_5_background_sa, R.mipmap.icon_5_foreground_sa, R.string.AppIconTurbo),
+        IMPOSTER("NoxIcon", R.mipmap.icon_6_launcher, R.mipmap.icon_2_background_sa, R.mipmap.icon_foreground_sa, R.string.AppIconNox),
+        EVIL("EvilIcon", R.mipmap.icon_7_launcher, R.drawable.icon_3_background_sa, R.mipmap.icon_3_foreground_sa, R.string.AppIconEvil);
 
         public final String key;
         public final int preview;
+        public final int background;
+        public final int foreground;
         public final int title;
         private ComponentName componentName;
 
-        LauncherIcon(String key, int preview, int title) {
+        LauncherIcon(String key, int preview, int background, int foreground, int title) {
             this.key = key;
             this.preview = preview;
+            this.background = background;
+            this.foreground = foreground;
             this.title = title;
         }
 
