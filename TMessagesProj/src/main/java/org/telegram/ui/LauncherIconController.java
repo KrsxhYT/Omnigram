@@ -37,17 +37,18 @@ public class LauncherIconController {
     }
 
     /**
-     * All 7 icons are free (no Premium lock).
-     * UI names: Default, Itachi, Discord, Premium, Google, Imposter, Evil.
+     * All icons free. Labels come from strings.xml (Default, Itachi, Discord, Premium, Google, Imposter, Evil).
+     * Resource ids match the original Telegram/Omnigram assets that already exist in the project.
      */
     public enum LauncherIcon {
         DEFAULT("DefaultIcon", R.drawable.icon_background_sa, R.mipmap.icon_foreground_sa, R.string.AppIconDefault),
-        ITACHI("VintageIcon", R.drawable.icon_6_background_sa, R.mipmap.icon_6_foreground_sa, R.string.AppIconItachi),
-        DISCORD("AquaIcon", R.drawable.icon_4_background_sa, R.mipmap.icon_foreground_sa, R.string.AppIconDiscord),
+        ITACHI("VintageIcon", R.drawable.icon_6_background_sa, R.mipmap.icon_6_foreground_sa, R.string.AppIconVintage),
+        DISCORD("AquaIcon", R.drawable.icon_4_background_sa, R.mipmap.icon_foreground_sa, R.string.AppIconAqua),
         PREMIUM("PremiumIcon", R.drawable.icon_3_background_sa, R.mipmap.icon_3_foreground_sa, R.string.AppIconPremium),
-        GOOGLE("TurboIcon", R.drawable.icon_5_background_sa, R.mipmap.icon_5_foreground_sa, R.string.AppIconGoogle),
-        IMPOSTER("NoxIcon", R.mipmap.icon_2_background_sa, R.mipmap.icon_foreground_sa, R.string.AppIconImposter),
-        EVIL("EvilIcon", R.drawable.icon_3_background_sa, R.mipmap.icon_3_foreground_sa, R.string.AppIconEvil);
+        GOOGLE("TurboIcon", R.drawable.icon_5_background_sa, R.mipmap.icon_5_foreground_sa, R.string.AppIconTurbo),
+        IMPOSTER("NoxIcon", R.mipmap.icon_2_background_sa, R.mipmap.icon_foreground_sa, R.string.AppIconNox),
+        // 7th slot: reuses Premium assets until custom Evil mipmaps are added; component still EvilIcon
+        EVIL("EvilIcon", R.drawable.icon_3_background_sa, R.mipmap.icon_3_foreground_sa, R.string.AppIconPremium);
 
         public final String key;
         public final int background;
