@@ -37,17 +37,17 @@ public class LauncherIconController {
     }
 
     /**
-     * All icons are free. Display names: Default, Itachi, Discord, Premium, Google, Imposter, Evil.
-     * Component keys keep existing alias names where possible; Evil is new.
+     * All 7 icons are free (no Premium lock).
+     * UI names: Default, Itachi, Discord, Premium, Google, Imposter, Evil.
      */
     public enum LauncherIcon {
-        DEFAULT("DefaultIcon", R.mipmap.icon_background_sa, R.mipmap.icon_foreground_sa, R.string.AppIconDefault),
-        ITACHI("VintageIcon", R.mipmap.icon_6_background_sa, R.mipmap.icon_6_foreground_sa, R.string.AppIconItachi),
-        DISCORD("AquaIcon", R.mipmap.icon_4_background_sa, R.mipmap.icon_4_foreground_sa, R.string.AppIconDiscord),
-        PREMIUM("PremiumIcon", R.mipmap.icon_3_background_sa, R.mipmap.icon_3_foreground_sa, R.string.AppIconPremium),
-        GOOGLE("TurboIcon", R.mipmap.icon_5_background_sa, R.mipmap.icon_5_foreground_sa, R.string.AppIconGoogle),
-        IMPOSTER("NoxIcon", R.mipmap.icon_2_background_sa, R.mipmap.icon_2_foreground_sa, R.string.AppIconImposter),
-        EVIL("EvilIcon", R.mipmap.icon_7_background_sa, R.mipmap.icon_7_foreground_sa, R.string.AppIconEvil);
+        DEFAULT("DefaultIcon", R.drawable.icon_background_sa, R.mipmap.icon_foreground_sa, R.string.AppIconDefault),
+        ITACHI("VintageIcon", R.drawable.icon_6_background_sa, R.mipmap.icon_6_foreground_sa, R.string.AppIconItachi),
+        DISCORD("AquaIcon", R.drawable.icon_4_background_sa, R.mipmap.icon_foreground_sa, R.string.AppIconDiscord),
+        PREMIUM("PremiumIcon", R.drawable.icon_3_background_sa, R.mipmap.icon_3_foreground_sa, R.string.AppIconPremium),
+        GOOGLE("TurboIcon", R.drawable.icon_5_background_sa, R.mipmap.icon_5_foreground_sa, R.string.AppIconGoogle),
+        IMPOSTER("NoxIcon", R.mipmap.icon_2_background_sa, R.mipmap.icon_foreground_sa, R.string.AppIconImposter),
+        EVIL("EvilIcon", R.drawable.icon_3_background_sa, R.mipmap.icon_3_foreground_sa, R.string.AppIconEvil);
 
         public final String key;
         public final int background;
