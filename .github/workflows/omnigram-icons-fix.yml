@@ -1,0 +1,111 @@
+name: Omnigram icons+ToBeginning fix
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/omnigram_icons_and_fixes.py'
+      - 'TMessagesProj/src/main/java/org/telegram/ui/LauncherIconController.java'
+      - '.github/workflows/omnigram-icons-fix.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: omnigram-icons-fix
+  cancel-in-progress: true
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Apply script fixes
+        run: |
+          set -euo pipefail
+          python3 tools/omnigram_icons_and_fixes.py
+
+      - name: Ensure icon_7 resources exist (copy from icon_3 until custom art lands)
+        run: |
+          set -euo pipefail
+          for dens in mdpi hdpi xhdpi xxhdpi xxxhdpi; do
+            dir="TMessagesProj/src/main/res/mipmap-${dens}"
+            mkdir -p "$dir"
+            for kind in launcher launcher_round foreground_sa background_sa; do
+              src=""
+              if [ -f "$dir/icon_3_${kind}.png" ]; then src="$dir/icon_3_${kind}.png"; fi
+              if [ -f "$dir/icon_3_${kind}.webp" ]; then src="$dir/icon_3_${kind}.webp"; fi
+              if [ -n "$src" ] && [ ! -f "$dir/icon_7_${kind}.png" ] && [ ! -f "$dir/icon_7_${kind}.webp" ]; then
+                cp "$src" "$dir/icon_7_${kind}.${src##*.}"
+                echo "copied $src -> icon_7"
+              fi
+            done
+            # also map foreground without _sa suffix variants
+            if [ -f "$dir/icon_3_foreground.png" ] && [ ! -f "$dir/icon_7_foreground.png" ]; then
+              cp "$dir/icon_3_foreground.png" "$dir/icon_7_foreground.png" || true
+            fi
+          done
+          # drawable backgrounds
+          mkdir -p TMessagesProj/src/main/res/drawable
+          if [ -f TMessagesProj/src/main/res/drawable/icon_3_background_sa.xml ]; then
+            cp TMessagesProj/src/main/res/drawable/icon_3_background_sa.xml TMessagesProj/src/main/res/drawable/icon_7_background_sa.xml || true
+          fi
+          if [ -f TMessagesProj/src/main/res/drawable/icon_3_background.xml ]; then
+            cp TMessagesProj/src/main/res/drawable/icon_3_background.xml TMessagesProj/src/main/res/drawable/icon_7_background.xml || true
+          fi
+          # adaptive
+          mkdir -p TMessagesProj/src/main/res/mipmap-anydpi-v26
+          if [ -f TMessagesProj/src/main/res/mipmap-anydpi-v26/icon_3_launcher.xml ]; then
+            sed 's/icon_3/icon_7/g' TMessagesProj/src/main/res/mipmap-anydpi-v26/icon_3_launcher.xml > TMessagesProj/src/main/res/mipmap-anydpi-v26/icon_7_launcher.xml
+            sed 's/icon_3/icon_7/g' TMessagesProj/src/main/res/mipmap-anydpi-v26/icon_3_launcher_round.xml > TMessagesProj/src/main/res/mipmap-anydpi-v26/icon_7_launcher_round.xml || true
+          fi
+
+      - name: Align LauncherIconController to existing resource types
+        run: |
+          set -euo pipefail
+          # Prefer drawable backgrounds + mipmap foregrounds like original Telegram layout
+          python3 - <<'PY'
+from pathlib import Path
+p = Path("TMessagesProj/src/main/java/org/telegram/ui/LauncherIconController.java")
+t = p.read_text(encoding="utf-8")
+# Use drawable for *_background_sa if project uses drawable (safer compile)
+# Keep mipmap only if drawable missing — detect
+root = Path("TMessagesProj/src/main/res")
+has_drawable_bg = any(root.joinpath("drawable").glob("icon_background*")) or any(root.joinpath("drawable").glob("icon_*background*"))
+print("has_drawable_bg", has_drawable_bg)
+if has_drawable_bg:
+    t2 = t.replace("R.mipmap.icon_background_sa", "R.drawable.icon_background_sa")
+    t2 = t2.replace("R.mipmap.icon_6_background_sa", "R.drawable.icon_6_background_sa")
+    t2 = t2.replace("R.mipmap.icon_4_background_sa", "R.drawable.icon_4_background_sa")
+    t2 = t2.replace("R.mipmap.icon_3_background_sa", "R.drawable.icon_3_background_sa")
+    t2 = t2.replace("R.mipmap.icon_5_background_sa", "R.drawable.icon_5_background_sa")
+    t2 = t2.replace("R.mipmap.icon_2_background_sa", "R.drawable.icon_2_background_sa")
+    t2 = t2.replace("R.mipmap.icon_7_background_sa", "R.drawable.icon_7_background_sa")
+    # foregrounds often mipmap without _sa
+    for a,b in [
+        ("R.mipmap.icon_foreground_sa", "R.mipmap.icon_foreground_sa"),
+    ]:
+        pass
+    p.write_text(t2, encoding="utf-8")
+    print("aligned drawable backgrounds")
+else:
+    print("keep mipmap backgrounds")
+PY
+
+      - name: Commit
+        run: |
+          set -euo pipefail
+          git config user.name "omnigram-bot"
+          git config user.email "bot@omnigram.local"
+          git add TMessagesProj/ || true
+          git reset HEAD -- .github 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "No source changes"
+          else
+            git commit -m "Icons: 7 free labels + Evil alias + To Beginning not opening delete"
+            git push origin HEAD:master
+          fi
