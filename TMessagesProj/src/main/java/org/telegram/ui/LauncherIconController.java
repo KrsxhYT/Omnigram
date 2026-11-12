@@ -9,6 +9,9 @@ import org.telegram.messenger.FileLog;
 import org.telegram.messenger.R;
 
 public final class LauncherIconController {
+    private static final String ICON_PREFS = "omnigram_launcher_icon";
+    private static final String SELECTED_ICON_KEY = "selected_icon";
+
     private LauncherIconController() {}
 
     /**
@@ -20,22 +23,38 @@ public final class LauncherIconController {
         Context context = ApplicationLoader.applicationContext;
         if (context == null) return;
 
-        LauncherIcon selected = null;
+        LauncherIcon enabledIcon = null;
         int enabledCount = 0;
         for (LauncherIcon icon : LauncherIcon.values()) {
             if (isEnabled(icon)) {
                 enabledCount++;
-                if (selected == null) {
-                    selected = icon;
+                if (enabledIcon == null) {
+                    enabledIcon = icon;
                 }
             }
         }
 
-        if (enabledCount == 1) {
+        String savedName = context.getSharedPreferences(ICON_PREFS, Context.MODE_PRIVATE)
+                .getString(SELECTED_ICON_KEY, null);
+        LauncherIcon savedIcon = null;
+        if (savedName != null) {
+            try {
+                savedIcon = LauncherIcon.valueOf(savedName);
+            } catch (IllegalArgumentException ignored) {
+                // An obsolete or invalid saved value is repaired below.
+            }
+        }
+
+        if (enabledCount == 1 && (savedIcon == null || savedIcon == enabledIcon)) {
+            if (savedIcon == null && enabledIcon != null) {
+                context.getSharedPreferences(ICON_PREFS, Context.MODE_PRIVATE)
+                        .edit().putString(SELECTED_ICON_KEY, enabledIcon.name()).apply();
+            }
             return;
         }
 
-        setIcon(selected == null ? LauncherIcon.DEFAULT : selected);
+        // Prefer the saved choice when recovering an interrupted icon switch.
+        setIcon(savedIcon != null ? savedIcon : (enabledIcon != null ? enabledIcon : LauncherIcon.DEFAULT));
     }
 
     public static boolean isEnabled(LauncherIcon icon) {
@@ -58,6 +77,11 @@ public final class LauncherIconController {
     public static void setIcon(LauncherIcon icon) {
         Context context = ApplicationLoader.applicationContext;
         if (context == null || icon == null) return;
+
+        // Persist the intended choice before touching PackageManager so startup can
+        // recover the same icon if the process is interrupted during the switch.
+        context.getSharedPreferences(ICON_PREFS, Context.MODE_PRIVATE)
+                .edit().putString(SELECTED_ICON_KEY, icon.name()).apply();
 
         PackageManager pm = context.getPackageManager();
         try {
