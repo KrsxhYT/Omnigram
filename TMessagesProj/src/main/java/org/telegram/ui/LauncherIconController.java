@@ -11,18 +11,30 @@ import org.telegram.messenger.R;
 public final class LauncherIconController {
     private LauncherIconController() {}
 
-    /** Repairs launcher state left by older or interrupted icon switches. */
+    /**
+     * Repairs only invalid launcher states. Avoid rewriting PackageManager
+     * component state on every application startup when one valid icon is
+     * already enabled.
+     */
     public static void tryFixLauncherIconIfNeeded() {
         Context context = ApplicationLoader.applicationContext;
         if (context == null) return;
 
         LauncherIcon selected = null;
+        int enabledCount = 0;
         for (LauncherIcon icon : LauncherIcon.values()) {
             if (isEnabled(icon)) {
-                selected = icon;
-                break;
+                enabledCount++;
+                if (selected == null) {
+                    selected = icon;
+                }
             }
         }
+
+        if (enabledCount == 1) {
+            return;
+        }
+
         setIcon(selected == null ? LauncherIcon.DEFAULT : selected);
     }
 
