@@ -147,8 +147,8 @@
             android:enabled="false"
             android:name="org.telegram.messenger.AquaIcon"
             android:targetActivity="org.telegram.ui.LaunchActivity"
-            android:icon="@mipmap/icon_7_launcher"
-            android:roundIcon="@mipmap/icon_7_launcher_round"
+            android:icon="@mipmap/icon_3_launcher"
+            android:roundIcon="@mipmap/icon_3_launcher_round"
             android:exported="true">
 
             <intent-filter>
