@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -18,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
@@ -265,7 +267,8 @@ getAdapter().notifyDataSetChanged();
         }
 
         private void bind(LauncherIconController.LauncherIcon icon) {
-            iconView.setImageResource(icon.preview);
+            iconView.setImageResource(icon.background);
+            iconView.setForeground(icon.foreground);
 
             titleView.setText(LocaleController.getString(icon.title));
             setSelected(LauncherIconController.isEnabled(icon), false);
@@ -274,6 +277,7 @@ getAdapter().notifyDataSetChanged();
 
     public static class AdaptiveIconImageView extends ImageView {
         private Path path = new Path();
+        private Drawable foreground;
         private int outerPadding = AndroidUtilities.dp(5);
         private int backgroundOuterPadding = AndroidUtilities.dp(42);
 
@@ -295,6 +299,11 @@ getAdapter().notifyDataSetChanged();
             this.outerPadding = outerPadding;
         }
 
+        public void setForeground(int resourceId) {
+            foreground = ContextCompat.getDrawable(getContext(), resourceId);
+            invalidate();
+        }
+
         public void setBackgroundOuterPadding(int backgroundOuterPadding) {
             this.backgroundOuterPadding = backgroundOuterPadding;
         }
@@ -307,6 +316,10 @@ getAdapter().notifyDataSetChanged();
             super.draw(canvas);
             canvas.restore();
 
+            if (foreground != null) {
+                foreground.setBounds(-outerPadding, -outerPadding, getWidth() + outerPadding, getHeight() + outerPadding);
+                foreground.draw(canvas);
+            }
         }
 
         private void updatePath() {
