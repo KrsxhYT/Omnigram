@@ -106,7 +106,7 @@ public final class LauncherIconController {
         PREMIUM("PremiumIcon", R.mipmap.icon_4_launcher, R.string.AppIconPremium),
         GOOGLE("TurboIcon", R.mipmap.icon_5_launcher, R.string.AppIconTurbo),
         IMPOSTER("NoxIcon", R.mipmap.icon_6_launcher, R.string.AppIconNox),
-        EVIL("EvilIcon", R.mipmap.icon_3_launcher, R.string.AppIconEvil);
+        EVIL("EvilIcon", R.mipmap.icon_7_launcher, R.string.AppIconEvil);
 
         public final String key;
         public final int preview;
