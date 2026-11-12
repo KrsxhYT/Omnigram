@@ -1,0 +1,84 @@
+name: Fix icon strings+manifest
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/omnigram-fix-icons-strings.yml'
+      - 'TMessagesProj/src/main/java/org/telegram/ui/LauncherIconController.java'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Patch strings + manifest + controller Evil string
+        run: |
+          set -euo pipefail
+          STR=TMessagesProj/src/main/res/values/strings.xml
+          sed -i 's/<string name="AppIconVintage">Vintage<\/string>/<string name="AppIconVintage">Itachi<\/string>/' "$STR"
+          sed -i 's/<string name="AppIconAqua">Aqua<\/string>/<string name="AppIconAqua">Discord<\/string>/' "$STR"
+          sed -i 's/<string name="AppIconTurbo">Turbo<\/string>/<string name="AppIconTurbo">Google<\/string>/' "$STR"
+          sed -i 's/<string name="AppIconNox">Nox<\/string>/<string name="AppIconNox">Imposter<\/string>/' "$STR"
+          if ! grep -q 'name="AppIconEvil"' "$STR"; then
+            sed -i 's/<string name="AppIconNox">Imposter<\/string>/<string name="AppIconNox">Imposter<\/string>\n    <string name="AppIconEvil">Evil<\/string>/' "$STR"
+          fi
+          # controller: EVIL title -> AppIconEvil
+          sed -i 's/EVIL("EvilIcon", R.drawable.icon_3_background_sa, R.mipmap.icon_3_foreground_sa, R.string.AppIconPremium)/EVIL("EvilIcon", R.drawable.icon_3_background_sa, R.mipmap.icon_3_foreground_sa, R.string.AppIconEvil)/' \
+            TMessagesProj/src/main/java/org/telegram/ui/LauncherIconController.java || true
+          # manifest EvilIcon alias
+          MF=TMessagesProj/src/main/AndroidManifest.xml
+          if ! grep -q 'EvilIcon' "$MF"; then
+            python3 - <<'PY'
+from pathlib import Path
+p=Path("TMessagesProj/src/main/AndroidManifest.xml")
+t=p.read_text(encoding="utf-8")
+block='''
+        <activity-alias
+            android:enabled="false"
+            android:name="org.telegram.messenger.EvilIcon"
+            android:targetActivity="org.telegram.ui.LaunchActivity"
+            android:icon="@mipmap/icon_3_launcher"
+            android:roundIcon="@mipmap/icon_3_launcher_round"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
+            </intent-filter>
+            <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts" />
+        </activity-alias>
+'''
+idx=t.find("org.telegram.messenger.NoxIcon")
+if idx<0:
+    raise SystemExit('NoxIcon missing')
+end=t.find("</activity-alias>", idx)+len("</activity-alias>")
+t=t[:end]+"\n"+block+t[end:]
+p.write_text(t,encoding="utf-8")
+print("manifest ok")
+PY
+          fi
+          grep AppIconVintage "$STR"
+          grep AppIconEvil "$STR"
+          grep EvilIcon "$MF" | head -3
+
+      - name: Commit
+        run: |
+          set -euo pipefail
+          git config user.name "omnigram-bot"
+          git config user.email "bot@omnigram.local"
+          git add TMessagesProj/
+          git reset HEAD -- .github 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "Fix: AppIcon labels Itachi/Discord/Google/Imposter/Evil + EvilIcon alias"
+            git push origin HEAD:master
+          fi
