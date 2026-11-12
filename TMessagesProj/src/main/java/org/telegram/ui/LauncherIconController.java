@@ -113,6 +113,7 @@ public final class LauncherIconController {
 
     private static void recoverDefault(PackageManager pm, Context context) {
         try {
+            // Never disable another launcher entry unless the fallback is confirmed enabled.
             pm.setComponentEnabledSetting(
                     LauncherIcon.DEFAULT.getComponentName(context),
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
@@ -120,7 +121,12 @@ public final class LauncherIconController {
             );
         } catch (RuntimeException error) {
             FileLog.e(error);
+            return;
         }
+
+        context.getSharedPreferences(ICON_PREFS, Context.MODE_PRIVATE)
+                .edit().putString(SELECTED_ICON_KEY, LauncherIcon.DEFAULT.name()).apply();
+
         for (LauncherIcon other : LauncherIcon.values()) {
             if (other == LauncherIcon.DEFAULT) continue;
             try {
