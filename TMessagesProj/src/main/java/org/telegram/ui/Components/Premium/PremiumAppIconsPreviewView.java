@@ -58,8 +58,8 @@ public class PremiumAppIconsPreviewView extends FrameLayout implements PagerHead
         iconImageView.setLayoutParams(LayoutHelper.createFrame(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER, 0, 52, 0, 0));
         iconImageView.setForeground(icon.foreground);
         iconImageView.setBackgroundResource(icon.background);
-        iconImageView.setPadding(AndroidUtilities.dp(8));
-        iconImageView.setBackgroundOuterPadding(AndroidUtilities.dp(32));
+        iconImageView.setPadding(0);
+        iconImageView.setBackgroundOuterPadding(0);
         addView(iconImageView);
         return iconImageView;
     }

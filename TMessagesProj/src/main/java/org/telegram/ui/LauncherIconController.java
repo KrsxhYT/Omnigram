@@ -142,13 +142,13 @@ public final class LauncherIconController {
     }
 
     public enum LauncherIcon {
-        DEFAULT("DefaultIcon", R.mipmap.ic_launcher, R.mipmap.omni_bg_1, R.drawable.omni_icon_clear, R.string.AppIconDefault),
-        ITACHI("VintageIcon", R.mipmap.icon_2_launcher, R.mipmap.omni_bg_2, R.drawable.omni_icon_clear, R.string.AppIconVintage),
-        DISCORD("AquaIcon", R.mipmap.icon_3_launcher, R.mipmap.omni_bg_3, R.drawable.omni_icon_clear, R.string.AppIconAqua),
-        GOOGLE("TurboIcon", R.mipmap.icon_5_launcher, R.mipmap.omni_bg_5, R.drawable.omni_icon_clear, R.string.AppIconTurbo),
-        IMPOSTER("NoxIcon", R.mipmap.icon_6_launcher, R.mipmap.omni_bg_6, R.drawable.omni_icon_clear, R.string.AppIconNox),
-        EVIL("EvilIcon", R.mipmap.icon_7_launcher, R.mipmap.omni_bg_7, R.drawable.omni_icon_clear, R.string.AppIconEvil),
-        PREMIUM("PremiumIcon", R.mipmap.icon_4_launcher, R.mipmap.omni_bg_4, R.drawable.omni_icon_clear, R.string.AppIconPremium);
+        DEFAULT("DefaultIcon", R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.drawable.omni_icon_clear, R.string.AppIconDefault),
+        ITACHI("VintageIcon", R.mipmap.icon_2_launcher, R.mipmap.icon_2_launcher, R.drawable.omni_icon_clear, R.string.AppIconVintage),
+        DISCORD("AquaIcon", R.mipmap.icon_3_launcher, R.mipmap.icon_3_launcher, R.drawable.omni_icon_clear, R.string.AppIconAqua),
+        GOOGLE("TurboIcon", R.mipmap.icon_5_launcher, R.mipmap.icon_5_launcher, R.drawable.omni_icon_clear, R.string.AppIconTurbo),
+        IMPOSTER("NoxIcon", R.mipmap.icon_6_launcher, R.mipmap.icon_6_launcher, R.drawable.omni_icon_clear, R.string.AppIconNox),
+        EVIL("EvilIcon", R.mipmap.icon_7_launcher, R.mipmap.icon_7_launcher, R.drawable.omni_icon_clear, R.string.AppIconEvil),
+        PREMIUM("PremiumIcon", R.mipmap.icon_4_launcher, R.mipmap.icon_4_launcher, R.drawable.omni_icon_clear, R.string.AppIconPremium);
 
         public final String key;
         public final int preview;
@@ -163,6 +163,19 @@ public final class LauncherIconController {
             this.background = background;
             this.foreground = foreground;
             this.title = title;
+        }
+
+        /** Fixed Omnigram names, so the cloud language pack can never override them. */
+        public String getDisplayName() {
+            switch (this) {
+                case ITACHI: return "OmniTgam";
+                case DISCORD: return "Discord";
+                case GOOGLE: return "Google";
+                case IMPOSTER: return "Imposter";
+                case EVIL: return "Evil";
+                case PREMIUM: return "Premium";
+                default: return "Default";
+            }
         }
 
         public ComponentName getComponentName(Context context) {

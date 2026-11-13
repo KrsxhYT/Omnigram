@@ -201,8 +201,9 @@ getAdapter().notifyDataSetChanged();
 
             setWillNotDraw(false);
             iconView = new AdaptiveIconImageView(context);
-            iconView.setPadding(AndroidUtilities.dp(8), AndroidUtilities.dp(8), AndroidUtilities.dp(8), AndroidUtilities.dp(8));
-            addView(iconView, LayoutHelper.createLinear(58, 58, Gravity.CENTER_HORIZONTAL));
+            iconView.setPadding(0, 0, 0, 0);
+            iconView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            addView(iconView, LayoutHelper.createLinear(60, 60, Gravity.CENTER_HORIZONTAL, 0, 4, 0, 0));
 
             titleView = new TextView(context);
             titleView.setSingleLine();
@@ -218,13 +219,14 @@ getAdapter().notifyDataSetChanged();
 
         @Override
         public void draw(Canvas canvas) {
-            float stroke = outlinePaint.getStrokeWidth();
-            AndroidUtilities.rectTmp.set(iconView.getLeft() + stroke, iconView.getTop() + stroke, iconView.getRight() - stroke, iconView.getBottom() - stroke);
-            canvas.drawRoundRect(AndroidUtilities.rectTmp, AndroidUtilities.dp(ICONS_ROUND_RADIUS), AndroidUtilities.dp(ICONS_ROUND_RADIUS), fillPaint);
-
             super.draw(canvas);
 
-            canvas.drawRoundRect(AndroidUtilities.rectTmp, AndroidUtilities.dp(ICONS_ROUND_RADIUS), AndroidUtilities.dp(ICONS_ROUND_RADIUS), outlinePaint);
+            // Selection ring is drawn around the icon, which keeps its own rounded shape.
+            if (progress > 0f) {
+                float out = AndroidUtilities.dp(3.5f);
+                AndroidUtilities.rectTmp.set(iconView.getLeft() - out, iconView.getTop() - out, iconView.getRight() + out, iconView.getBottom() + out);
+                canvas.drawRoundRect(AndroidUtilities.rectTmp, AndroidUtilities.dp(ICONS_ROUND_RADIUS + 4), AndroidUtilities.dp(ICONS_ROUND_RADIUS + 4), outlinePaint);
+            }
         }
 
         private boolean progressApplied;
@@ -245,8 +247,8 @@ getAdapter().notifyDataSetChanged();
             progressApplied = true;
 
             titleView.setTextColor(ColorUtils.blendARGB(Theme.getColor(Theme.key_windowBackgroundWhiteBlackText), Theme.getColor(Theme.key_windowBackgroundWhiteValueText), progress));
-            outlinePaint.setColor(ColorUtils.blendARGB(ColorUtils.setAlphaComponent(Theme.getColor(Theme.key_switchTrack), 0x3F), Theme.getColor(Theme.key_windowBackgroundWhiteValueText), progress));
-            outlinePaint.setStrokeWidth(Math.max(2, AndroidUtilities.dp(AndroidUtilities.lerp(0.5f, 2f, progress))));
+            outlinePaint.setColor(ColorUtils.setAlphaComponent(Theme.getColor(Theme.key_windowBackgroundWhiteValueText), (int) (255 * progress)));
+            outlinePaint.setStrokeWidth(Math.max(2, AndroidUtilities.dp(2f)));
             invalidate();
         }
 
@@ -270,7 +272,7 @@ getAdapter().notifyDataSetChanged();
             iconView.setImageResource(icon.background);
             iconView.setForeground(icon.foreground);
 
-            titleView.setText(LocaleController.getString(icon.title));
+            titleView.setText(icon.getDisplayName());
             setSelected(LauncherIconController.isEnabled(icon), false);
         }
     }
@@ -278,8 +280,8 @@ getAdapter().notifyDataSetChanged();
     public static class AdaptiveIconImageView extends ImageView {
         private Path path = new Path();
         private Drawable foreground;
-        private int outerPadding = AndroidUtilities.dp(5);
-        private int backgroundOuterPadding = AndroidUtilities.dp(42);
+        private int outerPadding = 0;
+        private int backgroundOuterPadding = 0;
 
         public AdaptiveIconImageView(Context context) {
             super(context);
@@ -324,7 +326,9 @@ getAdapter().notifyDataSetChanged();
 
         private void updatePath() {
             path.rewind();
-            path.addCircle(getWidth() / 2f, getHeight() / 2f, Math.min(getWidth() - getPaddingLeft() - getPaddingRight(), getHeight() - getPaddingTop() - getPaddingBottom()) / 2f, Path.Direction.CW);
+            float l = getPaddingLeft(), t = getPaddingTop(), r = getWidth() - getPaddingRight(), btm = getHeight() - getPaddingBottom();
+            float radius = Math.min(r - l, btm - t) * 0.24f;
+            path.addRoundRect(l, t, r, btm, radius, radius, Path.Direction.CW);
         }
     }
 }

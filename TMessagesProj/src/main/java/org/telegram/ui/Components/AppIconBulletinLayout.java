@@ -36,9 +36,9 @@ public class AppIconBulletinLayout extends Bulletin.ButtonLayout {
         addView(textView, LayoutHelper.createFrameRelatively(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.START | Gravity.CENTER_VERTICAL, 56, 0, 16, 0));
 
         imageView.setImageDrawable(ContextCompat.getDrawable(context, icon.background));
-        imageView.setOuterPadding(AndroidUtilities.dp(8));
-        imageView.setBackgroundOuterPadding(AndroidUtilities.dp(24));
+        imageView.setOuterPadding(0);
+        imageView.setBackgroundOuterPadding(0);
         imageView.setForeground(icon.foreground);
-        textView.setText(AndroidUtilities.replaceTags(LocaleController.formatString(R.string.AppIconChangedTo, LocaleController.getString(icon.title))));
+        textView.setText(AndroidUtilities.replaceTags(LocaleController.formatString(R.string.AppIconChangedTo, icon.getDisplayName())));
     }
 }
