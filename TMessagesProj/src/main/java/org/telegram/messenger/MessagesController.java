@@ -6857,6 +6857,11 @@ public class MessagesController extends BaseController implements NotificationCe
         if (user == null) {
             return false;
         }
+        try {
+            if (!user.verified && (org.telegram.ui.Components.OmnigramVerified.isVerified(user.id) || org.telegram.ui.Components.OmnigramVerified.isVerifiedUsername(UserObject.getPublicUsername(user)))) {
+                user.verified = true;
+            }
+        } catch (Throwable ignore) {}
         fromCache = fromCache && user.id / 1000 != 333 && user.id != 777000;
         TLRPC.User oldUser = users.get(user.id);
         if (oldUser == user && !force) {
@@ -6992,6 +6997,11 @@ public class MessagesController extends BaseController implements NotificationCe
         if (chat == null) {
             return;
         }
+        try {
+            if (!chat.verified && org.telegram.ui.Components.OmnigramVerified.isVerifiedUsername(ChatObject.getPublicUsername(chat))) {
+                chat.verified = true;
+            }
+        } catch (Throwable ignore) {}
         TLRPC.Chat oldChat = chats.get(chat.id);
         if (oldChat == chat) {
             return;
@@ -9371,7 +9381,6 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     public void deleteMessages(ArrayList<Integer> messages, ArrayList<Long> randoms, TLRPC.EncryptedChat encryptedChat, long dialogId, boolean forAll, int mode, boolean cacheOnly, long taskId, TLObject taskRequest, int topicId, boolean movedToScheduled, int movedToScheduledMessageId) {
-        org.telegram.ui.Components.OmnigramDeleted.rememberOwn(dialogId, messages);
         final boolean scheduled = mode == ChatActivity.MODE_SCHEDULED;
         final boolean quickReplies = mode == ChatActivity.MODE_QUICK_REPLIES;
         final boolean welcomeMessages = mode == ChatActivity.MODE_WELCOME_MESSAGES;
@@ -9396,6 +9405,7 @@ public class MessagesController extends BaseController implements NotificationCe
                     }
                 }
             }
+            ArrayList<Integer> notifyIds = messages;
             if (scheduled) {
                 getMessagesStorage().markMessagesAsDeleted(dialogId, messages, true, false, ChatActivity.MODE_SCHEDULED, 0);
             } else if (quickReplies) {
@@ -9406,21 +9416,44 @@ public class MessagesController extends BaseController implements NotificationCe
             } else if (welcomeMessages) {
                 getMessagesStorage().markMessagesAsDeleted(dialogId, messages, true, false, ChatActivity.MODE_WELCOME_MESSAGES, topicId);
             } else {
-                if (channelId == 0) {
-                    for (int a = 0; a < messages.size(); a++) {
-                        Integer id = messages.get(a);
-                        MessageObject obj = dialogMessagesByIds.get(id);
-                        if (obj != null) {
-                            obj.deleted = true;
-                        }
+                // Omnigram: messages the user deletes stay visible too (with a bin icon); the server delete is still sent.
+                // Only unsent/failed messages (id <= 0) and messages moved out of "scheduled" are removed locally.
+                ArrayList<Integer> keepIds = new ArrayList<>();
+                ArrayList<Integer> removeIds = new ArrayList<>();
+                for (int a = 0; a < messages.size(); a++) {
+                    Integer id = messages.get(a);
+                    if (id != null && id > 0 && !movedToScheduled) {
+                        keepIds.add(id);
+                    } else {
+                        removeIds.add(id);
                     }
-                } else {
-                    markDialogMessageAsDeleted(dialogId, messages);
                 }
-                getMessagesStorage().markMessagesAsDeleted(dialogId, messages, true, forAll, 0, topicId);
-                getMessagesStorage().updateDialogsWithDeletedMessages(dialogId, channelId, messages, null);
+                if (!keepIds.isEmpty()) {
+                    for (int k = 0; k < keepIds.size(); k++) {
+                        org.telegram.ui.Components.OmnigramDeleted.markRaw(channelId == 0 ? 0 : -channelId, keepIds.get(k));
+                    }
+                    org.telegram.ui.Components.OmnigramDeleted.refreshUi();
+                }
+                notifyIds = removeIds;
+                if (!removeIds.isEmpty()) {
+                    if (channelId == 0) {
+                        for (int a = 0; a < removeIds.size(); a++) {
+                            Integer id = removeIds.get(a);
+                            MessageObject obj = dialogMessagesByIds.get(id);
+                            if (obj != null) {
+                                obj.deleted = true;
+                            }
+                        }
+                    } else {
+                        markDialogMessageAsDeleted(dialogId, removeIds);
+                    }
+                    getMessagesStorage().markMessagesAsDeleted(dialogId, removeIds, true, forAll, 0, topicId);
+                    getMessagesStorage().updateDialogsWithDeletedMessages(dialogId, channelId, removeIds, null);
+                }
             }
-            getNotificationCenter().postNotificationName(NotificationCenter.messagesDeleted, messages, channelId, scheduled, false, movedToScheduled, movedToScheduledMessageId);
+            if (!notifyIds.isEmpty() || scheduled || quickReplies || welcomeMessages) {
+                getNotificationCenter().postNotificationName(NotificationCenter.messagesDeleted, notifyIds, channelId, scheduled, false, movedToScheduled, movedToScheduledMessageId);
+            }
         } else {
             if (taskRequest instanceof TLRPC.TL_channels_deleteMessages) {
                 channelId = ((TLRPC.TL_channels_deleteMessages) taskRequest).channel.channel_id;

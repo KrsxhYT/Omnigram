@@ -72,10 +72,22 @@ public final class OmnigramDeleted {
             if (own) {
                 toDelete.add(id);
             } else {
-                mark(storageKey, id);
+                markRaw(storageKey, id);
             }
         }
+        refreshUi();
         return toDelete;
+    }
+
+    /** Mark with an exact storage key: 0 for account-wide ids, or -channelId for channel messages. */
+    public static void markRaw(long storageKey, int msgId) {
+        if (msgId == 0) return;
+        String k = key(storageKey, msgId);
+        MEM.add(k);
+        try {
+            SharedPreferences sp = p();
+            if (sp != null) sp.edit().putString(k, "1").apply();
+        } catch (Throwable ignore) {}
     }
 
     public static void mark(long dialogId, int msgId) {
@@ -125,6 +137,14 @@ public final class OmnigramDeleted {
 
     public static void markManyChannel(long channelId, java.util.ArrayList<Integer> ids) {
         markMany(-channelId, ids);
+    }
+
+    /** Repaint the open chat so a newly marked message dims immediately. */
+    public static void refreshUi() {
+        try {
+            org.telegram.messenger.AndroidUtilities.runOnUIThread(() ->
+                org.telegram.messenger.NotificationCenter.getGlobalInstance().postNotificationName(org.telegram.messenger.NotificationCenter.emojiLoaded));
+        } catch (Throwable ignore) {}
     }
 
     /** Load all deleted keys for a dialog into memory (call when opening chat). */

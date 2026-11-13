@@ -6117,7 +6117,7 @@ public class ChatActivityEnterView extends FrameLayout implements
         });
         messageEditText.addTextChangedListener(new EditTextSuggestionsFix());
         messageEditText.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int a, int b, int c) {}
+            @Override public void beforeTextChanged(CharSequence s, int a, int b, int c) { omnigramCalcPrevLen = s != null ? s.length() : 0; }
             @Override public void onTextChanged(CharSequence s, int a, int b, int c) {}
             @Override public void afterTextChanged(android.text.Editable s) { omnigramMaybeEvalMath(); }
         });
@@ -6216,6 +6216,7 @@ public class ChatActivityEnterView extends FrameLayout implements
 
 
     private boolean omnigramCalcBusy;
+    private int omnigramCalcPrevLen;
 
     private void omnigramMaybeEvalMath() {
         if (omnigramCalcBusy || messageEditText == null) return;
@@ -6223,6 +6224,9 @@ public class ChatActivityEnterView extends FrameLayout implements
             CharSequence cs = messageEditText.getText();
             if (cs == null) return;
             String s = cs.toString();
+            // Only solve when the user just TYPED "=". While deleting (backspace) never re-add the answer,
+            // otherwise the answer comes back every time and the expression has to be erased first.
+            if (s.length() <= omnigramCalcPrevLen) return;
             if (s.isEmpty() || !s.endsWith("=")) return;
             String expr = s.substring(0, s.length() - 1).trim();
             if (expr.isEmpty()) return;

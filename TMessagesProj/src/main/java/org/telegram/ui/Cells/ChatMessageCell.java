@@ -15671,7 +15671,12 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                 currentTimeString = TextUtils.concat(formatString(R.string.MessageScheduledRepeatSeconds, period), ", ", currentTimeString);
             }
         }
-        timeTextWidth = timeWidth = (int) Math.ceil(Theme.chat_timePaint.measureText(currentTimeString, 0, currentTimeString == null ? 0 : currentTimeString.length()));
+        currentTimeString = org.telegram.ui.Components.OmnigramIconSpan.apply(getContext(), currentTimeString);
+        if (currentTimeString instanceof android.text.Spanned && ((android.text.Spanned) currentTimeString).getSpans(0, currentTimeString.length(), org.telegram.ui.Components.OmnigramIconSpan.class).length > 0) {
+            timeTextWidth = timeWidth = (int) Math.ceil(Layout.getDesiredWidth(currentTimeString, 0, currentTimeString.length(), Theme.chat_timePaint));
+        } else {
+            timeTextWidth = timeWidth = (int) Math.ceil(Theme.chat_timePaint.measureText(currentTimeString, 0, currentTimeString == null ? 0 : currentTimeString.length()));
+        }
         if (currentMessageObject.scheduled && currentMessageObject.messageOwner.date == 0x7FFFFFFE || currentMessageObject.notime) {
             timeWidth -= dp(8);
         }
