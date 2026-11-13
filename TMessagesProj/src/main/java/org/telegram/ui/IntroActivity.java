@@ -21,6 +21,9 @@ import android.content.pm.ActivityInfo;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Path;
+import android.graphics.Rect;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -156,9 +159,7 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
     public View createView(Context context) {
         logoDrawable = context.getResources().getDrawable(R.drawable.telegram_logo).mutate();
         logoDrawable.setBounds(0, dp(8.666f), dp(115), dp(35));
-        SpannableStringBuilder ssb = new SpannableStringBuilder(LocaleController.getString(R.string.Page1Title));
-        ssb.setSpan(new ImageSpan(logoDrawable), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        titles[0] = ssb;
+        titles[0] = "Omnigram";
 
 
         actionBar.setAddToContainer(false);
@@ -792,14 +793,27 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
             loadTexture(R.drawable.intro_powerful_star, 18);
             loadTexture(R.drawable.intro_private_door, 19);
             loadTexture(R.drawable.intro_private_screw, 20);
-            loadTexture(R.drawable.intro_tg_plane, 21);
+            // Telegram paper plane is hidden: the Omnigram default logo replaces the whole badge.
             loadTexture(v -> {
-                Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                paint.setColor(ThemeColors.TELEGRAM_COLOR); // It's logo color, it should not be colored by the theme
+                Bitmap plane = BitmapFactory.decodeResource(getParentActivity().getResources(), R.drawable.intro_tg_plane);
+                Bitmap clear = Bitmap.createBitmap(Math.max(1, plane.getWidth()), Math.max(1, plane.getHeight()), Bitmap.Config.ARGB_8888);
+                plane.recycle();
+                return clear;
+            }, 21);
+            loadTexture(v -> {
                 int size = dp(ICON_HEIGHT_DP);
                 Bitmap bm = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
                 Canvas c = new Canvas(bm);
-                c.drawCircle(size / 2f, size / 2f, size / 2f, paint);
+                Bitmap logo = BitmapFactory.decodeResource(getParentActivity().getResources(), R.mipmap.omni_bg_1);
+                if (logo != null) {
+                    int crop = (int) (logo.getWidth() * 0.18f);
+                    Rect src = new Rect(crop, crop, logo.getWidth() - crop, logo.getHeight() - crop);
+                    Path clip = new Path();
+                    clip.addCircle(size / 2f, size / 2f, size / 2f, Path.Direction.CW);
+                    c.clipPath(clip);
+                    c.drawBitmap(logo, src, new Rect(0, 0, size, size), new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
+                    logo.recycle();
+                }
                 return bm;
             }, 22);
             loadTexture(telegramMaskProvider, 23);

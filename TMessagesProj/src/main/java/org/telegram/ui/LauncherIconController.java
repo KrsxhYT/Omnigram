@@ -142,13 +142,13 @@ public final class LauncherIconController {
     }
 
     public enum LauncherIcon {
-        DEFAULT("DefaultIcon", R.mipmap.ic_launcher, R.drawable.icon_background_sa, R.mipmap.icon_foreground_sa, R.string.AppIconDefault),
-        ITACHI("VintageIcon", R.mipmap.icon_2_launcher, R.drawable.icon_6_background_sa, R.mipmap.icon_6_foreground_sa, R.string.AppIconVintage),
-        DISCORD("AquaIcon", R.mipmap.icon_3_launcher, R.drawable.icon_4_background_sa, R.mipmap.icon_foreground_sa, R.string.AppIconAqua),
-        PREMIUM("PremiumIcon", R.mipmap.icon_4_launcher, R.drawable.icon_3_background_sa, R.mipmap.icon_3_foreground_sa, R.string.AppIconPremium),
-        GOOGLE("TurboIcon", R.mipmap.icon_5_launcher, R.drawable.icon_5_background_sa, R.mipmap.icon_5_foreground_sa, R.string.AppIconTurbo),
-        IMPOSTER("NoxIcon", R.mipmap.icon_6_launcher, R.mipmap.icon_2_background_sa, R.mipmap.icon_foreground_sa, R.string.AppIconNox),
-        EVIL("EvilIcon", R.mipmap.icon_7_launcher, R.drawable.icon_3_background_sa, R.mipmap.icon_3_foreground_sa, R.string.AppIconEvil);
+        DEFAULT("DefaultIcon", R.mipmap.ic_launcher, R.mipmap.omni_bg_1, R.drawable.omni_icon_clear, R.string.AppIconDefault),
+        ITACHI("VintageIcon", R.mipmap.icon_2_launcher, R.mipmap.omni_bg_2, R.drawable.omni_icon_clear, R.string.AppIconVintage),
+        DISCORD("AquaIcon", R.mipmap.icon_3_launcher, R.mipmap.omni_bg_3, R.drawable.omni_icon_clear, R.string.AppIconAqua),
+        GOOGLE("TurboIcon", R.mipmap.icon_5_launcher, R.mipmap.omni_bg_5, R.drawable.omni_icon_clear, R.string.AppIconTurbo),
+        IMPOSTER("NoxIcon", R.mipmap.icon_6_launcher, R.mipmap.omni_bg_6, R.drawable.omni_icon_clear, R.string.AppIconNox),
+        EVIL("EvilIcon", R.mipmap.icon_7_launcher, R.mipmap.omni_bg_7, R.drawable.omni_icon_clear, R.string.AppIconEvil),
+        PREMIUM("PremiumIcon", R.mipmap.icon_4_launcher, R.mipmap.omni_bg_4, R.drawable.omni_icon_clear, R.string.AppIconPremium);
 
         public final String key;
         public final int preview;
