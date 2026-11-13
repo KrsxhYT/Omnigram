@@ -9371,6 +9371,7 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     public void deleteMessages(ArrayList<Integer> messages, ArrayList<Long> randoms, TLRPC.EncryptedChat encryptedChat, long dialogId, boolean forAll, int mode, boolean cacheOnly, long taskId, TLObject taskRequest, int topicId, boolean movedToScheduled, int movedToScheduledMessageId) {
+        org.telegram.ui.Components.OmnigramDeleted.rememberOwn(dialogId, messages);
         final boolean scheduled = mode == ChatActivity.MODE_SCHEDULED;
         final boolean quickReplies = mode == ChatActivity.MODE_QUICK_REPLIES;
         final boolean welcomeMessages = mode == ChatActivity.MODE_WELCOME_MESSAGES;
@@ -17659,6 +17660,15 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     protected void deleteMessagesByPush(long dialogId, ArrayList<Integer> ids, long channelId) {
+        ids = org.telegram.ui.Components.OmnigramDeleted.keepIncoming(channelId == 0 ? 0 : -channelId, ids);
+        if (ids.isEmpty()) {
+            return;
+        }
+        final ArrayList<Integer> idsFinal = ids;
+        deleteMessagesByPushInternal(dialogId, idsFinal, channelId);
+    }
+
+    private void deleteMessagesByPushInternal(long dialogId, ArrayList<Integer> ids, long channelId) {
         getMessagesStorage().getStorageQueue().postRunnable(() -> {
             AndroidUtilities.runOnUIThread(() -> {
                 getNotificationCenter().postNotificationName(NotificationCenter.messagesDeleted, ids, channelId, false);
@@ -21349,7 +21359,11 @@ public class MessagesController extends BaseController implements NotificationCe
         if (deletedMessages != null) {
             for (int a = 0, size = deletedMessages.size(); a < size; a++) {
                 long key = deletedMessages.keyAt(a);
-                ArrayList<Integer> arrayList = deletedMessages.valueAt(a);
+                // Keep messages that other people deleted (shown with a bin icon); only the user's own deletes are removed.
+                ArrayList<Integer> arrayList = org.telegram.ui.Components.OmnigramDeleted.keepIncoming(key, deletedMessages.valueAt(a));
+                if (arrayList.isEmpty()) {
+                    continue;
+                }
                 getMessagesStorage().getStorageQueue().postRunnable(() -> {
                     ArrayList<Long> dialogIds = getMessagesStorage().markMessagesAsDeleted(key, arrayList, false, true, 0, 0);
                     getMessagesStorage().updateDialogsWithDeletedMessages(key, -key, arrayList, dialogIds);

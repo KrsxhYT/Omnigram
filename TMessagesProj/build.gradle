@@ -147,6 +147,12 @@ android {
 
         multiDexEnabled true
 
+        // Telegram API credentials are baked in at BUILD time (System.getenv() does not exist on the phone).
+        def tgApiId = (System.getenv("TELEGRAM_API_ID") ?: "").trim()
+        def tgApiHash = (System.getenv("TELEGRAM_API_HASH") ?: "").trim()
+        buildConfigField "int", "TG_API_ID", (tgApiId.matches("[0-9]+") ? tgApiId : "0")
+        buildConfigField "String", "TG_API_HASH", '"' + tgApiHash.replaceAll("[^0-9A-Za-z]", "") + '"'
+
         externalNativeBuild {
             cmake {
                 version '3.22.1'

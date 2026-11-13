@@ -26,9 +26,9 @@ public class BuildVars {
     public static boolean NO_SCOPED_STORAGE = Build.VERSION.SDK_INT <= 29;
     public static String BUILD_VERSION_STRING = BuildConfig.BUILD_VERSION_STRING;
 
-    public static int APP_ID = Integer.parseInt(System.getenv("TELEGRAM_API_ID"));
+    public static int APP_ID = BuildConfig.TG_API_ID;
 
-    public static String APP_HASH = System.getenv("TELEGRAM_API_HASH");
+    public static String APP_HASH = BuildConfig.TG_API_HASH;
 
     // SafetyNet key for Google Identity SDK, set it to empty to disable
     public static String SAFETYNET_KEY = "AIzaSyDqt8P-7F7CPCseMkOiVRgb1LY8RN1bvH8";

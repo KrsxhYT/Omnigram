@@ -34331,17 +34331,6 @@ public class ChatActivity extends BaseFragment implements
                 break;
             }
             case OPTION_DELETE:
-                try {
-                    if (selectedObject != null) {
-                        org.telegram.ui.Components.OmnigramDeleted.markAndSave(selectedObject);
-                        if (selectedObjectGroup != null && selectedObjectGroup.messages != null) {
-                            for (int gi = 0; gi < selectedObjectGroup.messages.size(); gi++) {
-                                MessageObject mo = selectedObjectGroup.messages.get(gi);
-                                if (mo != null) org.telegram.ui.Components.OmnigramDeleted.mark(dialog_id, mo.getId());
-                            }
-                        }
-                    }
-                } catch (Throwable ignore) {}
  {
                 if (getParentActivity() == null) {
                     selectedObject = null;
