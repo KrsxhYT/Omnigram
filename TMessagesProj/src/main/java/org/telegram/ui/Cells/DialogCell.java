@@ -3845,6 +3845,15 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
     @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(Canvas canvas) {
+        org.telegram.ui.Components.OmnigramVerifiedGlowDrawable.animatedDrawn = false;
+        omniOnDraw(canvas);
+        // Keep the verified-badge pulse running (~14 fps) only for rows that actually show a genuine badge.
+        if (org.telegram.ui.Components.OmnigramVerifiedGlowDrawable.animatedDrawn) {
+            postInvalidateDelayed(70);
+        }
+    }
+
+    private void omniOnDraw(Canvas canvas) {
         if (currentDialogId == 0 && customDialog == null) {
             return;
         }

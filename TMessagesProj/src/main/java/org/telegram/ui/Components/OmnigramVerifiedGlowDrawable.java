@@ -16,6 +16,9 @@ import org.telegram.messenger.ApplicationLoader;
  * one, and is off when disabled in Omni Preference or when the system animation scale is 0 (Reduce Motion).
  */
 public class OmnigramVerifiedGlowDrawable extends Drawable {
+    /** Set while drawing so the host row knows it must redraw again to continue the pulse. */
+    public static volatile boolean animatedDrawn = false;
+
     private final Drawable base;
     private final Paint ring = new Paint(Paint.ANTI_ALIAS_FLAG);
     private int color = 0xFF3897F0;
@@ -44,8 +47,9 @@ public class OmnigramVerifiedGlowDrawable extends Drawable {
             float r = b.width() / 2f + b.width() * (0.12f + 0.16f * pulse);
             ring.setStrokeWidth(Math.max(1f, b.width() * 0.08f));
             ring.setColor(color);
-            ring.setAlpha((int) (110 * (1f - pulse * 0.6f)));
+            ring.setAlpha((int) (200 * (1f - pulse * 0.7f)));
             canvas.drawCircle(cx, cy, r, ring);
+            animatedDrawn = true;
         }
         base.setBounds(b);
         base.draw(canvas);

@@ -5809,6 +5809,10 @@
     <string name="AppIconTurbo">Google</string>
     <string name="AppIconNox">Imposter</string>
     <string name="AppIconEvil">Evil</string>
+    <string name="AppIconSasuke">Sasuke</string>
+    <string name="AppIconSpotify">Spotify</string>
+    <string name="AppIconYouTube">YouTube</string>
+    <string name="AppIconTelegram">Telegram</string>
     <string name="AppIconChangedTo">App icon has been changed to %1$s</string>
     <string name="FileTooLarge">File Too Large</string>
     <string name="PremiumPreviewAppIcon">Premium App Icon</string>

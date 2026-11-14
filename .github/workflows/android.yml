@@ -87,11 +87,20 @@ jobs:
       - name: Build release APK
         run: |
           chmod +x ./gradlew
+          set +e
           ./gradlew :TMessagesProj_App:assembleAfatRelease --no-daemon --stacktrace --max-workers=2 \
             -PRELEASE_STORE_PASSWORD="$RELEASE_STORE_PASSWORD" \
             -PRELEASE_KEY_PASSWORD="$RELEASE_KEY_PASSWORD" \
             -PRELEASE_KEY_ALIAS="$RELEASE_KEY_ALIAS" \
-            -Dorg.gradle.jvmargs="-Xmx5g -XX:MaxMetaspaceSize=1g"
+            -Dorg.gradle.jvmargs="-Xmx5g -XX:MaxMetaspaceSize=1g" 2>&1 | tee build.log
+          STATUS=${PIPESTATUS[0]}
+          if [ "$STATUS" != "0" ]; then
+            # Show the real compile errors as annotations on the run page
+            grep -E "error:|error: |FAILURE|What went wrong|Execution failed|AAPT:|Unresolved|cannot find symbol" build.log | head -25 | while IFS= read -r line; do
+              echo "::error::${line:0:400}"
+            done
+            exit $STATUS
+          fi
 
       - name: Verify APK signature
         run: |
@@ -117,8 +126,28 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           TAG="build-${{ github.run_number }}"
+          cat > notes.md <<'NOTES'
+          ## Omnigram: Telegram client for Android with extra features
+
+          Omnigram is a free, open-source **Telegram Android mod** (unofficial Telegram client) with a clean Omni Preference screen, 11 changeable app icons, deleted messages kept in chat, fast downloads, quick sticker bar, no ads option and more.
+
+          ### Download
+          Download **Omnigram.apk** below (the file itself, not a zip) and install it. If Android blocks it, allow "Install unknown apps" for your browser or file manager.
+
+          ### Highlights
+          - 11 app icons: Default, OmniTgam, Discord, Google, Imposter, Evil, Sasuke, Spotify, YouTube, Telegram, Premium
+          - Deleted messages stay visible and can be listed per chat
+          - Omni Preference: fast download, verified badge animation, sticker undo, quick sticker bar, time with seconds, last seen estimate, no ads, hide phone number
+          - Send to Saved Messages from any message, jump To Beginning of a chat
+          - Chat calculator, local mention alias
+
+          Official channels: https://t.me/OfficalOmnigram , https://t.me/OmnigramChat
+
+          Keywords: Telegram mod, Telegram APK, Telegram Android client, Omnigram APK, Telegram custom icons, anti delete Telegram.
+          NOTES
+          sed -i 's/^          //' notes.md
           gh release create "$TAG" dist/Omnigram.apk \
             --repo "${{ github.repository }}" \
-            --title "Omnigram build ${{ github.run_number }}" \
-            --notes "Signed APK from commit ${{ github.sha }}. Download Omnigram.apk and install it directly." \
+            --title "Omnigram build ${{ github.run_number }} | Telegram mod APK for Android" \
+            --notes-file notes.md \
             --latest

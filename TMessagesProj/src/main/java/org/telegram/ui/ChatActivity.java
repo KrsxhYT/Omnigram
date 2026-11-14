@@ -8128,15 +8128,15 @@ public class ChatActivity extends BaseFragment implements
 
         try {
             if (org.telegram.ui.Components.OmnigramPrefs.quickStickerBar() && !inPreviewMode && !isInsideContainer && chatMode == 0) {
-                final org.telegram.ui.Components.OmnigramQuickStickerBar quickBar = new org.telegram.ui.Components.OmnigramQuickStickerBar(context, currentAccount, doc -> {
+                final org.telegram.ui.Components.OmnigramQuickStickerBar omniQuickBar = new org.telegram.ui.Components.OmnigramQuickStickerBar(context, currentAccount, omniDoc -> {
                     try {
-                        chatActivityEnterView.onStickerSelected(doc, null, null, null, false, true, 0, 0);
+                        chatActivityEnterView.onStickerSelected(omniDoc, null, null, null, false, true, 0, 0);
                     } catch (Throwable ignore) {}
                 });
-                chatInputBubbleContainer.addView(quickBar, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 52, Gravity.BOTTOM, 14, 0, 14, 0));
-                chatActivityEnterView.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or, ob) -> {
-                    quickBar.setTranslationY(-(v.getHeight() + AndroidUtilities.dp(8)));
-                    quickBar.setVisibility(v.getVisibility() == View.VISIBLE ? View.VISIBLE : View.GONE);
+                chatInputBubbleContainer.addView(omniQuickBar, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 52, Gravity.BOTTOM, 14, 0, 14, 0));
+                chatActivityEnterView.addOnLayoutChangeListener((omniView, omniL, omniT, omniR, omniB, omniOl, omniOt, omniOr, omniOb) -> {
+                    omniQuickBar.setTranslationY(-(omniView.getHeight() + AndroidUtilities.dp(8)));
+                    omniQuickBar.setVisibility(omniView.getVisibility() == View.VISIBLE ? View.VISIBLE : View.GONE);
                 });
             }
         } catch (Throwable ignore) {}

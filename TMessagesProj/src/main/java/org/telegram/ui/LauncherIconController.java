@@ -148,6 +148,10 @@ public final class LauncherIconController {
         GOOGLE("TurboIcon", R.mipmap.icon_5_launcher, R.mipmap.icon_5_launcher, R.drawable.omni_icon_clear, R.string.AppIconTurbo),
         IMPOSTER("NoxIcon", R.mipmap.icon_6_launcher, R.mipmap.icon_6_launcher, R.drawable.omni_icon_clear, R.string.AppIconNox),
         EVIL("EvilIcon", R.mipmap.icon_7_launcher, R.mipmap.icon_7_launcher, R.drawable.omni_icon_clear, R.string.AppIconEvil),
+        SASUKE("SasukeIcon", R.mipmap.icon_8_launcher, R.mipmap.icon_8_launcher, R.drawable.omni_icon_clear, R.string.AppIconSasuke),
+        SPOTIFY("SpotifyIcon", R.mipmap.icon_9_launcher, R.mipmap.icon_9_launcher, R.drawable.omni_icon_clear, R.string.AppIconSpotify),
+        YOUTUBE("YouTubeIcon", R.mipmap.icon_10_launcher, R.mipmap.icon_10_launcher, R.drawable.omni_icon_clear, R.string.AppIconYouTube),
+        TELEGRAM("TelegramIcon", R.mipmap.icon_11_launcher, R.mipmap.icon_11_launcher, R.drawable.omni_icon_clear, R.string.AppIconTelegram),
         PREMIUM("PremiumIcon", R.mipmap.icon_4_launcher, R.mipmap.icon_4_launcher, R.drawable.omni_icon_clear, R.string.AppIconPremium);
 
         public final String key;
@@ -173,6 +177,10 @@ public final class LauncherIconController {
                 case GOOGLE: return "Google";
                 case IMPOSTER: return "Imposter";
                 case EVIL: return "Evil";
+                case SASUKE: return "Sasuke";
+                case SPOTIFY: return "Spotify";
+                case YOUTUBE: return "YouTube";
+                case TELEGRAM: return "Telegram";
                 case PREMIUM: return "Premium";
                 default: return "Default";
             }
