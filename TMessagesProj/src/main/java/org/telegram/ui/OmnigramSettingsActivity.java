@@ -87,6 +87,8 @@ public class OmnigramSettingsActivity extends BaseFragment {
                 OmnigramPrefs.VERIFIED_ANIM, true);
         toggle(context, general, "Sticker undo", "Shows an Undo bar for a few seconds after sending a sticker",
                 OmnigramPrefs.STICKER_UNDO, true);
+        toggle(context, general, "Quick sticker bar", "Strip with favorite and recent stickers above the message box. Tap once to send. Reopen the chat after changing",
+                OmnigramPrefs.QUICK_STICKER_BAR, false);
         button(context, general, "Delete deleted messages history", v -> confirmClearHistory());
 
         // ---- links

@@ -14,6 +14,7 @@ public final class OmnigramPrefs {
     public static final String LAST_SEEN_ALL = "last_seen_all";
     public static final String VERIFIED_ANIM = "verified_anim";
     public static final String STICKER_UNDO = "sticker_undo";
+    public static final String QUICK_STICKER_BAR = "quick_sticker_bar";
 
     private OmnigramPrefs() {}
 
@@ -42,6 +43,7 @@ public final class OmnigramPrefs {
     public static boolean lastSeenAll() { return get(LAST_SEEN_ALL, false); }
     public static boolean verifiedAnim() { return get(VERIFIED_ANIM, true); }
     public static boolean stickerUndo() { return get(STICKER_UNDO, true); }
+    public static boolean quickStickerBar() { return get(QUICK_STICKER_BAR, false); }
 
     /** Local-only nickname used for "@" suggestions inside this app. It never changes the real Telegram profile. */
     public static String getAlias(long dialogId) {
