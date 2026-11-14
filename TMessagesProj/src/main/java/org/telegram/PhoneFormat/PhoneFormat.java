@@ -189,6 +189,14 @@ public class PhoneFormat {
             return orig;
         }
         try {
+            if (org.telegram.ui.Components.OmnigramPrefs.hidePhone() && orig != null) {
+                org.telegram.tgnet.TLRPC.User me = org.telegram.messenger.UserConfig.getInstance(org.telegram.messenger.UserConfig.selectedAccount).getCurrentUser();
+                if (me != null && me.phone != null && !me.phone.isEmpty() && orig.replaceAll("[^0-9]", "").equals(me.phone.replaceAll("[^0-9]", ""))) {
+                    return "+\u2022\u2022 \u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022";
+                }
+            }
+        } catch (Throwable ignore) {}
+        try {
             String str = strip(orig);
 
             if (str.startsWith("+")) {

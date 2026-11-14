@@ -1252,6 +1252,8 @@ public class ChatActivity extends BaseFragment implements
     public final static int OPTION_OMNI_TO_BEGINNING = 9101;
     public final static int OPTION_OMNI_MSG_DETAILS = 9102;
     public final static int OPTION_OMNI_VOICE_DL = 9103;
+    public final static int OPTION_OMNI_SAVE = 9104;
+    public final static int OPTION_OMNI_DELETED_LIST = 9105;
     public final static int OPTION_ADD_TO_STICKERS_OR_MASKS = 9;
     public final static int OPTION_SAVE_TO_DOWNLOADS_OR_MUSIC = 10;
     public final static int OPTION_ADD_TO_GIFS = 11;
@@ -3847,6 +3849,8 @@ public class ChatActivity extends BaseFragment implements
                     showDialog(AlertsCreator.createTTLAlert(getParentActivity(), currentEncryptedChat, themeDelegate).create());
                 } else if (id == OPTION_OMNI_TO_BEGINNING) {
                     try { omnigramGoToBeginning(); } catch (Throwable ignore) {}
+                } else if (id == OPTION_OMNI_DELETED_LIST) {
+                    try { omnigramShowDeletedMessages(); } catch (Throwable ignore) {}
                 } else if (id == clear_history || id == delete_chat || id == auto_delete_timer) {
                     if (getParentActivity() == null) {
                         return;
@@ -4423,6 +4427,7 @@ public class ChatActivity extends BaseFragment implements
             if (!isTopic && !ChatObject.isMonoForum(currentChat)) {
                 headerItem.lazilyAddSubItem(OPTION_OMNI_TO_BEGINNING, R.drawable.msg_arrow_back, "To Beginning");
             }
+            headerItem.lazilyAddSubItem(OPTION_OMNI_DELETED_LIST, R.drawable.msg_delete, "Deleted messages");
             clearHistoryItem = headerItem.lazilyAddSubItem(clear_history, R.drawable.msg_clear,
                     LocaleController.getString(UserObject.isBotForum(currentUser) ? R.string.ClearAllHistory : R.string.ClearHistory));
             boolean addedSettings = false;
@@ -34256,7 +34261,54 @@ public class ChatActivity extends BaseFragment implements
         }
     }
 
+    private void omnigramSendToSaved() {
+        try {
+            ArrayList<MessageObject> toSend = new ArrayList<>();
+            if (selectedObjectGroup != null && selectedObjectGroup.messages != null && !selectedObjectGroup.messages.isEmpty()) {
+                toSend.addAll(selectedObjectGroup.messages);
+            } else if (selectedObject != null) {
+                toSend.add(selectedObject);
+            }
+            if (toSend.isEmpty()) return;
+            long me = getUserConfig().getClientUserId();
+            getSendMessagesHelper().sendMessage(toSend, me, false, false, true, 0, 0L);
+            BulletinFactory.of(this).createSimpleBulletin(R.raw.contact_check, "Saved to Saved Messages").show();
+        } catch (Throwable ignore) {}
+    }
+
+    private void omnigramShowDeletedMessages() {
+        if (getParentActivity() == null) return;
+        final ArrayList<Integer> ids = new ArrayList<>();
+        final ArrayList<CharSequence> labels = new ArrayList<>();
+        for (int i = messages.size() - 1; i >= 0; i--) {
+            MessageObject m = messages.get(i);
+            if (m == null || m.getId() <= 0) continue;
+            if (!org.telegram.ui.Components.OmnigramDeleted.isDeleted(m.getDialogId(), m.getId())) continue;
+            String body = m.messageText != null ? m.messageText.toString() : "";
+            if (body.isEmpty() && m.messageOwner != null && m.messageOwner.message != null) body = m.messageOwner.message;
+            if (body.isEmpty()) body = "[media]";
+            body = body.replace('\n', ' ');
+            if (body.length() > 60) body = body.substring(0, 60) + "...";
+            String time = LocaleController.getInstance().getFormatterDay().format((long) m.messageOwner.date * 1000);
+            ids.add(m.getId());
+            labels.add(time + "  " + body);
+        }
+        if (ids.isEmpty()) {
+            BulletinFactory.of(this).createSimpleBulletin(R.raw.error, "No deleted messages found in this chat").show();
+            return;
+        }
+        new org.telegram.ui.ActionBar.AlertDialog.Builder(getParentActivity())
+                .setTitle("Deleted messages (" + ids.size() + ")")
+                .setItems(labels.toArray(new CharSequence[0]), (d, which) -> scrollToMessageId(ids.get(which), 0, true, 0, false, 0))
+                .setNegativeButton("Close", null)
+                .show();
+    }
+
     private void processSelectedOption(int option) {
+        if (option == OPTION_OMNI_SAVE) {
+            omnigramSendToSaved();
+            return;
+        }
         if (option == OPTION_OMNI_TO_BEGINNING) {
             try { omnigramGoToBeginning(); } catch (Throwable ignore) {}
             return;
@@ -46671,6 +46723,11 @@ public class ChatActivity extends BaseFragment implements
                     icons.add(R.drawable.msg_copy);
                 }
                 // Omnigram Part2
+                if (!selectedObject.isSponsored() && !noforwardsOrPaidMedia && chatMode != MODE_SCHEDULED && selectedObject.getId() > 0) {
+                    items.add("Send to Saved Messages");
+                    options.add(OPTION_OMNI_SAVE);
+                    icons.add(R.drawable.msg_saved);
+                }
                 if (!selectedObject.isSponsored()) {
                     items.add("Details");
                     options.add(OPTION_OMNI_MSG_DETAILS);

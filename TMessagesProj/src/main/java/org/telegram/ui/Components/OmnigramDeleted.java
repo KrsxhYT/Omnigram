@@ -139,6 +139,17 @@ public final class OmnigramDeleted {
         markMany(-channelId, ids);
     }
 
+    /** Forget the "deleted messages" list. The messages themselves stay in their chats. */
+    public static void clearAll() {
+        try {
+            synchronized (OWN) { OWN.clear(); }
+            MEM.clear();
+            SharedPreferences sp = p();
+            if (sp != null) sp.edit().clear().apply();
+        } catch (Throwable ignore) {}
+        refreshUi();
+    }
+
     /** Repaint the open chat so a newly marked message dims immediately. */
     public static void refreshUi() {
         try {

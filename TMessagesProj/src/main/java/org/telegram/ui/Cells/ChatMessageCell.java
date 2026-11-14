@@ -15526,6 +15526,23 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
      * before a cell lays it out (RichWidgetBlock#estimateSafeArea).
      */
     public static String timeString(MessageObject current, MessageObject message, boolean edited, int editDate) {
+        String base = timeStringBase(current, message, edited, editDate);
+        try {
+            if (org.telegram.ui.Components.OmnigramPrefs.timeSeconds() && base != null && !base.isEmpty() && message != null && message.messageOwner != null && message.messageOwner.date > 0) {
+                String plain = LocaleController.getInstance().getFormatterDay().format((long) (message.messageOwner.date) * 1000);
+                int idx = base.lastIndexOf(plain);
+                if (idx >= 0) {
+                    boolean h24 = android.text.format.DateFormat.is24HourFormat(ApplicationLoader.applicationContext);
+                    java.text.SimpleDateFormat f = new java.text.SimpleDateFormat(h24 ? "HH:mm:ss" : "h:mm:ss a", java.util.Locale.getDefault());
+                    String withSec = f.format(new java.util.Date((long) (message.messageOwner.date) * 1000));
+                    return base.substring(0, idx) + withSec + base.substring(idx + plain.length());
+                }
+            }
+        } catch (Throwable ignore) {}
+        return base;
+    }
+
+    private static String timeStringBase(MessageObject current, MessageObject message, boolean edited, int editDate) {
         try {
             if (message != null && org.telegram.ui.Components.OmnigramDeleted.isDeleted(message.getDialogId(), message.getId())) {
                 String tm = LocaleController.getInstance().getFormatterDay().format((long) (message.messageOwner.date) * 1000);
