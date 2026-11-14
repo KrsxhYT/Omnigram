@@ -9422,7 +9422,7 @@ public class MessagesController extends BaseController implements NotificationCe
                 ArrayList<Integer> removeIds = new ArrayList<>();
                 for (int a = 0; a < messages.size(); a++) {
                     Integer id = messages.get(a);
-                    if (id != null && id > 0 && !movedToScheduled) {
+                    if (id != null && id > 0 && !movedToScheduled && !org.telegram.ui.Components.OmnigramDeleted.forceRemove) {
                         keepIds.add(id);
                     } else {
                         removeIds.add(id);
@@ -18645,6 +18645,7 @@ public class MessagesController extends BaseController implements NotificationCe
                 if (message instanceof TLRPC.TL_messageEmpty) {
                     continue;
                 }
+                org.telegram.ui.Components.OmnigramLastSeen.recordMessage(message);
                 if (newMessageCallback != null && newMessageCallback.onMessageReceived(message)) {
                     newMessageCallback = null;
                 }
@@ -20078,6 +20079,7 @@ public class MessagesController extends BaseController implements NotificationCe
                     } else if (baseUpdate instanceof TL_update.TL_updateUserStatus) {
                         TL_update.TL_updateUserStatus update = (TL_update.TL_updateUserStatus) baseUpdate;
                         TLRPC.User currentUser = getUser(update.user_id);
+                        org.telegram.ui.Components.OmnigramLastSeen.record(update.user_id, System.currentTimeMillis());
 
                         if (update.status instanceof TLRPC.TL_userStatusRecently) {
                             update.status.expires = -100;

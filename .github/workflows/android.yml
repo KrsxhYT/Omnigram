@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: omnigram-build-${{ github.ref }}
@@ -93,10 +93,32 @@ jobs:
             -PRELEASE_KEY_ALIAS="$RELEASE_KEY_ALIAS" \
             -Dorg.gradle.jvmargs="-Xmx5g -XX:MaxMetaspaceSize=1g"
 
-      - name: Upload APK
+      - name: Verify APK signature
+        run: |
+          SDK_ROOT="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          APKSIGNER="$SDK_ROOT/build-tools/36.0.0/apksigner"
+          mkdir -p dist
+          APK="$(ls TMessagesProj_App/build/outputs/apk/afat/release/*.apk | grep -v unsigned | head -n 1 || true)"
+          [ -n "$APK" ] || { echo "::error::No signed APK found (only unsigned?)"; ls -R TMessagesProj_App/build/outputs/apk || true; exit 1; }
+          "$APKSIGNER" verify --verbose --print-certs "$APK"
+          cp "$APK" dist/Omnigram.apk
+          ls -l dist
+
+      - name: Upload APK (artifact)
         uses: actions/upload-artifact@v4
         with:
-          name: omnigram-release
-          path: TMessagesProj_App/build/outputs/apk/afat/release/*.apk
+          name: omnigram-apk
+          path: dist/Omnigram.apk
           if-no-files-found: error
           retention-days: 14
+
+      - name: Publish APK as GitHub Release (download the raw .apk, not a zip)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="build-${{ github.run_number }}"
+          gh release create "$TAG" dist/Omnigram.apk \
+            --repo "${{ github.repository }}" \
+            --title "Omnigram build ${{ github.run_number }}" \
+            --notes "Signed APK from commit ${{ github.sha }}. Download Omnigram.apk and install it directly." \
+            --latest

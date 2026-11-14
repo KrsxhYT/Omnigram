@@ -33,6 +33,8 @@ public final class OmnigramDeleted {
     }
 
     private static final Set<String> OWN = new HashSet<>();
+    /** Set briefly by "Undo" so that the undone message is really removed instead of kept as "deleted". */
+    public static volatile boolean forceRemove = false;
 
     private static String key(long dialogId, int msgId) {
         return dialogId + ":" + msgId;

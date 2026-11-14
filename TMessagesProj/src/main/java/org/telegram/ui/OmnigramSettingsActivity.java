@@ -73,12 +73,20 @@ public class OmnigramSettingsActivity extends BaseFragment {
         // ---- General
         section(context, "General");
         LinearLayout general = card(context);
+        toggle(context, general, "Fast download speed", "More parallel parts per file. Real speed still depends on your connection and Telegram's server limits",
+                OmnigramPrefs.FAST_DOWNLOAD, true);
         toggle(context, general, "Format time with seconds", "Shows 12:34:56 instead of 12:34 on messages",
                 OmnigramPrefs.TIME_SECONDS, false);
         toggle(context, general, "No ads", "Hides sponsored messages",
                 OmnigramPrefs.NO_ADS, false);
         toggle(context, general, "Hide phone number", "The number will be hidden in the UI only. To hide it from others, please use Privacy settings.",
                 OmnigramPrefs.HIDE_PHONE, false);
+        toggle(context, general, "Show all users last seen", "Telegram hides the real time for some users. This shows an approximate local time (last message or status this app received)",
+                OmnigramPrefs.LAST_SEEN_ALL, false);
+        toggle(context, general, "Verified badge animation", "Soft pulsing ring on genuine verified badges. Off automatically when system animations are off",
+                OmnigramPrefs.VERIFIED_ANIM, true);
+        toggle(context, general, "Sticker undo", "Shows an Undo bar for a few seconds after sending a sticker",
+                OmnigramPrefs.STICKER_UNDO, true);
         button(context, general, "Delete deleted messages history", v -> confirmClearHistory());
 
         // ---- links

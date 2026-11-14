@@ -12888,6 +12888,9 @@ public class ChatActivityEnterView extends FrameLayout implements
                         setFieldText("");
                     }
                     MediaDataController.getInstance(currentAccount).addRecentSticker(MediaDataController.TYPE_IMAGE, parent, sticker, (int) (System.currentTimeMillis() / 1000), false);
+                    try {
+                        if (parentFragment != null) parentFragment.omnigramOfferStickerUndo();
+                    } catch (Throwable ignore) {}
                 };
                 if (!showConfirmAlert(runnable)) {
                     runnable.run();

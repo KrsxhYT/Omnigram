@@ -2035,6 +2035,11 @@ public class MentionsAdapter extends RecyclerListView.SelectionAdapter implement
                 TLObject object = searchResultUsernames.get(position);
                 if (object instanceof TLRPC.User) {
                     cell.setUser((TLRPC.User) object);
+                    try {
+                        if (((TLRPC.User) object).id == UserConfig.getInstance(currentAccount).getClientUserId()) {
+                            cell.setNameOverride(org.telegram.ui.Components.OmnigramPrefs.getAlias(dialog_id));
+                        }
+                    } catch (Throwable ignore) {}
                 } else if (object instanceof TLRPC.Chat) {
                     cell.setChat((TLRPC.Chat) object);
                 }

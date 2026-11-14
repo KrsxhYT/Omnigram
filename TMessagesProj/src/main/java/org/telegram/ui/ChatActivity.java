@@ -1254,6 +1254,7 @@ public class ChatActivity extends BaseFragment implements
     public final static int OPTION_OMNI_VOICE_DL = 9103;
     public final static int OPTION_OMNI_SAVE = 9104;
     public final static int OPTION_OMNI_DELETED_LIST = 9105;
+    public final static int OPTION_OMNI_ALIAS = 9106;
     public final static int OPTION_ADD_TO_STICKERS_OR_MASKS = 9;
     public final static int OPTION_SAVE_TO_DOWNLOADS_OR_MUSIC = 10;
     public final static int OPTION_ADD_TO_GIFS = 11;
@@ -3849,6 +3850,8 @@ public class ChatActivity extends BaseFragment implements
                     showDialog(AlertsCreator.createTTLAlert(getParentActivity(), currentEncryptedChat, themeDelegate).create());
                 } else if (id == OPTION_OMNI_TO_BEGINNING) {
                     try { omnigramGoToBeginning(); } catch (Throwable ignore) {}
+                } else if (id == OPTION_OMNI_ALIAS) {
+                    try { omnigramEditAlias(); } catch (Throwable ignore) {}
                 } else if (id == OPTION_OMNI_DELETED_LIST) {
                     try { omnigramShowDeletedMessages(); } catch (Throwable ignore) {}
                 } else if (id == clear_history || id == delete_chat || id == auto_delete_timer) {
@@ -4428,6 +4431,7 @@ public class ChatActivity extends BaseFragment implements
                 headerItem.lazilyAddSubItem(OPTION_OMNI_TO_BEGINNING, R.drawable.msg_arrow_back, "To Beginning");
             }
             headerItem.lazilyAddSubItem(OPTION_OMNI_DELETED_LIST, R.drawable.msg_delete, "Deleted messages");
+            headerItem.lazilyAddSubItem(OPTION_OMNI_ALIAS, R.drawable.msg_edit, "Mention alias (local)");
             clearHistoryItem = headerItem.lazilyAddSubItem(clear_history, R.drawable.msg_clear,
                     LocaleController.getString(UserObject.isBotForum(currentUser) ? R.string.ClearAllHistory : R.string.ClearHistory));
             boolean addedSettings = false;
@@ -34273,6 +34277,47 @@ public class ChatActivity extends BaseFragment implements
             long me = getUserConfig().getClientUserId();
             getSendMessagesHelper().sendMessage(toSend, me, false, false, true, 0, 0L);
             BulletinFactory.of(this).createSimpleBulletin(R.raw.contact_check, "Saved to Saved Messages").show();
+        } catch (Throwable ignore) {}
+    }
+
+    private void omnigramEditAlias() {
+        if (getParentActivity() == null) return;
+        final android.widget.EditText input = new android.widget.EditText(getParentActivity());
+        input.setSingleLine(true);
+        input.setHint("Nickname");
+        input.setText(org.telegram.ui.Components.OmnigramPrefs.getAlias(dialog_id));
+        input.setPadding(AndroidUtilities.dp(24), AndroidUtilities.dp(12), AndroidUtilities.dp(24), AndroidUtilities.dp(12));
+        new org.telegram.ui.ActionBar.AlertDialog.Builder(getParentActivity())
+                .setTitle("Mention alias")
+                .setMessage("Local only: changes how your name appears in @ suggestions inside this app for this chat. Your real Telegram name and username do not change, and other people will not see it.")
+                .setView(input)
+                .setPositiveButton("Save", (d, w) -> org.telegram.ui.Components.OmnigramPrefs.setAlias(dialog_id, input.getText().toString()))
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    /** Called right after a sticker was sent from the panel; offers a short "Undo". */
+    public void omnigramOfferStickerUndo() {
+        try {
+            if (!org.telegram.ui.Components.OmnigramPrefs.stickerUndo()) return;
+            BulletinFactory.of(this).createSimpleBulletin(R.raw.contact_check, "Sticker sent", "Undo", () -> {
+                try {
+                    for (int i = 0; i < messages.size(); i++) {
+                        MessageObject m = messages.get(i);
+                        if (m != null && m.isOut() && m.isSticker()) {
+                            ArrayList<Integer> ids = new ArrayList<>();
+                            ids.add(m.getId());
+                            org.telegram.ui.Components.OmnigramDeleted.forceRemove = true;
+                            try {
+                                getMessagesController().deleteMessages(ids, null, null, dialog_id, 0, true, 0);
+                            } finally {
+                                org.telegram.ui.Components.OmnigramDeleted.forceRemove = false;
+                            }
+                            break;
+                        }
+                    }
+                } catch (Throwable ignore) {}
+            }).setDuration(Bulletin.DURATION_PROLONG).show();
         } catch (Throwable ignore) {}
     }
 

@@ -116,6 +116,11 @@ public class MentionCell extends LinearLayout {
         usernameTextView.setVisibility(VISIBLE);
     }
 
+    /** Local-only display name for "@" suggestions; the inserted mention still uses the real @username. */
+    public void setNameOverride(CharSequence name) {
+        if (name != null && name.length() > 0) nameTextView.setText(name);
+    }
+
     private boolean needsDivider = false;
     public void setDivider(boolean enabled) {
         if (enabled != needsDivider) {

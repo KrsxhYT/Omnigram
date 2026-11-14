@@ -2982,6 +2982,15 @@ public class LocaleController {
                 }
                 return getString("Online", R.string.Online);
             } else {
+                if (user.status.expires < 0 && user.status.expires != -1 && org.telegram.ui.Components.OmnigramPrefs.lastSeenAll()) {
+                    long seen = org.telegram.ui.Components.OmnigramLastSeen.get(user.id);
+                    if (seen > 0) {
+                        Date d = new Date(seen);
+                        String t = getInstance().getFormatterDay().format(d);
+                        boolean sameDay = getInstance().getFormatterDayMonth().format(d).equals(getInstance().getFormatterDayMonth().format(new Date()));
+                        return "last seen at ~" + (sameDay ? t : getInstance().getFormatterDayMonth().format(d) + " " + t);
+                    }
+                }
                 if (user.status.expires == -1) {
                     return getString("Invisible", R.string.Invisible);
                 } else if (user.status.expires == -100 || user.status.expires == -1000) {
