@@ -36,19 +36,40 @@ public class OmnigramVerifiedGlowDrawable extends Drawable {
         }
     }
 
+    private final Paint fill = new Paint(Paint.ANTI_ALIAS_FLAG);
+
     @Override
     public void draw(Canvas canvas) {
         Rect b = getBounds();
         if (OmnigramPrefs.verifiedAnim() && !reduceMotion() && b.width() > 0) {
-            float phase = (SystemClock.uptimeMillis() % 2200L) / 2200f;
+            long now = SystemClock.uptimeMillis();
+            float phase = (now % 2000L) / 2000f;
             float pulse = (float) (0.5 + 0.5 * Math.sin(phase * 2 * Math.PI));
             float cx = b.exactCenterX();
             float cy = b.exactCenterY();
-            float r = b.width() / 2f + b.width() * (0.12f + 0.16f * pulse);
-            ring.setStrokeWidth(Math.max(1f, b.width() * 0.08f));
+            float w = b.width();
+
+            // soft halo
+            fill.setStyle(Paint.Style.FILL);
+            fill.setColor(color);
+            fill.setAlpha((int) (46 + 40 * pulse));
+            canvas.drawCircle(cx, cy, w * (0.62f + 0.10f * pulse), fill);
+
+            // expanding ring
+            ring.setStrokeWidth(Math.max(1f, w * 0.07f));
             ring.setColor(color);
-            ring.setAlpha((int) (200 * (1f - pulse * 0.7f)));
-            canvas.drawCircle(cx, cy, r, ring);
+            ring.setAlpha((int) (210 * (1f - phase)));
+            canvas.drawCircle(cx, cy, w * (0.5f + 0.5f * phase), ring);
+
+            // three small sparkles orbiting the badge
+            fill.setColor(0xFFFFFFFF);
+            for (int i = 0; i < 3; i++) {
+                double ang = (now % 3000L) / 3000.0 * 2 * Math.PI + i * (2 * Math.PI / 3);
+                float tw = (float) (0.5 + 0.5 * Math.sin(phase * 2 * Math.PI * 2 + i * 2.1));
+                float r = w * 0.66f;
+                fill.setAlpha((int) (60 + 180 * tw));
+                canvas.drawCircle(cx + (float) Math.cos(ang) * r, cy + (float) Math.sin(ang) * r, Math.max(0.8f, w * (0.045f + 0.035f * tw)), fill);
+            }
             animatedDrawn = true;
         }
         base.setBounds(b);

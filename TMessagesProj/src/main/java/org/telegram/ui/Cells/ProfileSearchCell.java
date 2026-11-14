@@ -940,6 +940,14 @@ public class ProfileSearchCell extends BaseCell implements NotificationCenter.No
 
     @Override
     protected void onDraw(Canvas canvas) {
+        org.telegram.ui.Components.OmnigramVerifiedGlowDrawable.animatedDrawn = false;
+        omniOnDraw(canvas);
+        if (org.telegram.ui.Components.OmnigramVerifiedGlowDrawable.animatedDrawn) {
+            postInvalidateDelayed(70);
+        }
+    }
+
+    private void omniOnDraw(Canvas canvas) {
         if (user == null && chat == null && encryptedChat == null && contact == null) {
             return;
         }

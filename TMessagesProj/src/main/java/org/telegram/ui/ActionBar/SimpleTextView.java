@@ -844,6 +844,14 @@ public class SimpleTextView extends View implements Drawable.Callback {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        org.telegram.ui.Components.OmnigramVerifiedGlowDrawable.animatedDrawn = false;
+        omniOnDraw(canvas);
+        if (org.telegram.ui.Components.OmnigramVerifiedGlowDrawable.animatedDrawn) {
+            postInvalidateDelayed(70);
+        }
+    }
+
+    private void omniOnDraw(Canvas canvas) {
         super.onDraw(canvas);
         int textOffsetX = 0;
         layoutX = 0;

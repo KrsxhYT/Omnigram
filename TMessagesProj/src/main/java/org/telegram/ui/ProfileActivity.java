@@ -11335,7 +11335,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             if (userInfo != null) {
                 musicView.setMusicDocument(userInfo.saved_music);
             }
-            musicView.setVisibility(hasMusic ? View.VISIBLE : View.GONE);
+            musicView.setVisibility(View.GONE);
             if (hasBalance) {
                 balanceView.setBalance(userInfo.wallet_card.balance);
             }

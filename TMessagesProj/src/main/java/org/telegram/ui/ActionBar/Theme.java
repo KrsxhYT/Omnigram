@@ -8984,7 +8984,7 @@ public class Theme {
 
             Resources resources = context.getResources();
 
-            profile_verifiedDrawable = resources.getDrawable(R.drawable.verified_area).mutate();
+            profile_verifiedDrawable = new org.telegram.ui.Components.OmnigramVerifiedGlowDrawable(resources.getDrawable(R.drawable.verified_area).mutate());
             profile_verifiedCheckDrawable = resources.getDrawable(R.drawable.verified_check).mutate();
 
             applyProfileTheme();

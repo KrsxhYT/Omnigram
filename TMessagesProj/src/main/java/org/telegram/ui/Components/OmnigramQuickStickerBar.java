@@ -27,6 +27,28 @@ public class OmnigramQuickStickerBar extends HorizontalScrollView {
     private final int account;
     private final Listener listener;
     private boolean loaded;
+    private View anchor;
+    private View container;
+    private android.view.ViewTreeObserver.OnPreDrawListener preDraw;
+
+    /** The bar sits just above {@code anchor} (the message box) inside {@code container} (full-screen layout). */
+    public void setAnchor(View anchor, View container) {
+        this.anchor = anchor;
+        this.container = container;
+    }
+
+    private void follow() {
+        try {
+            if (anchor == null || container == null) return;
+            int[] a = new int[2];
+            int[] b = new int[2];
+            anchor.getLocationInWindow(a);
+            container.getLocationInWindow(b);
+            float top = a[1] - b[1];
+            setTranslationY(top - container.getHeight() - AndroidUtilities.dp(8));
+            setVisibility(anchor.getVisibility() == View.VISIBLE ? View.VISIBLE : View.GONE);
+        } catch (Throwable ignore) {}
+    }
 
     public OmnigramQuickStickerBar(Context context, int account, Listener listener) {
         super(context);
@@ -72,5 +94,25 @@ public class OmnigramQuickStickerBar extends HorizontalScrollView {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         if (!loaded) reload();
+        if (preDraw == null) {
+            preDraw = () -> {
+                follow();
+                return true;
+            };
+        }
+        try { getViewTreeObserver().addOnPreDrawListener(preDraw); } catch (Throwable ignore) {}
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        try { if (preDraw != null) getViewTreeObserver().removeOnPreDrawListener(preDraw); } catch (Throwable ignore) {}
+    }
+
+    @Override
+    public boolean onTouchEvent(android.view.MotionEvent ev) {
+        // keep horizontal scrolling inside the strip, not stolen by the chat
+        if (getParent() != null) getParent().requestDisallowInterceptTouchEvent(true);
+        return super.onTouchEvent(ev);
     }
 }

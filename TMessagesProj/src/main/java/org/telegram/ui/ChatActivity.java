@@ -8133,11 +8133,8 @@ public class ChatActivity extends BaseFragment implements
                         chatActivityEnterView.onStickerSelected(omniDoc, null, null, null, false, true, 0, 0);
                     } catch (Throwable ignore) {}
                 });
-                chatInputBubbleContainer.addView(omniQuickBar, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 52, Gravity.BOTTOM, 14, 0, 14, 0));
-                chatActivityEnterView.addOnLayoutChangeListener((omniView, omniL, omniT, omniR, omniB, omniOl, omniOt, omniOr, omniOb) -> {
-                    omniQuickBar.setTranslationY(-(omniView.getHeight() + AndroidUtilities.dp(8)));
-                    omniQuickBar.setVisibility(omniView.getVisibility() == View.VISIBLE ? View.VISIBLE : View.GONE);
-                });
+                omniQuickBar.setAnchor(chatActivityEnterView, contentView);
+                contentView.addView(omniQuickBar, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 52, Gravity.BOTTOM, 14, 0, 14, 0));
             }
         } catch (Throwable ignore) {}
 
@@ -30672,6 +30669,9 @@ public class ChatActivity extends BaseFragment implements
 
     @Override
     public void onResume() {
+        org.telegram.ui.Components.OmnigramDeleted.uiRefresher = () -> {
+            try { if (chatListView != null) chatListView.invalidateViews(); } catch (Throwable ignore) {}
+        };
         super.onResume();
         checkShowBlur(false);
         activityResumeTime = System.currentTimeMillis();
@@ -30888,6 +30888,7 @@ public class ChatActivity extends BaseFragment implements
 
     @Override
     public void onPause() {
+        org.telegram.ui.Components.OmnigramDeleted.uiRefresher = null;
         super.onPause();
         scrolling = false;
         if (scrimPopupWindow != null) {

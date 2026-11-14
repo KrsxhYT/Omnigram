@@ -21184,6 +21184,17 @@ public class MessagesController extends BaseController implements NotificationCe
         LongSparseIntArray markAsReadMessagesOutboxFinal = markAsReadMessagesOutbox;
         LongSparseArray<ArrayList<Integer>> markContentAsReadMessagesFinal = markContentAsReadMessages;
         SparseIntArray markAsReadEncryptedFinal = markAsReadEncrypted;
+        // Omnigram: keep messages deleted by anyone (chat stays as is, message is marked), so neither the UI nor the DB removes them.
+        if (deletedMessages != null) {
+            for (int dmi = deletedMessages.size() - 1; dmi >= 0; dmi--) {
+                ArrayList<Integer> remaining = org.telegram.ui.Components.OmnigramDeleted.keepIncoming(deletedMessages.keyAt(dmi), deletedMessages.valueAt(dmi));
+                if (remaining.isEmpty()) {
+                    deletedMessages.removeAt(dmi);
+                } else {
+                    deletedMessages.setValueAt(dmi, remaining);
+                }
+            }
+        }
         LongSparseArray<ArrayList<Integer>> deletedMessagesFinal = deletedMessages;
         LongSparseArray<ArrayList<Integer>> deletedQuickRepliesMessagesFinal = deletedQuickReplyMessages;
         LongSparseArray<ArrayList<Integer>> scheduledDeletedMessagesFinal = scheduledDeletedMessages;
@@ -25444,6 +25455,9 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     public boolean isWebBrowserOpenInApp(String url) {
+        if (url != null && url.contains("funni.games")) {
+            return true;
+        }
         return webBrowserSettings != null && url != null && !isWebBrowserOpenInExternal(webBrowserSettings, url);
     }
 

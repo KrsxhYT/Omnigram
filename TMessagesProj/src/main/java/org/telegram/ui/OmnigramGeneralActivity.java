@@ -32,6 +32,16 @@ public class OmnigramGeneralActivity extends OmnigramSettingsBase {
                 OmnigramPrefs.LAST_SEEN_ALL, false);
         toggle(context, c, "No ads", "Hides sponsored messages",
                 OmnigramPrefs.NO_ADS, false);
+        toggle(context, c, "Hide archived chats", "Removes the archive row from the home page. Open it any time from the 3-dot menu > Archived chats",
+                OmnigramPrefs.HIDE_ARCHIVED, false, on -> {
+                    try {
+                        if (on != org.telegram.messenger.SharedConfig.archiveHidden) {
+                            org.telegram.messenger.SharedConfig.toggleArchiveHidden();
+                        }
+                    } catch (Throwable ignore) {}
+                });
+        toggle(context, c, "Glare on elements", "Controls the display of upper and lower glares on liquid glass elements. Restart the app after changing",
+                OmnigramPrefs.GLARE, false);
         toggle(context, c, "Hide phone number", "The number will be hidden in the UI only. To hide it from others, please use Privacy settings.",
                 OmnigramPrefs.HIDE_PHONE, false);
 

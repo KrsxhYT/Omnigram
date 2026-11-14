@@ -17314,6 +17314,14 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
     @SuppressLint("WrongCall")
     @Override
     protected void onDraw(Canvas canvas) {
+        org.telegram.ui.Components.OmnigramVerifiedGlowDrawable.animatedDrawn = false;
+        omniOnDraw(canvas);
+        if (org.telegram.ui.Components.OmnigramVerifiedGlowDrawable.animatedDrawn) {
+            postInvalidateDelayed(70);
+        }
+    }
+
+    private void omniOnDraw(Canvas canvas) {
         try { if (currentMessageObject != null && org.telegram.ui.Components.OmnigramDeleted.isDeleted(currentMessageObject.getDialogId(), currentMessageObject.getId())) setAlpha(0.70f); } catch (Throwable ignore) {}
 
         drawInternal(canvas);

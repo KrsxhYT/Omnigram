@@ -119,7 +119,15 @@ public abstract class OmnigramSettingsBase extends BaseFragment {
         parent.addView(row, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
     }
 
+    protected interface OnToggle {
+        void on(boolean value);
+    }
+
     protected void toggle(Context context, LinearLayout parent, String title, String sub, String key, boolean def) {
+        toggle(context, parent, title, sub, key, def, null);
+    }
+
+    protected void toggle(Context context, LinearLayout parent, String title, String sub, String key, boolean def, OnToggle cb) {
         if (parent.getChildCount() > 0) divider(context, parent);
         LinearLayout row = new LinearLayout(context);
         row.setOrientation(LinearLayout.HORIZONTAL);
@@ -150,6 +158,7 @@ public abstract class OmnigramSettingsBase extends BaseFragment {
             boolean now = !sw.isChecked();
             sw.setChecked(now);
             OmnigramPrefs.set(key, now);
+            if (cb != null) cb.on(now);
         });
         parent.addView(row, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
     }

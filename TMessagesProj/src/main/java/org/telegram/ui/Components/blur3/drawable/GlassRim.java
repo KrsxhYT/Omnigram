@@ -91,11 +91,11 @@ public final class GlassRim {
     }
 
     boolean hasTop() {
-        return topWidth > 0.05f && (topColor >>> 24) != 0;
+        return org.telegram.ui.Components.OmnigramPrefs.glare() && topWidth > 0.05f && (topColor >>> 24) != 0;
     }
 
     boolean hasBottom() {
-        return bottomWidth > 0.05f && (bottomColor >>> 24) != 0;
+        return org.telegram.ui.Components.OmnigramPrefs.glare() && bottomWidth > 0.05f && (bottomColor >>> 24) != 0;
     }
 
     boolean hasRing() {

@@ -42,6 +42,13 @@ import org.telegram.ui.Components.blur3.drawable.BlurredBackgroundDrawable;
 
 public class ProfileMusicView extends View {
 
+    /** The profile music bar and its background are removed in Omnigram. */
+    @Override
+    public void setVisibility(int visibility) {
+        super.setVisibility(View.GONE);
+    }
+
+
     private final Theme.ResourcesProvider resourcesProvider;
     private final PorterDuffColorFilter filterColorWhite = new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
     private final PorterDuffColorFilter filterColorBlack = new PorterDuffColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);

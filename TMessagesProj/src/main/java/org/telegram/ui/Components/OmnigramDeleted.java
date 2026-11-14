@@ -153,10 +153,15 @@ public final class OmnigramDeleted {
     }
 
     /** Repaint the open chat so a newly marked message dims immediately. */
+    /** Set by the open chat; repaints its message cells so a newly marked message dims without any heavy refresh. */
+    public static volatile Runnable uiRefresher;
+
     public static void refreshUi() {
         try {
-            org.telegram.messenger.AndroidUtilities.runOnUIThread(() ->
-                org.telegram.messenger.NotificationCenter.getGlobalInstance().postNotificationName(org.telegram.messenger.NotificationCenter.emojiLoaded));
+            org.telegram.messenger.AndroidUtilities.runOnUIThread(() -> {
+                Runnable r = uiRefresher;
+                if (r != null) r.run();
+            });
         } catch (Throwable ignore) {}
     }
 
