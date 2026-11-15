@@ -79,6 +79,23 @@ public class OmnigramVerifiedGlowDrawable extends Drawable {
     @Override public void setBounds(int l, int t, int r, int b) { super.setBounds(l, t, r, b); base.setBounds(l, t, r, b); }
     @Override public void setAlpha(int alpha) { base.setAlpha(alpha); }
     @Override public void setColorFilter(ColorFilter cf) { base.setColorFilter(cf); }
+    @Override
+    public ConstantState getConstantState() {
+        final ConstantState inner = base.getConstantState();
+        if (inner == null) return null;
+        return new ConstantState() {
+            @Override
+            public Drawable newDrawable() {
+                return new OmnigramVerifiedGlowDrawable(inner.newDrawable());
+            }
+
+            @Override
+            public int getChangingConfigurations() {
+                return inner.getChangingConfigurations();
+            }
+        };
+    }
+
     @Override public int getOpacity() { return PixelFormat.TRANSLUCENT; }
     @Override public int getIntrinsicWidth() { return base.getIntrinsicWidth(); }
     @Override public int getIntrinsicHeight() { return base.getIntrinsicHeight(); }
