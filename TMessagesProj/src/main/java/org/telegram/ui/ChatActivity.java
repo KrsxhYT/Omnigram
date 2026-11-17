@@ -8138,6 +8138,13 @@ public class ChatActivity extends BaseFragment implements
             }
         } catch (Throwable ignore) {}
 
+        try {
+            if (!inPreviewMode && !isInsideContainer && chatMode == 0) {
+                final org.telegram.ui.Components.OmnigramComposerBar omniComposerBar = new org.telegram.ui.Components.OmnigramComposerBar(context, currentAccount, chatActivityEnterView, contentView);
+                contentView.addView(omniComposerBar, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.BOTTOM, 14, 0, 14, 0));
+            }
+        } catch (Throwable ignore) {}
+
         int chatListIndex = contentView.indexOfChild(chatListView);
         chatListIndex = chatListIndex < 0 ? contentView.getChildCount() : (chatListIndex + 1);
 

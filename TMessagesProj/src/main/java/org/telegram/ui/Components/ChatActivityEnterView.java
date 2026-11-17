@@ -6232,9 +6232,9 @@ public class ChatActivityEnterView extends FrameLayout implements
             if (expr.isEmpty()) return;
             for (int k = 0; k < expr.length(); k++) {
                 char ch = expr.charAt(k);
-                if (!(Character.isDigit(ch) || ch=='+'||ch=='-'||ch=='*'||ch=='/'||ch=='x'||ch=='X'||ch=='('||ch==')'||ch=='.'||ch==' '||ch=='%')) return;
+                if (!(Character.isDigit(ch) || ch=='+'||ch=='-'||ch=='*'||ch=='/'||ch=='x'||ch=='X'||ch=='\u00D7'||ch=='\u00F7'||ch=='('||ch==')'||ch=='.'||ch==' '||ch=='%')) return;
             }
-            double val = omnigramEvalExpr(expr.replace('x','*').replace('X','*'));
+            double val = omnigramEvalExpr(expr.replace('x','*').replace('X','*').replace('\u00D7','*').replace('\u00F7','/'));
             if (Double.isNaN(val) || Double.isInfinite(val)) return;
             String ans = (Math.abs(val - Math.rint(val)) < 1e-9) ? String.valueOf((long)Math.rint(val)) : String.format(java.util.Locale.US, "%.8f", val).replaceAll("0+$","").replaceAll("\\.$","");
             String next = expr + "=" + ans;
