@@ -161,7 +161,13 @@ public class OmnigramComposerBar extends LinearLayout {
 
     public void setPreview(boolean on) {
         previewOn = on;
-        previewCard.setVisibility(on ? VISIBLE : GONE);
+        if (on) {
+            previewCard.setAlpha(0f);
+            previewCard.setVisibility(VISIBLE);
+            previewCard.animate().alpha(1f).setDuration(180).start();
+        } else {
+            previewCard.setVisibility(GONE);
+        }
         refresh();
     }
 
@@ -185,7 +191,7 @@ public class OmnigramComposerBar extends LinearLayout {
             CharSequence text = et != null ? et.getText() : "";
             int n = text == null ? 0 : text.length();
             boolean show = OmnigramComposerPrefs.on(OmnigramComposerPrefs.CONTEXT_MENU) && (n > 0 || previewOn);
-            setVisibility(show ? VISIBLE : GONE);
+            animateVisible(show);
             toolsButton.setVisibility(OmnigramComposerPrefs.on(OmnigramComposerPrefs.CONTEXT_MENU) ? VISIBLE : GONE);
 
             if (OmnigramComposerPrefs.on(OmnigramComposerPrefs.COUNTER)) {
@@ -215,6 +221,24 @@ public class OmnigramComposerBar extends LinearLayout {
                 previewText.setText(sb.length() == 0 ? "(empty)" : sb);
             }
         } catch (Throwable ignore) {}
+    }
+
+    private boolean lastShow;
+
+    private void animateVisible(boolean show) {
+        lastShow = show;
+        if (show) {
+            animate().cancel();
+            if (getVisibility() != VISIBLE) {
+                setAlpha(0f);
+                setVisibility(VISIBLE);
+            }
+            if (getAlpha() < 1f) animate().alpha(1f).setDuration(180).start();
+        } else if (getVisibility() == VISIBLE) {
+            animate().alpha(0f).setDuration(140).withEndAction(() -> {
+                if (!lastShow) setVisibility(GONE);
+            }).start();
+        }
     }
 
     private void follow() {

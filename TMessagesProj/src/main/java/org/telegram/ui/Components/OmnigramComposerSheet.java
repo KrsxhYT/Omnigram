@@ -56,44 +56,66 @@ public class OmnigramComposerSheet {
     private TextView title(String t) {
         TextView v = new TextView(context);
         v.setText(t);
-        v.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
+        v.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
         v.setTypeface(Typeface.DEFAULT_BOLD);
+        v.setLetterSpacing(0.06f);
         v.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlueHeader));
-        v.setPadding(0, AndroidUtilities.dp(14), 0, AndroidUtilities.dp(6));
+        v.setPadding(AndroidUtilities.dp(4), AndroidUtilities.dp(16), 0, AndroidUtilities.dp(8));
         return v;
+    }
+
+    private LinearLayout card() {
+        LinearLayout c = new LinearLayout(context);
+        c.setOrientation(LinearLayout.VERTICAL);
+        c.setBackground(Theme.createRoundRectDrawable(AndroidUtilities.dp(16), Theme.getColor(Theme.key_windowBackgroundGray)));
+        c.setPadding(AndroidUtilities.dp(6), AndroidUtilities.dp(6), AndroidUtilities.dp(6), AndroidUtilities.dp(6));
+        return c;
     }
 
     private TextView chip(String text, View.OnClickListener l) {
         TextView t = new TextView(context);
         t.setText(text);
-        t.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
+        t.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
         t.setTextColor(textColor());
         t.setGravity(Gravity.CENTER);
-        t.setPadding(AndroidUtilities.dp(12), AndroidUtilities.dp(9), AndroidUtilities.dp(12), AndroidUtilities.dp(9));
-        t.setBackground(Theme.createRoundRectDrawable(AndroidUtilities.dp(12), Theme.getColor(Theme.key_windowBackgroundGray)));
+        t.setSingleLine(true);
+        t.setPadding(AndroidUtilities.dp(4), AndroidUtilities.dp(11), AndroidUtilities.dp(4), AndroidUtilities.dp(11));
+        t.setBackground(Theme.createRoundRectDrawable(AndroidUtilities.dp(12), Theme.getColor(Theme.key_windowBackgroundWhite)));
         t.setOnClickListener(l);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp.rightMargin = AndroidUtilities.dp(6);
-        lp.bottomMargin = AndroidUtilities.dp(6);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
+        lp.setMargins(AndroidUtilities.dp(3), AndroidUtilities.dp(3), AndroidUtilities.dp(3), AndroidUtilities.dp(3));
         t.setLayoutParams(lp);
         return t;
     }
 
-    private TextView action(String text, View.OnClickListener l) {
+    /** One tappable row: round icon glyph + label. */
+    private View item(String glyph, String label, View.OnClickListener l) {
+        LinearLayout row = new LinearLayout(context);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        row.setPadding(AndroidUtilities.dp(8), AndroidUtilities.dp(10), AndroidUtilities.dp(8), AndroidUtilities.dp(10));
+        row.setBackground(Theme.createSelectorDrawable(Theme.getColor(Theme.key_listSelector), 2));
+        TextView g = new TextView(context);
+        g.setText(glyph);
+        g.setGravity(Gravity.CENTER);
+        g.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
+        g.setTypeface(Typeface.DEFAULT_BOLD);
+        g.setTextColor(Theme.getColor(Theme.key_featuredStickers_buttonText));
+        g.setBackground(Theme.createRoundRectDrawable(AndroidUtilities.dp(15), Theme.getColor(Theme.key_featuredStickers_addButton)));
+        row.addView(g, new LinearLayout.LayoutParams(AndroidUtilities.dp(30), AndroidUtilities.dp(30)));
         TextView t = new TextView(context);
-        t.setText(text);
-        t.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+        t.setText(label);
+        t.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
         t.setTextColor(textColor());
-        t.setPadding(AndroidUtilities.dp(4), AndroidUtilities.dp(12), AndroidUtilities.dp(4), AndroidUtilities.dp(12));
-        t.setOnClickListener(l);
-        return t;
+        LinearLayout.LayoutParams tp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
+        tp.leftMargin = AndroidUtilities.dp(12);
+        row.addView(t, tp);
+        row.setOnClickListener(l);
+        return row;
     }
 
-    private LinearLayout wrapRow() {
-        // simple wrapping: rows of up to 4 chips
-        LinearLayout col = new LinearLayout(context);
-        col.setOrientation(LinearLayout.VERTICAL);
-        return col;
+    private void addItem(LinearLayout card, String glyph, String label, View.OnClickListener l) {
+        card.addView(item(glyph, label, l), new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
     }
 
     private void addChips(LinearLayout col, ArrayList<TextView> chips) {
@@ -102,9 +124,18 @@ public class OmnigramComposerSheet {
             if (i % 4 == 0) {
                 row = new LinearLayout(context);
                 row.setOrientation(LinearLayout.HORIZONTAL);
-                col.addView(row);
+                col.addView(row, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             }
             row.addView(chips.get(i));
+        }
+        // keep the last row's chips the same width as the others
+        int rem = chips.size() % 4;
+        if (rem != 0 && row != null) {
+            for (int i = rem; i < 4; i++) {
+                View sp = new View(context);
+                sp.setLayoutParams(new LinearLayout.LayoutParams(0, 1, 1f));
+                row.addView(sp);
+            }
         }
     }
 
@@ -130,12 +161,12 @@ public class OmnigramComposerSheet {
         ScrollView scroll = new ScrollView(context);
         LinearLayout root = new LinearLayout(context);
         root.setOrientation(LinearLayout.VERTICAL);
-        root.setPadding(AndroidUtilities.dp(20), AndroidUtilities.dp(4), AndroidUtilities.dp(20), AndroidUtilities.dp(8));
+        root.setPadding(AndroidUtilities.dp(16), AndroidUtilities.dp(0), AndroidUtilities.dp(16), AndroidUtilities.dp(10));
         scroll.addView(root);
 
         if (OmnigramComposerPrefs.on(OmnigramComposerPrefs.FORMAT_TOOLBAR)) {
             root.addView(title("FORMAT SELECTED TEXT"));
-            LinearLayout col = wrapRow();
+            LinearLayout col = card();
             ArrayList<TextView> chips = new ArrayList<>();
             chips.add(chip("Bold", v -> format(0)));
             chips.add(chip("Italic", v -> format(1)));
@@ -143,47 +174,68 @@ public class OmnigramComposerSheet {
             chips.add(chip("Strike", v -> format(3)));
             chips.add(chip("Spoiler", v -> format(4)));
             chips.add(chip("Code", v -> format(5)));
-            chips.add(chip("Code block", v -> format(6)));
+            chips.add(chip("Block", v -> format(6)));
             chips.add(chip("Quote", v -> format(7)));
             chips.add(chip("Link", v -> format(8)));
-            chips.add(chip("Mention", v -> format(9)));
+            chips.add(chip("@Mention", v -> format(9)));
             chips.add(chip("Clear", v -> format(10)));
             addChips(col, chips);
-            root.addView(col);
+            root.addView(col, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
 
-        root.addView(title("TOOLS"));
-        if (OmnigramComposerPrefs.on(OmnigramComposerPrefs.CONVERTER)) {
-            root.addView(action("Convert Markdown / HTML to Telegram formatting", v -> { dismiss(); convertMarkdownHtml(); }));
+        boolean hasEdit = OmnigramComposerPrefs.on(OmnigramComposerPrefs.CONVERTER) || OmnigramComposerPrefs.on(OmnigramComposerPrefs.AUTO_FIX)
+                || OmnigramComposerPrefs.on(OmnigramComposerPrefs.LIVE_PREVIEW) || OmnigramComposerPrefs.on(OmnigramComposerPrefs.UNDO_REDO);
+        if (hasEdit) {
+            root.addView(title("EDIT"));
+            LinearLayout c = card();
+            if (OmnigramComposerPrefs.on(OmnigramComposerPrefs.CONVERTER)) {
+                addItem(c, "M", "Convert Markdown / HTML", v -> { dismiss(); convertMarkdownHtml(); });
+            }
+            if (OmnigramComposerPrefs.on(OmnigramComposerPrefs.AUTO_FIX)) {
+                addItem(c, "\u2713", "Auto fix formatting", v -> { dismiss(); autoFix(); });
+                addItem(c, "\u21BA", "Restore original draft", v -> { dismiss(); restoreOriginal(); });
+            }
+            if (OmnigramComposerPrefs.on(OmnigramComposerPrefs.LIVE_PREVIEW)) {
+                addItem(c, "\u25B6", bar.isPreviewOn() ? "Hide live preview" : "Show live preview", v -> { dismiss(); bar.setPreview(!bar.isPreviewOn()); });
+            }
+            if (OmnigramComposerPrefs.on(OmnigramComposerPrefs.UNDO_REDO)) {
+                addItem(c, "\u21B6", bar.history.canUndo() ? "Undo" : "Undo (nothing yet)", v -> { dismiss(); undo(); });
+                addItem(c, "\u21B7", bar.history.canRedo() ? "Redo" : "Redo (nothing yet)", v -> { dismiss(); redo(); });
+            }
+            root.addView(c, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
-        if (OmnigramComposerPrefs.on(OmnigramComposerPrefs.AUTO_FIX)) {
-            root.addView(action("Auto fix formatting", v -> { dismiss(); autoFix(); }));
-            root.addView(action("Restore original draft", v -> { dismiss(); restoreOriginal(); }));
+
+        boolean hasLong = OmnigramComposerPrefs.on(OmnigramComposerPrefs.THREAD_SPLITTER) || OmnigramComposerPrefs.on(OmnigramComposerPrefs.LIST_TABLE);
+        if (hasLong) {
+            root.addView(title("LONG TEXT"));
+            LinearLayout c = card();
+            if (OmnigramComposerPrefs.on(OmnigramComposerPrefs.THREAD_SPLITTER)) {
+                addItem(c, "1/n", "Split into numbered messages", v -> { dismiss(); splitThread(); });
+            }
+            if (OmnigramComposerPrefs.on(OmnigramComposerPrefs.LIST_TABLE)) {
+                addItem(c, "\u2261", "Convert list / table", v -> { dismiss(); convertListTable(); });
+            }
+            root.addView(c, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
-        if (OmnigramComposerPrefs.on(OmnigramComposerPrefs.LIVE_PREVIEW)) {
-            root.addView(action(bar.isPreviewOn() ? "Hide live preview" : "Show live preview", v -> { dismiss(); bar.setPreview(!bar.isPreviewOn()); }));
-        }
-        if (OmnigramComposerPrefs.on(OmnigramComposerPrefs.THREAD_SPLITTER)) {
-            root.addView(action("Split into numbered messages (thread)", v -> { dismiss(); splitThread(); }));
-        }
-        if (OmnigramComposerPrefs.on(OmnigramComposerPrefs.LIST_TABLE)) {
-            root.addView(action("Convert list / table to Telegram format", v -> { dismiss(); convertListTable(); }));
-        }
-        if (OmnigramComposerPrefs.on(OmnigramComposerPrefs.UNDO_REDO)) {
-            root.addView(action("Undo formatting change" + (bar.history.canUndo() ? "" : " (nothing to undo)"), v -> { dismiss(); undo(); }));
-            root.addView(action("Redo formatting change" + (bar.history.canRedo() ? "" : " (nothing to redo)"), v -> { dismiss(); redo(); }));
-        }
-        if (OmnigramComposerPrefs.on(OmnigramComposerPrefs.GRAMMAR_AI)) {
-            root.addView(action("Grammar + clarity fix (Telegram AI editor)", v -> { dismiss(); openAiEditor(); }));
-        }
-        if (OmnigramComposerPrefs.on(OmnigramComposerPrefs.TRANSLATE_AI)) {
-            root.addView(action("Translate + localize (Telegram AI editor)", v -> { dismiss(); openAiEditor(); }));
-        }
-        if (OmnigramComposerPrefs.on(OmnigramComposerPrefs.EMOJI_SUGGEST)) {
-            root.addView(action("Emoji suggestions", v -> { dismiss(); emojiSuggestions(); }));
-        }
-        if (OmnigramComposerPrefs.on(OmnigramComposerPrefs.WELCOME)) {
-            root.addView(action("Welcome / auto-reply templates", v -> { dismiss(); templates(); }));
+
+        boolean hasWrite = OmnigramComposerPrefs.on(OmnigramComposerPrefs.GRAMMAR_AI) || OmnigramComposerPrefs.on(OmnigramComposerPrefs.TRANSLATE_AI)
+                || OmnigramComposerPrefs.on(OmnigramComposerPrefs.EMOJI_SUGGEST) || OmnigramComposerPrefs.on(OmnigramComposerPrefs.WELCOME);
+        if (hasWrite) {
+            root.addView(title("WRITING HELP"));
+            LinearLayout c = card();
+            if (OmnigramComposerPrefs.on(OmnigramComposerPrefs.GRAMMAR_AI)) {
+                addItem(c, "G", "Grammar + clarity (Telegram AI)", v -> { dismiss(); openAiEditor(); });
+            }
+            if (OmnigramComposerPrefs.on(OmnigramComposerPrefs.TRANSLATE_AI)) {
+                addItem(c, "T", "Translate + localize (Telegram AI)", v -> { dismiss(); openAiEditor(); });
+            }
+            if (OmnigramComposerPrefs.on(OmnigramComposerPrefs.EMOJI_SUGGEST)) {
+                addItem(c, "\u263A", "Emoji suggestions", v -> { dismiss(); emojiSuggestions(); });
+            }
+            if (OmnigramComposerPrefs.on(OmnigramComposerPrefs.WELCOME)) {
+                addItem(c, "W", "Welcome / auto-reply templates", v -> { dismiss(); templates(); });
+            }
+            root.addView(c, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
 
         AlertDialog.Builder b = new AlertDialog.Builder(context);

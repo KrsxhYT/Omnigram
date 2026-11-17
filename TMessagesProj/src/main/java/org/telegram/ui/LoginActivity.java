@@ -1675,6 +1675,57 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
         onAuthSuccess(res, false);
     }
 
+    private static final String OMNI_BOT_NOTE = "Note:\n\nYou can use the @BotFather bot to create a new bot.\n\nEnter the bot token here that @BotFather gave you to login with the bot.\n\nIf you login with a bot, you will have all the limitations that bots have, including:\n\n- You do not have access to your contacts.\n\n- You can't join groups and channels. (unless you add their administrators)\n\n- You can only write to users who have already sent you /start.\n\nYou will not be able to see when users view your messages.\n\n- The chat list is empty when you first login, and will populate when the bot receives messages from users and groups. Group detection can be particularly slow.";
+
+    private void omnigramShowBotTokenDialog() {
+        if (getParentActivity() == null) return;
+        final android.content.Context ctx = getParentActivity();
+        android.widget.ScrollView scroll = new android.widget.ScrollView(ctx);
+        android.widget.LinearLayout box = new android.widget.LinearLayout(ctx);
+        box.setOrientation(android.widget.LinearLayout.VERTICAL);
+        box.setPadding(AndroidUtilities.dp(22), AndroidUtilities.dp(6), AndroidUtilities.dp(22), AndroidUtilities.dp(6));
+        scroll.addView(box);
+        TextView note = new TextView(ctx);
+        note.setText(OMNI_BOT_NOTE);
+        note.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
+        note.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteGrayText2));
+        box.addView(note);
+        final android.widget.EditText token = new android.widget.EditText(ctx);
+        token.setHint("123456789:ABC-DEF1234ghIkl-zyx57W2v1u123ew11");
+        token.setSingleLine(true);
+        token.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlackText));
+        token.setTextSize(15);
+        box.addView(token);
+        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+        builder.setTitle("Login with Bot Token");
+        builder.setView(scroll);
+        builder.setNegativeButton("Cancel", null);
+        builder.setPositiveButton("Login", (d, w) -> omnigramLoginWithBotToken(token.getText().toString().trim()));
+        showDialog(builder.create());
+    }
+
+    private void omnigramLoginWithBotToken(String botToken) {
+        if (!botToken.matches("[0-9]+:[A-Za-z0-9_-]{20,}")) {
+            android.widget.Toast.makeText(getParentActivity(), "That does not look like a bot token from @BotFather", android.widget.Toast.LENGTH_LONG).show();
+            return;
+        }
+        TLRPC.TL_auth_importBotAuthorization req = new TLRPC.TL_auth_importBotAuthorization();
+        req.api_id = BuildVars.APP_ID;
+        req.api_hash = BuildVars.APP_HASH;
+        req.bot_auth_token = botToken;
+        needShowProgress(0);
+        getConnectionsManager().sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
+            needHideProgress(false);
+            if (error == null && response instanceof TLRPC.TL_auth_authorization) {
+                onAuthSuccess((TLRPC.TL_auth_authorization) response);
+            } else {
+                String msg = error != null && error.text != null ? error.text : "Login failed";
+                if (msg.contains("ACCESS_TOKEN_INVALID")) msg = "This bot token is not valid";
+                android.widget.Toast.makeText(getParentActivity(), msg, android.widget.Toast.LENGTH_LONG).show();
+            }
+        }), ConnectionsManager.RequestFlagFailOnServerErrors | ConnectionsManager.RequestFlagWithoutLogin);
+    }
+
     private boolean pendingSwitchingAccount;
 
     private void onAuthSuccess(TLRPC.TL_auth_authorization res, boolean afterSignup) {
@@ -2532,6 +2583,16 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
                     loadCountries();
                 });
             }
+
+            TextView botLogin = new TextView(context);
+            botLogin.setText("Login with Bot Token");
+            botLogin.setGravity(Gravity.CENTER);
+            botLogin.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
+            botLogin.setTypeface(AndroidUtilities.bold());
+            botLogin.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlueText4));
+            botLogin.setPadding(AndroidUtilities.dp(16), AndroidUtilities.dp(14), AndroidUtilities.dp(16), AndroidUtilities.dp(14));
+            botLogin.setOnClickListener(v -> omnigramShowBotTokenDialog());
+            addView(botLogin, LayoutHelper.createLinear(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL, 16, 6, 16, 0));
 
             if (bottomMargin > 0 && !AndroidUtilities.isSmallScreen()) {
                 Space bottomSpacer = new Space(context);

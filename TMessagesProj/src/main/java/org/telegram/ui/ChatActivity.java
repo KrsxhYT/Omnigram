@@ -1255,6 +1255,9 @@ public class ChatActivity extends BaseFragment implements
     public final static int OPTION_OMNI_SAVE = 9104;
     public final static int OPTION_OMNI_DELETED_LIST = 9105;
     public final static int OPTION_OMNI_ALIAS = 9106;
+    public final static int OPTION_OMNI_LOCK = 9107;
+    public final static int OPTION_OMNI_LINK = 9108;
+    public final static int OPTION_OMNI_SPEAK = 9109;
     public final static int OPTION_ADD_TO_STICKERS_OR_MASKS = 9;
     public final static int OPTION_SAVE_TO_DOWNLOADS_OR_MUSIC = 10;
     public final static int OPTION_ADD_TO_GIFS = 11;
@@ -3850,6 +3853,8 @@ public class ChatActivity extends BaseFragment implements
                     showDialog(AlertsCreator.createTTLAlert(getParentActivity(), currentEncryptedChat, themeDelegate).create());
                 } else if (id == OPTION_OMNI_TO_BEGINNING) {
                     try { omnigramGoToBeginning(); } catch (Throwable ignore) {}
+                } else if (id == OPTION_OMNI_LOCK) {
+                    try { omnigramLockMenu(); } catch (Throwable ignore) {}
                 } else if (id == OPTION_OMNI_ALIAS) {
                     try { omnigramEditAlias(); } catch (Throwable ignore) {}
                 } else if (id == OPTION_OMNI_DELETED_LIST) {
@@ -4432,6 +4437,7 @@ public class ChatActivity extends BaseFragment implements
             }
             headerItem.lazilyAddSubItem(OPTION_OMNI_DELETED_LIST, R.drawable.msg_delete, "Deleted messages");
             headerItem.lazilyAddSubItem(OPTION_OMNI_ALIAS, R.drawable.msg_edit, "Mention alias (local)");
+            headerItem.lazilyAddSubItem(OPTION_OMNI_LOCK, R.drawable.msg_secret, "Lock Chat");
             clearHistoryItem = headerItem.lazilyAddSubItem(clear_history, R.drawable.msg_clear,
                     LocaleController.getString(UserObject.isBotForum(currentUser) ? R.string.ClearAllHistory : R.string.ClearHistory));
             boolean addedSettings = false;
@@ -30676,6 +30682,7 @@ public class ChatActivity extends BaseFragment implements
 
     @Override
     public void onResume() {
+        omnigramCheckLock();
         org.telegram.ui.Components.OmnigramDeleted.uiRefresher = () -> {
             try { if (chatListView != null) chatListView.invalidateViews(); } catch (Throwable ignore) {}
         };
@@ -34372,7 +34379,84 @@ public class ChatActivity extends BaseFragment implements
                 .show();
     }
 
+    private void omnigramCopyPrivateLink() {
+        try {
+            if (selectedObject == null) return;
+            long did = dialog_id;
+            long mid = selectedObject.getId();
+            String link;
+            if (did > 0) {
+                link = "tg://openmessage?user_id=" + did + "&message_id=" + mid;
+            } else if (currentChat != null && ChatObject.isChannel(currentChat)) {
+                link = "tg://openmessage?channel_id=" + (-did) + "&message_id=" + mid;
+            } else {
+                link = "tg://openmessage?chat_id=" + (-did) + "&message_id=" + mid;
+            }
+            AndroidUtilities.addToClipboard(link);
+            BulletinFactory.of(this).createSimpleBulletin(R.raw.copy, "Private link copied").show();
+        } catch (Throwable ignore) {}
+    }
+
+    private boolean omniUnlocked;
+    private boolean omniLockShowing;
+
+    /** Chat lock gate: asks for the 4-digit password before a locked chat can be seen. */
+    private void omnigramCheckLock() {
+        try {
+            if (dialog_id == 0 || omniUnlocked || omniLockShowing) return;
+            if (!org.telegram.ui.Components.OmnigramChatLock.isLocked(dialog_id)) {
+                omniUnlocked = true;
+                return;
+            }
+            if (getParentActivity() == null) return;
+            omniLockShowing = true;
+            if (fragmentView != null) fragmentView.setAlpha(0f);
+            org.telegram.ui.Components.OmnigramChatLock.askPin(getParentActivity(), dialog_id, "Chat locked", ok -> {
+                omniLockShowing = false;
+                if (ok) {
+                    omniUnlocked = true;
+                    if (fragmentView != null) fragmentView.animate().alpha(1f).setDuration(220).start();
+                } else {
+                    finishFragment();
+                }
+            });
+        } catch (Throwable ignore) {}
+    }
+
+    private void omnigramLockMenu() {
+        if (getParentActivity() == null || dialog_id == 0) return;
+        final long did = dialog_id;
+        if (!org.telegram.ui.Components.OmnigramChatLock.isLocked(did)) {
+            org.telegram.ui.Components.OmnigramChatLock.askNewPin(getParentActivity(), did, () -> omniUnlocked = true);
+            return;
+        }
+        new org.telegram.ui.ActionBar.AlertDialog.Builder(getParentActivity())
+                .setTitle("Chat lock")
+                .setItems(new CharSequence[]{"Change password", "Remove lock"}, (d, which) ->
+                        org.telegram.ui.Components.OmnigramChatLock.askPin(getParentActivity(), did, "Enter current password", ok -> {
+                            if (!ok) return;
+                            if (which == 0) {
+                                org.telegram.ui.Components.OmnigramChatLock.askNewPin(getParentActivity(), did, null);
+                            } else {
+                                org.telegram.ui.Components.OmnigramChatLock.remove(did);
+                                BulletinFactory.of(this).createSimpleBulletin(R.raw.contact_check, "Chat unlocked").show();
+                            }
+                        }))
+                .setNegativeButton("Close", null)
+                .show();
+    }
+
     private void processSelectedOption(int option) {
+        if (option == OPTION_OMNI_LINK) {
+            omnigramCopyPrivateLink();
+            return;
+        }
+        if (option == OPTION_OMNI_SPEAK) {
+            try {
+                if (selectedObject != null) org.telegram.ui.Components.OmnigramSpeaker.speak(getParentActivity(), selectedObject.messageText);
+            } catch (Throwable ignore) {}
+            return;
+        }
         if (option == OPTION_OMNI_SAVE) {
             omnigramSendToSaved();
             return;
@@ -46789,6 +46873,17 @@ public class ChatActivity extends BaseFragment implements
                     items.add(LocaleController.getString(R.string.Copy));
                     options.add(OPTION_COPY);
                     icons.add(R.drawable.msg_copy);
+                }
+                // Omnigram: private link + speak
+                if (selectedObject != null && selectedObject.getId() > 0 && chatMode != MODE_SCHEDULED) {
+                    items.add("Copy private link");
+                    options.add(OPTION_OMNI_LINK);
+                    icons.add(R.drawable.msg_link);
+                }
+                if (selectedObject != null && !TextUtils.isEmpty(selectedObject.messageText)) {
+                    items.add("Speak");
+                    options.add(OPTION_OMNI_SPEAK);
+                    icons.add(R.drawable.msg_unmute);
                 }
                 // Omnigram Part2
                 if (!selectedObject.isSponsored() && !noforwardsOrPaidMedia && chatMode != MODE_SCHEDULED && selectedObject.getId() > 0) {

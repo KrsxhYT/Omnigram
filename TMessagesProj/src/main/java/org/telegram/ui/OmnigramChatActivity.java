@@ -15,6 +15,7 @@ public class OmnigramChatActivity extends OmnigramSettingsBase {
         section(context, "Composer");
         LinearLayout c = card(context);
         row(context, c, R.drawable.msg_customize, "Advanced Settings", null, x -> presentFragment(new OmnigramChatAdvancedActivity()));
+        row(context, c, R.drawable.msg_discuss, "Auto Answer When Offline", null, x -> presentFragment(new OmnigramAutoAnswerActivity()));
         return root;
     }
 }

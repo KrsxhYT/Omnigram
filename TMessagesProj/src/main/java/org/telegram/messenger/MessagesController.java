@@ -18646,6 +18646,7 @@ public class MessagesController extends BaseController implements NotificationCe
                     continue;
                 }
                 org.telegram.ui.Components.OmnigramLastSeen.recordMessage(message);
+                org.telegram.ui.Components.OmnigramAutoAnswer.onIncoming(currentAccount, message);
                 if (newMessageCallback != null && newMessageCallback.onMessageReceived(message)) {
                     newMessageCallback = null;
                 }
