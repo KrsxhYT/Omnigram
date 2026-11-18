@@ -74,62 +74,23 @@ public final class OmnigramChatLock {
         return b;
     }
 
-    /** Ask for the current password until it is right or the user cancels. */
+    /** Full screen PIN pad: asks for the current password until it is right or the user cancels. */
     public static void askPin(final Context context, final long dialogId, final String title, final Result result) {
         if (context == null) {
             result.done(false);
             return;
         }
-        final EditText field = pinField(context, "4-digit password");
-        LinearLayout b = box(context);
-        b.addView(field);
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(title);
-        builder.setMessage("Enter the 4-digit password for this chat");
-        builder.setView(b);
-        builder.setPositiveButton("Unlock", (d, w) -> {
-            if (verify(dialogId, field.getText().toString())) {
-                result.done(true);
-            } else {
-                Toast.makeText(context, "Wrong password", Toast.LENGTH_SHORT).show();
-                askPin(context, dialogId, title, result);
-            }
-        });
-        builder.setNegativeButton("Cancel", (d, w) -> result.done(false));
-        AlertDialog dialog = builder.create();
-        dialog.setCancelable(false);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
+        new OmnigramPinDialog(context, dialogId, false, title, result::done).show();
     }
 
-    /** Set a new 4-digit password (typed twice). */
+    /** Full screen PIN pad: set a new 4-digit password (typed twice). */
     public static void askNewPin(final Context context, final long dialogId, final Runnable onSaved) {
         if (context == null) return;
-        final EditText one = pinField(context, "New 4-digit password");
-        final EditText two = pinField(context, "Repeat password");
-        LinearLayout b = box(context);
-        b.addView(one);
-        b.addView(two);
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Lock chat");
-        builder.setMessage("Choose a password with exactly 4 digits. It is saved only on this device.");
-        builder.setView(b);
-        builder.setPositiveButton("Lock", (d, w) -> {
-            String p1 = one.getText().toString();
-            String p2 = two.getText().toString();
-            if (!p1.matches("[0-9]{4}")) {
-                Toast.makeText(context, "The password must be exactly 4 digits", Toast.LENGTH_SHORT).show();
-                askNewPin(context, dialogId, onSaved);
-            } else if (!p1.equals(p2)) {
-                Toast.makeText(context, "The two passwords do not match", Toast.LENGTH_SHORT).show();
-                askNewPin(context, dialogId, onSaved);
-            } else {
-                setPin(dialogId, p1);
+        new OmnigramPinDialog(context, dialogId, true, "Lock chat", ok -> {
+            if (ok) {
                 Toast.makeText(context, "Chat locked", Toast.LENGTH_SHORT).show();
                 if (onSaved != null) onSaved.run();
             }
-        });
-        builder.setNegativeButton("Cancel", null);
-        builder.show();
+        }).show();
     }
 }

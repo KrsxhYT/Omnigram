@@ -34385,15 +34385,25 @@ public class ChatActivity extends BaseFragment implements
             long did = dialog_id;
             long mid = selectedObject.getId();
             String link;
-            if (did > 0) {
+            String note;
+            if (did < 0 && currentChat != null && ChatObject.isChannel(currentChat)) {
+                // channels and supergroups share message ids between everyone, so this link works for other members too
+                String username = ChatObject.getPublicUsername(currentChat);
+                if (!TextUtils.isEmpty(username)) {
+                    link = "https://t.me/" + username + "/" + mid;
+                } else {
+                    link = "https://t.me/c/" + (-did) + "/" + mid;
+                }
+                note = "Link copied. Anyone who is in this chat can open it";
+            } else if (did > 0) {
                 link = "tg://openmessage?user_id=" + did + "&message_id=" + mid;
-            } else if (currentChat != null && ChatObject.isChannel(currentChat)) {
-                link = "tg://openmessage?channel_id=" + (-did) + "&message_id=" + mid;
+                note = "Link copied. Private chat message numbers are different for each person, so this link opens the message only on your account";
             } else {
                 link = "tg://openmessage?chat_id=" + (-did) + "&message_id=" + mid;
+                note = "Link copied. Group message numbers are different for each person, so this link opens the message only on your account";
             }
             AndroidUtilities.addToClipboard(link);
-            BulletinFactory.of(this).createSimpleBulletin(R.raw.copy, "Private link copied").show();
+            BulletinFactory.of(this).createSimpleBulletin(R.raw.copy, note, 3).show();
         } catch (Throwable ignore) {}
     }
 

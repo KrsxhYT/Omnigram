@@ -38,7 +38,7 @@ public class OmnigramComposerSheet {
     private final int account;
     private final ChatActivityEnterView enter;
     private final OmnigramComposerBar bar;
-    private AlertDialog dialog;
+    private org.telegram.ui.ActionBar.BottomSheet dialog;
 
     public OmnigramComposerSheet(Context context, int account, ChatActivityEnterView enter, OmnigramComposerBar bar) {
         this.context = context;
@@ -238,10 +238,22 @@ public class OmnigramComposerSheet {
             root.addView(c, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
 
-        AlertDialog.Builder b = new AlertDialog.Builder(context);
-        b.setTitle("Composer tools");
-        b.setView(scroll);
-        b.setNegativeButton("Close", null);
+        // header
+        TextView head = new TextView(context);
+        head.setText("Composer tools");
+        head.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+        head.setTypeface(Typeface.DEFAULT_BOLD);
+        head.setTextColor(textColor());
+        head.setPadding(AndroidUtilities.dp(20), AndroidUtilities.dp(18), AndroidUtilities.dp(20), AndroidUtilities.dp(2));
+        android.widget.FrameLayout holder = new android.widget.FrameLayout(context);
+        LinearLayout outer = new LinearLayout(context);
+        outer.setOrientation(LinearLayout.VERTICAL);
+        outer.addView(head);
+        int maxH = (int) (AndroidUtilities.displaySize.y * 0.68f);
+        outer.addView(scroll, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, maxH));
+        holder.addView(outer);
+        org.telegram.ui.ActionBar.BottomSheet.Builder b = new org.telegram.ui.ActionBar.BottomSheet.Builder(context);
+        b.setCustomView(holder);
         dialog = b.create();
         dialog.show();
     }

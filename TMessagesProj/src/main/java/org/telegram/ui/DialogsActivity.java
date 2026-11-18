@@ -2970,6 +2970,10 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 showSelectStatusDialog();
             });
             SelectAnimatedEmojiDialog.preload(currentAccount);
+        } else if (user != null && user.verified && org.telegram.ui.Components.OmnigramVerifiedBadge.make() != null) {
+            statusDrawable.set(org.telegram.ui.Components.OmnigramVerifiedBadge.make(), animated);
+            statusDrawable.setParticles(false, animated);
+            actionBar.setRightDrawableOnClick(null);
         } else {
             statusDrawable.set((Drawable) null, animated);
             statusDrawable.setParticles(false, animated);

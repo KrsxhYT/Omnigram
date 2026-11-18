@@ -1243,6 +1243,8 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                 emojiStatusDrawable.set(emojiStatusId, false);
             } else if (user != null && user.premium) {
                 emojiStatusDrawable.set(getContext().getResources().getDrawable(R.drawable.msg_premium_liststar).mutate(), false);
+            } else if (user != null && user.verified && org.telegram.ui.Components.OmnigramVerifiedBadge.make() != null) {
+                emojiStatusDrawable.set(org.telegram.ui.Components.OmnigramVerifiedBadge.make(), false);
             } else {
                 emojiStatusDrawable.set((Drawable) null, false);
             }

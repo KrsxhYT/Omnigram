@@ -366,7 +366,22 @@ public class ApplicationLoader extends Application {
         NotificationCenter.sanitize();
     });
 
+    /**
+     * Omnigram cannot receive Telegram's Firebase pushes (they are only delivered to the official app), so the app keeps
+     * its own background connection instead. Turned on once by default; the user can still switch it off in
+     * Settings > Notifications.
+     */
+    private static void applyOmnigramPushDefaults() {
+        try {
+            SharedPreferences np = MessagesController.getGlobalNotificationsSettings();
+            if (!np.getBoolean("omni_push_default_v1", false)) {
+                np.edit().putBoolean("pushService", true).putBoolean("pushConnection", true).putBoolean("omni_push_default_v1", true).apply();
+            }
+        } catch (Throwable ignore) {}
+    }
+
     public static void startPushService() {
+        applyOmnigramPushDefaults();
         SharedPreferences preferences = MessagesController.getGlobalNotificationsSettings();
         boolean enabled;
         if (preferences.contains("pushService")) {
@@ -400,6 +415,7 @@ public class ApplicationLoader extends Application {
 
     private void initPushServices() {
         AndroidUtilities.runOnUIThread(() -> {
+            startPushService();
             if (getPushProvider().hasServices()) {
                 getPushProvider().onRequestPushToken();
             } else {

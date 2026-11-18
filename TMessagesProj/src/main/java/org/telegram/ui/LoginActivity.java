@@ -1680,22 +1680,90 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
     private void omnigramShowBotTokenDialog() {
         if (getParentActivity() == null) return;
         final android.content.Context ctx = getParentActivity();
+        final int text = Theme.getColor(Theme.key_windowBackgroundWhiteBlackText);
+        final int gray = Theme.getColor(Theme.key_windowBackgroundWhiteGrayText2);
+        final int accent = Theme.getColor(Theme.key_featuredStickers_addButton);
+
         android.widget.ScrollView scroll = new android.widget.ScrollView(ctx);
         android.widget.LinearLayout box = new android.widget.LinearLayout(ctx);
         box.setOrientation(android.widget.LinearLayout.VERTICAL);
-        box.setPadding(AndroidUtilities.dp(22), AndroidUtilities.dp(6), AndroidUtilities.dp(22), AndroidUtilities.dp(6));
+        box.setGravity(Gravity.CENTER_HORIZONTAL);
+        box.setPadding(AndroidUtilities.dp(22), AndroidUtilities.dp(10), AndroidUtilities.dp(22), AndroidUtilities.dp(6));
         scroll.addView(box);
-        TextView note = new TextView(ctx);
+
+        // round icon
+        TextView icon = new TextView(ctx);
+        icon.setText("\uD83E\uDD16");
+        icon.setGravity(Gravity.CENTER);
+        icon.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 30);
+        android.graphics.drawable.GradientDrawable circle = new android.graphics.drawable.GradientDrawable();
+        circle.setShape(android.graphics.drawable.GradientDrawable.OVAL);
+        circle.setColor((accent & 0x00FFFFFF) | 0x26000000);
+        icon.setBackground(circle);
+        box.addView(icon, new android.widget.LinearLayout.LayoutParams(AndroidUtilities.dp(68), AndroidUtilities.dp(68)));
+
+        TextView sub = new TextView(ctx);
+        sub.setText("Sign in as a bot. Paste the token that @BotFather gave you.");
+        sub.setGravity(Gravity.CENTER);
+        sub.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
+        sub.setTextColor(gray);
+        sub.setPadding(0, AndroidUtilities.dp(14), 0, AndroidUtilities.dp(14));
+        box.addView(sub);
+
+        // token field with paste button
+        android.widget.LinearLayout fieldRow = new android.widget.LinearLayout(ctx);
+        fieldRow.setOrientation(android.widget.LinearLayout.HORIZONTAL);
+        fieldRow.setGravity(Gravity.CENTER_VERTICAL);
+        fieldRow.setBackground(Theme.createRoundRectDrawable(AndroidUtilities.dp(14), Theme.getColor(Theme.key_windowBackgroundGray)));
+        fieldRow.setPadding(AndroidUtilities.dp(14), 0, AndroidUtilities.dp(6), 0);
+        final android.widget.EditText token = new android.widget.EditText(ctx);
+        token.setHint("123456789:ABC-DEF1234ghIkl...");
+        token.setSingleLine(true);
+        token.setBackground(null);
+        token.setTextColor(text);
+        token.setHintTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteHintText));
+        token.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
+        token.setPadding(0, AndroidUtilities.dp(14), 0, AndroidUtilities.dp(14));
+        fieldRow.addView(token, new android.widget.LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        TextView paste = new TextView(ctx);
+        paste.setText("Paste");
+        paste.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
+        paste.setTypeface(AndroidUtilities.bold());
+        paste.setTextColor(accent);
+        paste.setPadding(AndroidUtilities.dp(12), AndroidUtilities.dp(10), AndroidUtilities.dp(12), AndroidUtilities.dp(10));
+        paste.setOnClickListener(v -> {
+            try {
+                android.content.ClipboardManager cm = (android.content.ClipboardManager) ctx.getSystemService(android.content.Context.CLIPBOARD_SERVICE);
+                if (cm != null && cm.hasPrimaryClip() && cm.getPrimaryClip().getItemCount() > 0) {
+                    CharSequence cs = cm.getPrimaryClip().getItemAt(0).getText();
+                    if (cs != null) token.setText(cs.toString().trim());
+                }
+            } catch (Throwable ignore) {}
+        });
+        fieldRow.addView(paste);
+        box.addView(fieldRow, new android.widget.LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        // important notes, collapsed by default
+        final TextView note = new TextView(ctx);
         note.setText(OMNI_BOT_NOTE);
         note.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
-        note.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteGrayText2));
+        note.setTextColor(gray);
+        note.setVisibility(View.GONE);
+        note.setPadding(0, AndroidUtilities.dp(6), 0, 0);
+        final TextView toggle = new TextView(ctx);
+        toggle.setText("Read important notes  \u25BE");
+        toggle.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
+        toggle.setTypeface(AndroidUtilities.bold());
+        toggle.setTextColor(accent);
+        toggle.setPadding(0, AndroidUtilities.dp(16), 0, AndroidUtilities.dp(6));
+        toggle.setOnClickListener(v -> {
+            boolean open = note.getVisibility() != View.VISIBLE;
+            note.setVisibility(open ? View.VISIBLE : View.GONE);
+            toggle.setText(open ? "Hide important notes  \u25B4" : "Read important notes  \u25BE");
+        });
+        box.addView(toggle);
         box.addView(note);
-        final android.widget.EditText token = new android.widget.EditText(ctx);
-        token.setHint("123456789:ABC-DEF1234ghIkl-zyx57W2v1u123ew11");
-        token.setSingleLine(true);
-        token.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlackText));
-        token.setTextSize(15);
-        box.addView(token);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
         builder.setTitle("Login with Bot Token");
         builder.setView(scroll);
