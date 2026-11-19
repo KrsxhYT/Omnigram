@@ -1219,7 +1219,7 @@ public class UndoView extends FrameLayout implements Theme.Colorable {
             if (hapticDelay > 0) {
                 leftImageView.postDelayed(() -> {
                     try {
-                        leftImageView.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+                        org.telegram.ui.Components.OmnigramHaptics.perform(leftImageView, HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
                     } catch (Exception ignored) {}
                 }, hapticDelay);
             }

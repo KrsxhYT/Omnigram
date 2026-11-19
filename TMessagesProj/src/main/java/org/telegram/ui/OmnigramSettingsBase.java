@@ -88,7 +88,8 @@ public abstract class OmnigramSettingsBase extends BaseFragment {
     }
 
     /** Icon + title row with optional value on the right (blue), like the reference design. */
-    protected void row(Context context, LinearLayout parent, int iconRes, String title, String value, View.OnClickListener l) {
+    protected TextView row(Context context, LinearLayout parent, int iconRes, String title, String value, View.OnClickListener l) {
+        TextView valueView = null;
         if (parent.getChildCount() > 0) divider(context, parent);
         LinearLayout row = new LinearLayout(context);
         row.setOrientation(LinearLayout.HORIZONTAL);
@@ -113,10 +114,22 @@ public abstract class OmnigramSettingsBase extends BaseFragment {
             v.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
             v.setTextColor(getThemedColor(Theme.key_windowBackgroundWhiteValueText));
             row.addView(v, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            valueView = v;
         }
         row.setBackground(Theme.createSelectorDrawable(getThemedColor(Theme.key_listSelector), 2));
         row.setOnClickListener(l);
         parent.addView(row, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        return valueView;
+    }
+
+    /** Small gray explanation under a card. */
+    protected void footnote(Context context, String text) {
+        TextView t = new TextView(context);
+        t.setText(text);
+        t.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
+        t.setTextColor(getThemedColor(Theme.key_windowBackgroundWhiteGrayText2));
+        t.setPadding(AndroidUtilities.dp(6), AndroidUtilities.dp(8), AndroidUtilities.dp(6), 0);
+        list.addView(t);
     }
 
     protected interface OnToggle {
@@ -141,12 +154,14 @@ public abstract class OmnigramSettingsBase extends BaseFragment {
         t.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
         t.setTextColor(getThemedColor(Theme.key_windowBackgroundWhiteBlackText));
         texts.addView(t);
-        TextView s = new TextView(context);
-        s.setText(sub);
-        s.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
-        s.setTextColor(getThemedColor(Theme.key_windowBackgroundWhiteGrayText2));
-        s.setPadding(0, AndroidUtilities.dp(2), 0, 0);
-        texts.addView(s);
+        if (sub != null && !sub.isEmpty()) {
+            TextView s = new TextView(context);
+            s.setText(sub);
+            s.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
+            s.setTextColor(getThemedColor(Theme.key_windowBackgroundWhiteGrayText2));
+            s.setPadding(0, AndroidUtilities.dp(2), 0, 0);
+            texts.addView(s);
+        }
         row.addView(texts, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
 
         Switch sw = new Switch(context);

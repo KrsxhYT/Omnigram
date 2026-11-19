@@ -82,7 +82,7 @@ public class StarReactionsOverlay extends View {
         longPressRunnable = () -> {
             if (cell == null) return;
             try {
-                cell.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                org.telegram.ui.Components.OmnigramHaptics.perform(cell, HapticFeedbackConstants.LONG_PRESS);
             } catch (Exception ignored) {}
             onTouchEvent(MotionEvent.obtain(0, 0, MotionEvent.ACTION_CANCEL, 0, 0, 0));
 

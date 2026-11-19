@@ -1220,14 +1220,14 @@ public class RecyclerListView extends RecyclerView implements IBlur3Capture {
                     if (onItemLongClickListener != null) {
                         if (onItemLongClickListener.onItemClick(currentChildView, currentChildPosition)) {
                             try {
-                                child.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                                org.telegram.ui.Components.OmnigramHaptics.perform(child, HapticFeedbackConstants.LONG_PRESS);
                             } catch (Exception ignored) {}
                             child.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_LONG_CLICKED);
                         }
                     } else {
                         if (onItemLongClickListenerExtended.onItemClick(currentChildView, currentChildPosition, event.getX() - currentChildView.getX(), event.getY() - currentChildView.getY())) {
                             try {
-                                child.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                                org.telegram.ui.Components.OmnigramHaptics.perform(child, HapticFeedbackConstants.LONG_PRESS);
                             } catch (Exception ignored) {}
                             child.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_LONG_CLICKED);
                             longPressCalled = true;

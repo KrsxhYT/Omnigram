@@ -2073,6 +2073,7 @@ public class MessageObject {
         this.isSaved = isSavedMessages || getDialogId(message) == UserConfig.getInstance(accountNum).getClientUserId();
         this.searchType = searchType;
 
+        org.telegram.ui.Components.OmnigramCustomEmoji.apply(message);
         currentAccount = accountNum;
         messageOwner = message;
         replyMessageObject = replyToMessage;

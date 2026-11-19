@@ -139,7 +139,13 @@ public class OmnigramComposerBar extends LinearLayout {
         toolsButton.setPadding(AndroidUtilities.dp(14), AndroidUtilities.dp(7), AndroidUtilities.dp(14), AndroidUtilities.dp(7));
         toolsButton.setBackground(Theme.createRoundRectDrawable(AndroidUtilities.dp(16), Theme.getColor(Theme.key_featuredStickers_addButton)));
         toolsButton.setElevation(AndroidUtilities.dp(2));
-        toolsButton.setOnClickListener(v -> new OmnigramComposerSheet(getContext(), account, enterView, this).show());
+        toolsButton.setOnClickListener(v -> {
+            try {
+                new OmnigramComposerSheet(getContext(), account, enterView, this).show();
+            } catch (Throwable t) {
+                android.widget.Toast.makeText(getContext(), "Composer tools could not open: " + t, android.widget.Toast.LENGTH_LONG).show();
+            }
+        });
         row.addView(toolsButton);
         addView(row, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         setVisibility(GONE);

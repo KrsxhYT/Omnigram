@@ -1765,7 +1765,7 @@ public class StickersAlert extends BottomSheet implements NotificationCenter.Not
                 if (!lastNameAvailable) {
                     AndroidUtilities.shakeView(editText);
                     try {
-                        editText.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+                        org.telegram.ui.Components.OmnigramHaptics.perform(editText, HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
                     } catch (Exception ignored) {}
                 }
                 AndroidUtilities.hideKeyboard(editText);

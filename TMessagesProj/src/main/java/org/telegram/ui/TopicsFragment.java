@@ -1064,7 +1064,7 @@ public class TopicsFragment extends BaseFragment implements NotificationCenter.N
             }
             toggleSelection(view);
             try {
-                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                org.telegram.ui.Components.OmnigramHaptics.perform(view, HapticFeedbackConstants.LONG_PRESS);
             } catch (Exception ignored) {}
             return true;
         });
@@ -1197,7 +1197,7 @@ public class TopicsFragment extends BaseFragment implements NotificationCenter.N
                             canShowHiddenArchive = canShowInternal;
                             if (pullViewState == ARCHIVE_ITEM_STATE_HIDDEN) {
                                 try {
-                                    recyclerListView.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+                                    org.telegram.ui.Components.OmnigramHaptics.perform(recyclerListView, HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
                                 } catch (Exception ignored) {}
                                 if (pullForegroundDrawable != null) {
                                     pullForegroundDrawable.colorize(canShowInternal);
@@ -1952,7 +1952,7 @@ public class TopicsFragment extends BaseFragment implements NotificationCenter.N
 
     private boolean showChatPreview(DialogCell cell) {
         try {
-            cell.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+            org.telegram.ui.Components.OmnigramHaptics.perform(cell, HapticFeedbackConstants.LONG_PRESS);
         } catch (Exception ignored) {}
         final ActionBarPopupWindow.ActionBarPopupWindowLayout[] previewMenu = new ActionBarPopupWindow.ActionBarPopupWindowLayout[1];
         int flags = ActionBarPopupWindow.ActionBarPopupWindowLayout.FLAG_USE_SWIPEBACK;

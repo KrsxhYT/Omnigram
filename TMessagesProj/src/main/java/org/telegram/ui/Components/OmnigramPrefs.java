@@ -17,6 +17,12 @@ public final class OmnigramPrefs {
     public static final String QUICK_STICKER_BAR = "quick_sticker_bar";
     public static final String HIDE_ARCHIVED = "hide_archived";
     public static final String GLARE = "glare";
+    public static final String NO_ROUNDING = "no_rounding";
+    public static final String VIBRATION = "in_app_vibration";
+    public static final String OPEN_ARCHIVE_PULLDOWN = "open_archive_pulldown";
+    public static final String DISABLE_UNARCHIVE_SWIPE = "disable_unarchive_swipe";
+    public static final String PREMIUM_EMOJI = "premium_emoji";
+    public static final int ID_TELEGRAM = 0, ID_BOT_API = 1, ID_HIDE = 2;
 
     private OmnigramPrefs() {}
 
@@ -48,6 +54,19 @@ public final class OmnigramPrefs {
     public static boolean quickStickerBar() { return get(QUICK_STICKER_BAR, false); }
     public static boolean hideArchived() { return get(HIDE_ARCHIVED, false); }
     public static boolean glare() { return get(GLARE, false); }
+    public static boolean noRounding() { return get(NO_ROUNDING, false); }
+    public static boolean vibration() { return get(VIBRATION, false); }
+    public static boolean openArchivePulldown() { return get(OPEN_ARCHIVE_PULLDOWN, true); }
+    public static boolean disableUnarchiveSwipe() { return get(DISABLE_UNARCHIVE_SWIPE, true); }
+    public static boolean premiumEmoji() { return get(PREMIUM_EMOJI, false); }
+
+    public static int idMode() {
+        try { return sp().getInt("id_mode", ID_TELEGRAM); } catch (Throwable t) { return ID_TELEGRAM; }
+    }
+
+    public static void setIdMode(int mode) {
+        try { sp().edit().putInt("id_mode", mode).apply(); } catch (Throwable ignore) {}
+    }
 
     /** Local-only nickname used for "@" suggestions inside this app. It never changes the real Telegram profile. */
     public static String getAlias(long dialogId) {

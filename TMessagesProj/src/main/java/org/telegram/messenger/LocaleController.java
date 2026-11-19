@@ -2890,6 +2890,10 @@ public class LocaleController {
     }
 
     public static String formatShortNumber(int number, int[] rounded) {
+        if (org.telegram.ui.Components.OmnigramPrefs.noRounding()) {
+            if (rounded != null) rounded[0] = number;
+            return java.text.NumberFormat.getIntegerInstance(Locale.US).format(number);
+        }
         StringBuilder K = new StringBuilder();
         int lastDec = 0;
         int KCount = 0;

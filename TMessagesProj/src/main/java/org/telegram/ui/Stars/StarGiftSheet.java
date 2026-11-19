@@ -1428,7 +1428,7 @@ public class StarGiftSheet extends BottomSheetWithRecyclerListView implements No
                         bulletinFactory.createSimpleBulletin(R.raw.forward, AndroidUtilities.replaceTags(LocaleController.formatPluralString("LinkSharedToManyChats", dids.size(), dids.size()))).hideAfterBottomSheet(false).ignoreDetach().show();
                     }
                     try {
-                        container.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+                        org.telegram.ui.Components.OmnigramHaptics.perform(container, HapticFeedbackConstants.KEYBOARD_TAP);
                     } catch (Exception ignored) {}
                 }
             }

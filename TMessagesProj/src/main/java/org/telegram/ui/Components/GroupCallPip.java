@@ -911,7 +911,7 @@ public class GroupCallPip implements NotificationCenter.NotificationCenterDelega
             }
             if (prepare) {
                 try {
-                    button.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+                    org.telegram.ui.Components.OmnigramHaptics.perform(button, HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
                 } catch (Exception ignored) {}
             }
         }

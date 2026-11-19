@@ -350,7 +350,7 @@ public class MessageStatisticActivity extends BaseFragment implements Notificati
         listView.setOnItemLongClickListener((view, position) -> {
             if (position >= startRow && position < endRow) {
                 try {
-                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+                    org.telegram.ui.Components.OmnigramHaptics.perform(view, HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
                 } catch (Exception ignore) {}
                 MessageObject message = messages.get(position - startRow);
                 final long did = MessageObject.getDialogId(message.messageOwner);

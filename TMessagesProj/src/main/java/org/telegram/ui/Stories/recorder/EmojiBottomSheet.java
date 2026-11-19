@@ -1424,7 +1424,7 @@ public class EmojiBottomSheet extends BottomSheet implements NotificationCenter.
 
     public void showPremiumBulletin(String text) {
         try {
-            container.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+            org.telegram.ui.Components.OmnigramHaptics.perform(container, HapticFeedbackConstants.KEYBOARD_TAP);
         } catch (Exception ignored) {}
         BulletinFactory.of(container, resourcesProvider).createSimpleBulletin(
                 R.raw.star_premium_2,

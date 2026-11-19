@@ -478,7 +478,7 @@ public class LimitPreviewView extends LinearLayout implements Theme.Colorable {
                     if (!wasHaptic) {
                         wasHaptic = true;
                         try {
-                            limitIcon.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+                            org.telegram.ui.Components.OmnigramHaptics.perform(limitIcon, HapticFeedbackConstants.KEYBOARD_TAP);
                         } catch (Exception ignored) {}
                     }
                     limitIcon.setRotation(limitIconRotation + (v - 1f) * 60);

@@ -522,7 +522,7 @@ public class ContentPreviewViewer {
                     popupWindow.showAtLocation(containerView, 0, (int) ((containerView.getMeasuredWidth() - previewMenu.getMeasuredWidth()) / 2f), y);
 
                     try {
-                        containerView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                        org.telegram.ui.Components.OmnigramHaptics.perform(containerView, HapticFeedbackConstants.LONG_PRESS);
                     } catch (Exception ignored) {}
 
                     if (moveY != 0) {
@@ -717,7 +717,7 @@ public class ContentPreviewViewer {
                     menuVisible = true;
                     containerView.invalidate();
                     try {
-                        containerView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                        org.telegram.ui.Components.OmnigramHaptics.perform(containerView, HapticFeedbackConstants.LONG_PRESS);
                     } catch (Exception ignored) {}
                     return;
                 }
@@ -892,7 +892,7 @@ public class ContentPreviewViewer {
                 popupWindow.showAtLocation(containerView, 0, (int) ((containerView.getMeasuredWidth() - previewMenu.getMeasuredWidth()) / 2f), y);
 
                 try {
-                    containerView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                    org.telegram.ui.Components.OmnigramHaptics.perform(containerView, HapticFeedbackConstants.LONG_PRESS);
                 } catch (Exception ignored) {}
             } else if (currentContentType == CONTENT_TYPE_EMOJI && delegate != null) {
                 ArrayList<CharSequence> items = new ArrayList<>();
@@ -1006,7 +1006,7 @@ public class ContentPreviewViewer {
                 ActionBarPopupWindow.startAnimation(previewMenu);
 
                 try {
-                    containerView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                    org.telegram.ui.Components.OmnigramHaptics.perform(containerView, HapticFeedbackConstants.LONG_PRESS);
                 } catch (Exception ignored) {}
 
                 if (moveY != 0) {
@@ -1144,7 +1144,7 @@ public class ContentPreviewViewer {
                 popupWindow.showAtLocation(containerView, 0, (int) ((containerView.getMeasuredWidth() - previewMenu.getMeasuredWidth()) / 2f), y);
 
                 try {
-                    containerView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                    org.telegram.ui.Components.OmnigramHaptics.perform(containerView, HapticFeedbackConstants.LONG_PRESS);
                 } catch (Exception ignored) {}
 
                 if (moveY != 0) {
@@ -1642,7 +1642,7 @@ public class ContentPreviewViewer {
                     }
                     if (opened) {
                         try {
-                            currentPreviewCell.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+                            org.telegram.ui.Components.OmnigramHaptics.perform(currentPreviewCell, HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
                         } catch (Exception ignored) {}
                         if (delegate != null) {
                             delegate.resetTouch();

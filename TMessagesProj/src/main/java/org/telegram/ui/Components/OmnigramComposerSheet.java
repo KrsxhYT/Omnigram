@@ -39,6 +39,8 @@ public class OmnigramComposerSheet {
     private final ChatActivityEnterView enter;
     private final OmnigramComposerBar bar;
     private org.telegram.ui.ActionBar.BottomSheet dialog;
+    private int savedStart = -1;
+    private int savedEnd = -1;
 
     public OmnigramComposerSheet(Context context, int account, ChatActivityEnterView enter, OmnigramComposerBar bar) {
         this.context = context;
@@ -158,6 +160,13 @@ public class OmnigramComposerSheet {
     // ------------------------------------------------------------------ main menu
 
     public void show() {
+        try {
+            EditTextCaption cur = field();
+            if (cur != null) {
+                savedStart = cur.getSelectionStart();
+                savedEnd = cur.getSelectionEnd();
+            }
+        } catch (Throwable ignore) {}
         ScrollView scroll = new ScrollView(context);
         LinearLayout root = new LinearLayout(context);
         root.setOrientation(LinearLayout.VERTICAL);
@@ -274,8 +283,15 @@ public class OmnigramComposerSheet {
             dismiss();
             return;
         }
+        // the sheet takes focus away from the message box, so restore the selection made before opening it
+        try {
+            et.requestFocus();
+            if (savedStart >= 0 && savedEnd > savedStart && savedEnd <= et.getText().length()) {
+                et.setSelection(savedStart, savedEnd);
+            }
+        } catch (Throwable ignore) {}
         if (!hasSelection(et)) {
-            toast("Select some text in the message box first");
+            toast("Select some text in the message box first, then open Tools");
             return;
         }
         snapshot();
@@ -309,7 +325,7 @@ public class OmnigramComposerSheet {
                 default: break;
             }
         } catch (Throwable t) {
-            toast("Could not apply this formatting");
+            toast("Could not apply this formatting: " + t);
         }
         dismiss();
     }

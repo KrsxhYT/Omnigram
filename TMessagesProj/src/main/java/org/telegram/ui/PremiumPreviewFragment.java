@@ -1237,7 +1237,7 @@ public class PremiumPreviewFragment extends BaseFragment implements Notification
                     }
                     if (fragment != null && fragment.getParentActivity() instanceof LaunchActivity) {
                         try {
-                            fragment.getFragmentView().performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+                            org.telegram.ui.Components.OmnigramHaptics.perform(fragment.getFragmentView(), HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
                         } catch (Exception ignored) {}
                         ((LaunchActivity) fragment.getParentActivity()).getFireworksOverlay().start();
                     }

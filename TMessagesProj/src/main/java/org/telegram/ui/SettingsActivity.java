@@ -860,6 +860,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         items.add(SettingCell.Factory.of(18, IconBackgroundColors.BLUE_LIGHT.top, IconBackgroundColors.BLUE_LIGHT.bottom, R.drawable.settings_faq, getString(R.string.TelegramFAQ)));
         items.add(SettingCell.Factory.of(23, IconBackgroundColors.PURPLE.top, IconBackgroundColors.PURPLE.bottom, R.drawable.settings_features, getString(R.string.TelegramFeatures)));
         items.add(SettingCell.Factory.of(19, IconBackgroundColors.GREEN.top, IconBackgroundColors.GREEN.bottom, R.drawable.settings_policy, getString(R.string.PrivacyPolicy)));
+        items.add(SettingCell.Factory.of(9997, 0xFF2AABEE, 0xFF229ED9, R.drawable.settings_features, "Telegraph", "Create Telegraph pages"));
         items.add(SettingCell.Factory.of(9998, 0xFFB659FF, 0xFF617CFF, R.drawable.settings_features, "Omni Preference", "Omnigram settings"));
         items.add(SettingCell.Factory.of(9999, 0xFF62B0F0, 0xFF1B242F, R.drawable.msg_info, "Developers", "Omnigram Team"));
 
@@ -993,6 +994,9 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                 break;
             case 19:
                 Browser.openUrl(getParentActivity(), LocaleController.getString(R.string.PrivacyPolicyUrl));
+                break;
+            case 9997:
+                presentFragment(new OmnigramTelegraphActivity());
                 break;
             case 9998:
                 presentFragment(new OmnigramSettingsActivity());

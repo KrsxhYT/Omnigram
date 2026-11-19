@@ -357,7 +357,7 @@ class ChatMessagePoll {
         int maxVote = 0;
         if (!animateAnswer && cell.pollVoteInProgress && cell.vibrateOnPollVote) {
             try {
-                cell.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+                org.telegram.ui.Components.OmnigramHaptics.perform(cell, HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
             } catch (Exception ignored) {}
         }
         animateAnswer = cell.attachedToWindow && (cell.pollVoteInProgress || cell.pollUnvoteInProgress);

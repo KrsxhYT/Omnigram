@@ -671,7 +671,7 @@ public class ManageLinksActivity extends BaseFragment implements NotificationCen
                 LinkCell cell = (LinkCell) view;
                 cell.optionsView.callOnClick();
                 try {
-                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+                    org.telegram.ui.Components.OmnigramHaptics.perform(view, HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
                 } catch (Exception ignored) {}
                 return true;
             }

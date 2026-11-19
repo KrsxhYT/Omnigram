@@ -2280,14 +2280,14 @@ public class RichEditorListView extends UniversalRecyclerView {
                         } else if (pressTarget instanceof RichTableCell) {
                             RichTableCell cell = (RichTableCell) pressTarget;
                             if (handleTableHandleTap(cell, localX, localY)) {
-                                try { cell.performHapticFeedback(android.view.HapticFeedbackConstants.LONG_PRESS); } catch (Exception ignore) {}
+                                try { org.telegram.ui.Components.OmnigramHaptics.perform(cell, android.view.HapticFeedbackConstants.LONG_PRESS); } catch (Exception ignore) {}
                                 longPressConsumed = true;
                                 return;
                             }
                             TL_iv.pageTableCell tableCell = cell.findCellAt(localX, localY);
                             if (tableCell != null) {
                                 startCellSelectionDrag(cell, tableCell);
-                                try { cell.performHapticFeedback(android.view.HapticFeedbackConstants.LONG_PRESS); } catch (Exception ignore) {}
+                                try { org.telegram.ui.Components.OmnigramHaptics.perform(cell, android.view.HapticFeedbackConstants.LONG_PRESS); } catch (Exception ignore) {}
                                 longPressConsumed = true;
                             } else {
                                 startBlockDrag(pressTarget);
@@ -2617,7 +2617,7 @@ public class RichEditorListView extends UniversalRecyclerView {
         longPressConsumed = true;
         if (textSelectionHelper.isInSelectionMode()) textSelectionHelper.clear();
         try {
-            cell.performHapticFeedback(android.view.HapticFeedbackConstants.LONG_PRESS);
+            org.telegram.ui.Components.OmnigramHaptics.perform(cell, android.view.HapticFeedbackConstants.LONG_PRESS);
         } catch (Exception ignore) {}
         itemTouchHelper.startDrag(holder);
     }

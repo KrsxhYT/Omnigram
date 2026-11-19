@@ -243,7 +243,7 @@ public class AIEditorAlert extends BottomSheetWithRecyclerListView implements No
                                         bulletinFactory.createSimpleBulletin(R.raw.forward, AndroidUtilities.replaceTags(LocaleController.formatPluralString("AIEditorStyleSharedToManyChats", dids.size(), dids.size()))).hideAfterBottomSheet(false).show();
                                     }
                                     try {
-                                        bulletinContainer.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+                                        org.telegram.ui.Components.OmnigramHaptics.perform(bulletinContainer, HapticFeedbackConstants.KEYBOARD_TAP);
                                     } catch (Exception ignored) {}
                                 }
                             }

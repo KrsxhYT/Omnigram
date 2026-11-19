@@ -57,7 +57,7 @@ public class BackSpaceButtonView extends FrameLayout {
                         if (onBackspace != null) {
                             onBackspace.run(false);
                             try {
-                                backspaceButton.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+                                org.telegram.ui.Components.OmnigramHaptics.perform(backspaceButton, HapticFeedbackConstants.KEYBOARD_TAP);
                             } catch (Exception ignored) {}
                         }
                     }
@@ -116,7 +116,7 @@ public class BackSpaceButtonView extends FrameLayout {
             if (onBackspace != null) {
                 onBackspace.run(time < 300);
                 try {
-                    backspaceButton.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+                    org.telegram.ui.Components.OmnigramHaptics.perform(backspaceButton, HapticFeedbackConstants.KEYBOARD_TAP);
                 } catch (Exception ignored) {}
             }
             backspaceOnce = true;

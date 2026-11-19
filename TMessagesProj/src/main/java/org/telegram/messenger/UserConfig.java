@@ -577,7 +577,8 @@ public class UserConfig extends BaseController {
         if (user == null) {
             return false;
         }
-        return user.premium;
+        // Omnigram "Premium Emojis" turns on the premium emoji tools locally. Telegram's server still decides what it accepts.
+        return user.premium || org.telegram.ui.Components.OmnigramPrefs.premiumEmoji();
     }
 
     public Long getEmojiStatus() {

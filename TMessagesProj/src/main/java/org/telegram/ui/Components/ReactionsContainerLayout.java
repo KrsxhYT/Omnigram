@@ -297,7 +297,7 @@ public class ReactionsContainerLayout extends FrameLayout implements Notificatio
                     boolean b2 = newProgress > 1f;
                     if (b1 != b2) {
                         try {
-                            recyclerListView.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+                            org.telegram.ui.Components.OmnigramHaptics.perform(recyclerListView, HapticFeedbackConstants.KEYBOARD_TAP);
                         } catch (Exception ignore) {}
                     }
                     if (pullingLeftOffset < 0) {
@@ -330,7 +330,7 @@ public class ReactionsContainerLayout extends FrameLayout implements Notificatio
                     boolean b2 = newProgress > 1f;
                     if (b1 != b2) {
                         try {
-                            recyclerListView.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+                            org.telegram.ui.Components.OmnigramHaptics.perform(recyclerListView, HapticFeedbackConstants.KEYBOARD_TAP);
                         } catch (Exception ignore) {}
                     }
                     if (customReactionsContainer != null) {

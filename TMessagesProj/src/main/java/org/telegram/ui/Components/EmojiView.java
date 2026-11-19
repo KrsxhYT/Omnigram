@@ -2637,7 +2637,7 @@ public class EmojiView extends FrameLayout implements
                     if (!backspaceOnce) {
                         if (delegate != null && delegate.onBackspace()) {
                             try {
-                                backspaceButton.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+                                org.telegram.ui.Components.OmnigramHaptics.perform(backspaceButton, HapticFeedbackConstants.KEYBOARD_TAP);
                             } catch (Exception ignore) {}
                         }
                     }
@@ -5614,7 +5614,7 @@ public class EmojiView extends FrameLayout implements
             }
             if (delegate != null && delegate.onBackspace()) {
                 try {
-                    backspaceButton.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+                    org.telegram.ui.Components.OmnigramHaptics.perform(backspaceButton, HapticFeedbackConstants.KEYBOARD_TAP);
                 } catch (Exception ignore) {}
             }
             backspaceOnce = true;

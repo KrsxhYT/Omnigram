@@ -1258,6 +1258,8 @@ public class ChatActivity extends BaseFragment implements
     public final static int OPTION_OMNI_LOCK = 9107;
     public final static int OPTION_OMNI_LINK = 9108;
     public final static int OPTION_OMNI_SPEAK = 9109;
+    public final static int OPTION_OMNI_TOOLS = 9110;
+    private org.telegram.ui.Components.OmnigramComposerBar omniComposerBarRef;
     public final static int OPTION_ADD_TO_STICKERS_OR_MASKS = 9;
     public final static int OPTION_SAVE_TO_DOWNLOADS_OR_MUSIC = 10;
     public final static int OPTION_ADD_TO_GIFS = 11;
@@ -3853,6 +3855,14 @@ public class ChatActivity extends BaseFragment implements
                     showDialog(AlertsCreator.createTTLAlert(getParentActivity(), currentEncryptedChat, themeDelegate).create());
                 } else if (id == OPTION_OMNI_TO_BEGINNING) {
                     try { omnigramGoToBeginning(); } catch (Throwable ignore) {}
+                } else if (id == OPTION_OMNI_TOOLS) {
+                    try {
+                        if (omniComposerBarRef != null && getParentActivity() != null) {
+                            new org.telegram.ui.Components.OmnigramComposerSheet(getParentActivity(), currentAccount, chatActivityEnterView, omniComposerBarRef).show();
+                        }
+                    } catch (Throwable t) {
+                        android.widget.Toast.makeText(getParentActivity(), "Composer tools could not open: " + t, android.widget.Toast.LENGTH_LONG).show();
+                    }
                 } else if (id == OPTION_OMNI_LOCK) {
                     try { omnigramLockMenu(); } catch (Throwable ignore) {}
                 } else if (id == OPTION_OMNI_ALIAS) {
@@ -4438,6 +4448,7 @@ public class ChatActivity extends BaseFragment implements
             headerItem.lazilyAddSubItem(OPTION_OMNI_DELETED_LIST, R.drawable.msg_delete, "Deleted messages");
             headerItem.lazilyAddSubItem(OPTION_OMNI_ALIAS, R.drawable.msg_edit, "Mention alias (local)");
             headerItem.lazilyAddSubItem(OPTION_OMNI_LOCK, R.drawable.msg_secret, "Lock Chat");
+            headerItem.lazilyAddSubItem(OPTION_OMNI_TOOLS, R.drawable.msg_edit, "Composer tools");
             clearHistoryItem = headerItem.lazilyAddSubItem(clear_history, R.drawable.msg_clear,
                     LocaleController.getString(UserObject.isBotForum(currentUser) ? R.string.ClearAllHistory : R.string.ClearHistory));
             boolean addedSettings = false;
@@ -8148,6 +8159,7 @@ public class ChatActivity extends BaseFragment implements
             if (!inPreviewMode && !isInsideContainer && chatMode == 0) {
                 final org.telegram.ui.Components.OmnigramComposerBar omniComposerBar = new org.telegram.ui.Components.OmnigramComposerBar(context, currentAccount, chatActivityEnterView, contentView);
                 contentView.addView(omniComposerBar, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.BOTTOM, 14, 0, 14, 0));
+                omniComposerBarRef = omniComposerBar;
             }
         } catch (Throwable ignore) {}
 
@@ -13736,7 +13748,7 @@ public class ChatActivity extends BaseFragment implements
         }
 
         try {
-            fragmentView.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+            org.telegram.ui.Components.OmnigramHaptics.perform(fragmentView, HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
         } catch (Exception e) {
             FileLog.e(e);
         }
@@ -23965,7 +23977,7 @@ public class ChatActivity extends BaseFragment implements
                         }
                         if (hasChosen) {
                             try {
-                                pollView.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+                                org.telegram.ui.Components.OmnigramHaptics.perform(pollView, HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
                             } catch (Exception ignored) {
                             }
                             if (isQuizWin) {
@@ -29323,7 +29335,7 @@ public class ChatActivity extends BaseFragment implements
                         if (buttonTypeUrl != null) {
                             openClickableLink(null, buttonTypeUrl.url, true, null, buttonMessage, false);
                             try {
-                                buttonTextView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
+                                org.telegram.ui.Components.OmnigramHaptics.perform(buttonTextView, HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
                             } catch (Exception ignore) {}
                             return true;
                         }
@@ -33802,7 +33814,7 @@ public class ChatActivity extends BaseFragment implements
             if (bigEmoji) {
                 if (cell != null) {
                     try {
-                        cell.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                        org.telegram.ui.Components.OmnigramHaptics.perform(cell, HapticFeedbackConstants.LONG_PRESS);
                     } catch (Exception ignored) {}
                 }
                 ArrayList<TLRPC.MessageReactor> reactors = null;
@@ -33824,7 +33836,7 @@ public class ChatActivity extends BaseFragment implements
             }
             if (fragmentView != null) {
                 try {
-                    fragmentView.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
+                    org.telegram.ui.Components.OmnigramHaptics.perform(fragmentView, HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
                 } catch (Exception ignore) {}
             }
             final long chatId = -StarsController.MessageId.from(primaryMessage).did;
@@ -34487,17 +34499,7 @@ public class ChatActivity extends BaseFragment implements
         if (option == OPTION_OMNI_MSG_DETAILS) {
             try {
                 if (selectedObject != null) {
-                    StringBuilder sb = new StringBuilder();
-                    sb.append("Message ID: ").append(selectedObject.getId()).append("\n");
-                    sb.append("Date: ").append(LocaleController.formatDateAudio(selectedObject.messageOwner.date, true)).append("\n");
-                    if (selectedObject.messageOwner.views > 0) sb.append("Views: ").append(selectedObject.messageOwner.views).append("\n");
-                    sb.append("From ID: ").append(selectedObject.getFromChatId()).append("\n");
-                    sb.append("Dialog ID: ").append(dialog_id);
-                    new org.telegram.ui.ActionBar.AlertDialog.Builder(getParentActivity())
-                        .setTitle("Message Details")
-                        .setMessage(sb.toString())
-                        .setPositiveButton("OK", null)
-                        .show();
+                    org.telegram.ui.Components.OmnigramMessageDetails.show(getParentActivity(), currentAccount, selectedObject, dialog_id);
                 }
             } catch (Throwable ignore) {}
             return;
@@ -35098,7 +35100,7 @@ public class ChatActivity extends BaseFragment implements
                     View view = bulletin.getLayout();
                     view.postDelayed(() -> {
                         try {
-                            view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+                            org.telegram.ui.Components.OmnigramHaptics.perform(view, HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
                         } catch (Exception ignored) {}
                     }, 550);
                 });
@@ -41382,7 +41384,7 @@ public class ChatActivity extends BaseFragment implements
                     getMessagesController().pressTranscribeButton();
                 });
                 try {
-                    topUndoView.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+                    org.telegram.ui.Components.OmnigramHaptics.perform(topUndoView, HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
                 } catch (Exception ignored) {}
             } else if (type == 1) {
                 String until = LocaleController.formatDateTime(getMessagesController().transcribeAudioTrialCooldownUntil, true);
@@ -41391,7 +41393,7 @@ public class ChatActivity extends BaseFragment implements
                     AndroidUtilities.replaceTags(LocaleController.formatPluralString("TranscriptionTrialLeft", TranscribeButton.getTranscribeTrialCount(currentAccount)));
                 BulletinFactory.of(ChatActivity.this).createSimpleBulletin(R.raw.transcribe, text, 6).show(true);
                 try {
-                    fragmentView.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+                    org.telegram.ui.Components.OmnigramHaptics.perform(fragmentView, HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
                 } catch (Exception ignored) {}
             } else if (type == 2 || type == 3) {
                 String until = LocaleController.formatDateTime(getMessagesController().transcribeAudioTrialCooldownUntil, true);
@@ -41443,7 +41445,7 @@ public class ChatActivity extends BaseFragment implements
             if (buttonTypeUrl != null) {
                 openClickableLink(null, buttonTypeUrl.url, true, cell, cell.getMessageObject(), false);
                 try {
-                    cell.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
+                    org.telegram.ui.Components.OmnigramHaptics.perform(cell, HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
                 } catch (Exception ignore) {}
             }
         }
@@ -46198,7 +46200,7 @@ public class ChatActivity extends BaseFragment implements
             return;
         }
         if (longpress && reaction.reaction instanceof TLRPC.TL_reactionPaid) {
-            cell.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+            org.telegram.ui.Components.OmnigramHaptics.perform(cell, HapticFeedbackConstants.LONG_PRESS);
             ArrayList<TLRPC.MessageReactor> reactors = null;
             if (messageObject.messageOwner != null && messageObject.messageOwner.reactions != null) {
                 reactors = messageObject.messageOwner.reactions.top_reactors;
@@ -46211,7 +46213,7 @@ public class ChatActivity extends BaseFragment implements
             return;
         }
         if (longpress || messageObject.areTags() && (isInsideContainer || searchingReaction != null && searchingReaction.isSame(reaction.reaction))) {
-            cell.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+            org.telegram.ui.Components.OmnigramHaptics.perform(cell, HapticFeedbackConstants.LONG_PRESS);
             FrameLayout scrimPopupContainerLayout = new FrameLayout(getParentActivity()) {
                 @Override
                 public boolean dispatchKeyEvent(KeyEvent event) {
@@ -47925,7 +47927,7 @@ public class ChatActivity extends BaseFragment implements
             }
         });
         try {
-            view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+            org.telegram.ui.Components.OmnigramHaptics.perform(view, HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
         } catch (Exception ignored) {}
         return true;
     }
@@ -48116,7 +48118,7 @@ public class ChatActivity extends BaseFragment implements
         }
         fireworksOverlay.start();
         try {
-            fireworksOverlay.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+            org.telegram.ui.Components.OmnigramHaptics.perform(fireworksOverlay, HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
         } catch (Exception ignored) {};
     }
 

@@ -1111,7 +1111,7 @@ public class ChatEditActivity extends BaseFragment implements ImageUpdater.Image
                         }
                         BulletinFactory.of(this).createSimpleBulletin(R.raw.topics, text).show();
                         try {
-                            frameLayout.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+                            org.telegram.ui.Components.OmnigramHaptics.perform(frameLayout, HapticFeedbackConstants.KEYBOARD_TAP);
                         } catch (Exception ignored) {}
                         return;
                     }

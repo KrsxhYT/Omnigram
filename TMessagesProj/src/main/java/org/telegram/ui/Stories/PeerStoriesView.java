@@ -530,7 +530,7 @@ public class PeerStoriesView extends SizeNotifierFrameLayout implements Notifica
                         likeStory(newReaction);
                     }
                 }
-                v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+                org.telegram.ui.Components.OmnigramHaptics.perform(v, HapticFeedbackConstants.KEYBOARD_TAP);
                 v.playAnimation();
                 emojiAnimationsOverlay.showAnimationForWidget(v);
             }
@@ -2092,7 +2092,7 @@ public class PeerStoriesView extends SizeNotifierFrameLayout implements Notifica
                                 ActionBarMenuSubItem item = ActionBarMenuItem.addItem(popupLayout, R.drawable.msg_gallery, getString(R.string.SaveToGallery), false, resourcesProvider);
                                 item.setIcon(combinedDrawable);
                                 item.setOnClickListener(v -> {
-                                    item.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+                                    org.telegram.ui.Components.OmnigramHaptics.perform(item, HapticFeedbackConstants.KEYBOARD_TAP);
                                     BulletinFactory bulletinFactory = BulletinFactory.global();
                                     if (bulletinFactory != null) {
                                         bulletinFactory.createSimpleBulletin(R.raw.ic_save_to_gallery, AndroidUtilities.replaceSingleTag(
@@ -3164,7 +3164,7 @@ public class PeerStoriesView extends SizeNotifierFrameLayout implements Notifica
                         if (captionLimitView != null) {
                             AndroidUtilities.shakeViewSpring(captionLimitView, 3.5f);
                             try {
-                                captionLimitView.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+                                org.telegram.ui.Components.OmnigramHaptics.perform(captionLimitView, HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
                             } catch (Exception ignored) {}
                         }
                         return false;

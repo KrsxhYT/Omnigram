@@ -1901,7 +1901,7 @@ public class RichMessageLayout {
                     final boolean hit = act == MotionEvent.ACTION_UP && showMoreRect.contains(x, y);
                     showMorePressed = false;
                     if (hit && delegate != null && cell != null) {
-                        if (view != null) view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+                        if (view != null) org.telegram.ui.Components.OmnigramHaptics.perform(view, HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
                         delegate.didPressShowMore(cell);
                     }
                     return true;
@@ -3113,7 +3113,7 @@ public class RichMessageLayout {
                     longPressFired = true;
                     if (view != null) {
                         try {
-                            view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                            org.telegram.ui.Components.OmnigramHaptics.perform(view, HapticFeedbackConstants.LONG_PRESS);
                         } catch (Exception ignore) {}
                     }
                     pressedButtonSpan.didPress(root.getCell(), root.getDelegate(), true);
@@ -3123,7 +3123,7 @@ public class RichMessageLayout {
                 longPressFired = true;
                 if (view != null) {
                     try {
-                        view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                        org.telegram.ui.Components.OmnigramHaptics.perform(view, HapticFeedbackConstants.LONG_PRESS);
                     } catch (Exception ignore) {}
                 }
                 dispatchLinkClick(pressedLink, true);
@@ -9842,7 +9842,7 @@ public class RichMessageLayout {
             checkbox.setChecked(newChecked, true);
             invalidateCell();
             if (root.view != null) {
-                root.view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+                org.telegram.ui.Components.OmnigramHaptics.perform(root.view, HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
             }
             final Runnable revertOnError = () -> {
                 setCheckboxChecked(!newChecked);

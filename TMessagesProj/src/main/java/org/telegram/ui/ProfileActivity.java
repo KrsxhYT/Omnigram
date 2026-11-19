@@ -8831,7 +8831,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         avatarsViewPager.setVisibility(View.VISIBLE);
 
                         try {
-                            avatarContainer.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
+                            org.telegram.ui.Components.OmnigramHaptics.perform(avatarContainer, HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
                         } catch (Exception ignore) {
                         }
                     }
@@ -8913,7 +8913,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         expandAnimator.start();
                         ignoreScrollOnFullExpand = false;
                         try {
-                            avatarContainer.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
+                            org.telegram.ui.Components.OmnigramHaptics.perform(avatarContainer, HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
                         } catch (Exception ignore) {
                         }
                     }
@@ -10989,7 +10989,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 }
                 if (user != null && username != null) {
                     usernameRow = rowCount++;
-                    userOrChatIdRow = rowCount++;
+                    userOrChatIdRow = org.telegram.ui.Components.OmnigramPrefs.idMode() == org.telegram.ui.Components.OmnigramPrefs.ID_HIDE ? -1 : rowCount++;
                     regDateRow = rowCount++;
                 }
                 if (userInfo != null) {
@@ -11116,7 +11116,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 }
             }
             usernameRow = rowCount++;
-            userOrChatIdRow = rowCount++;
+            userOrChatIdRow = org.telegram.ui.Components.OmnigramPrefs.idMode() == org.telegram.ui.Components.OmnigramPrefs.ID_HIDE ? -1 : rowCount++;
             regDateRow = rowCount++;
             if (actionsView == null) {
                 notificationsSimpleRow = rowCount++;
@@ -11151,7 +11151,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 }
                 if (ChatObject.isPublic(currentChat)) {
                     usernameRow = rowCount++;
-                    userOrChatIdRow = rowCount++;
+                    userOrChatIdRow = org.telegram.ui.Components.OmnigramPrefs.idMode() == org.telegram.ui.Components.OmnigramPrefs.ID_HIDE ? -1 : rowCount++;
                     regDateRow = rowCount++;
                 }
             }
@@ -13621,7 +13621,12 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                                 dc = currentChat.photo.dc_id;
                             }
                         } catch (Throwable ignore) {}
-                        detailCell.setTextAndValue(String.valueOf(idv), userId != 0 ? "User ID" : "Chat ID", true);
+                        String shownId = String.valueOf(idv);
+                        if (org.telegram.ui.Components.OmnigramPrefs.idMode() == org.telegram.ui.Components.OmnigramPrefs.ID_BOT_API && userId == 0) {
+                            shownId = (currentChat != null && org.telegram.messenger.ChatObject.isChannel(currentChat)) ? "-100" + idv : "-" + idv;
+                        }
+                        if (dc != 0) shownId = shownId + "  \u00B7  DC " + dc;
+                        detailCell.setTextAndValue(shownId, userId != 0 ? "User ID" : "Chat ID", true);
                         try {
                             android.graphics.drawable.Drawable cal = getContext().getResources().getDrawable(R.drawable.msg_calendar2).mutate();
                             detailCell.setImage(cal);
