@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.widget.FrameLayout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
@@ -20,7 +21,9 @@ import org.telegram.messenger.AndroidUtilities;
 import org.telegram.ui.ActionBar.Theme;
 
 /** A chat-list row for an AdMob native ad. It is clearly labeled and never looks like a real conversation. */
-public class OmnigramNativeAdView extends NativeAdView {
+public class OmnigramNativeAdView extends LinearLayout {
+
+    private final NativeAdView adView;
 
     private final ImageView icon;
     private final TextView headline;
@@ -30,7 +33,12 @@ public class OmnigramNativeAdView extends NativeAdView {
 
     public OmnigramNativeAdView(Context context) {
         super(context);
+        setOrientation(VERTICAL);
         setBackgroundColor(Theme.getColor(Theme.key_windowBackgroundWhite));
+
+        // NativeAdView is final in the Google Mobile Ads SDK; host it instead of subclassing it.
+        adView = new NativeAdView(context);
+        adView.setBackgroundColor(Theme.getColor(Theme.key_windowBackgroundWhite));
 
         LinearLayout row = new LinearLayout(context);
         row.setOrientation(LinearLayout.HORIZONTAL);
@@ -94,12 +102,13 @@ public class OmnigramNativeAdView extends NativeAdView {
         tp.rightMargin = AndroidUtilities.dp(18); // room for the AdChoices icon
         row.addView(texts, tp);
 
-        addView(row, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        adView.addView(row, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        addView(adView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        setIconView(icon);
-        setHeadlineView(headline);
-        setBodyView(body);
-        setCallToActionView(cta);
+        adView.setIconView(icon);
+        adView.setHeadlineView(headline);
+        adView.setBodyView(body);
+        adView.setCallToActionView(cta);
     }
 
     public void bind(NativeAd ad) {
@@ -123,6 +132,6 @@ public class OmnigramNativeAdView extends NativeAdView {
         } else {
             icon.setImageDrawable(null);
         }
-        setNativeAd(ad);
+        adView.setNativeAd(ad);
     }
 }
