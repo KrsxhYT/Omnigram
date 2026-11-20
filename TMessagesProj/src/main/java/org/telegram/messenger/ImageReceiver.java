@@ -2544,6 +2544,7 @@ public class ImageReceiver implements NotificationCenter.NotificationCenterDeleg
     }
 
     public void setRoundRadius(int[] value) {
+        value = org.telegram.ui.Components.OmnigramAvatar.map(value);
         boolean changed = false;
         int firstValue = value[0];
         isRoundRect = true;

@@ -4536,7 +4536,7 @@ public class Theme {
     }
 
     public static boolean canStartHolidayAnimation() {
-        return canStartHolidayAnimation;
+        return canStartHolidayAnimation || org.telegram.ui.Components.OmnigramPrefs.forceSnow();
     }
 
     public static int getEventType() {

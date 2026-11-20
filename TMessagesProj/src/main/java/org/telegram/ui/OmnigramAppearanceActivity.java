@@ -1,0 +1,201 @@
+package org.telegram.ui;
+
+import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.drawable.GradientDrawable;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
+
+import org.telegram.messenger.AndroidUtilities;
+import org.telegram.messenger.MessagesController;
+import org.telegram.messenger.SharedConfig;
+import org.telegram.ui.ActionBar.AlertDialog;
+import org.telegram.ui.ActionBar.Theme;
+import org.telegram.ui.Components.OmnigramPrefs;
+
+/** Omni Preference > Appearance: avatar corners, chat list title, snow, fonts and emoji. */
+public class OmnigramAppearanceActivity extends OmnigramSettingsBase {
+
+    private TextView cornerChip;
+    private View previewAvatar;
+    private TextView titlePreview;
+    private TextView titleValue;
+
+    private static String cornerLabel(int pct) {
+        if (pct >= 100) return "CIRCLE";
+        if (pct <= 0) return "SQUARE";
+        return "ROUNDED " + pct + "%";
+    }
+
+    private static String titleLabel(int mode) {
+        switch (mode) {
+            case 1: return "Username";
+            case 2: return "Omnigram";
+            case 3: return "Chats";
+            default: return "Name";
+        }
+    }
+
+    private String titleText(int mode) {
+        try {
+            org.telegram.tgnet.TLRPC.User me = getUserConfig().getCurrentUser();
+            switch (mode) {
+                case 1: {
+                    String un = me != null ? org.telegram.messenger.UserObject.getPublicUsername(me) : null;
+                    return un != null && un.length() > 0 ? "@" + un : (me != null ? org.telegram.messenger.UserObject.getUserName(me) : "Username");
+                }
+                case 2: return "Omnigram";
+                case 3: return "Chats";
+                default: return me != null ? org.telegram.messenger.UserObject.getUserName(me) : "Name";
+            }
+        } catch (Throwable t) {
+            return "Omnigram";
+        }
+    }
+
+    private void updateAvatarPreview(int pct) {
+        GradientDrawable g = new GradientDrawable();
+        g.setColor(getThemedColor(Theme.key_windowBackgroundWhiteGrayText2) & 0x00FFFFFF | 0x88000000);
+        g.setCornerRadius(AndroidUtilities.dp(32) * pct / 100f);
+        previewAvatar.setBackground(g);
+        cornerChip.setText(cornerLabel(pct));
+    }
+
+    @Override
+    public View createView(Context context) {
+        View root = buildRoot(context, "Appearance");
+        final int accent = getThemedColor(Theme.key_featuredStickers_addButton);
+
+        // ---- avatar corners
+        LinearLayout avatar = card(context);
+        LinearLayout head = new LinearLayout(context);
+        head.setOrientation(LinearLayout.HORIZONTAL);
+        head.setGravity(Gravity.CENTER_VERTICAL);
+        head.setPadding(AndroidUtilities.dp(16), AndroidUtilities.dp(14), AndroidUtilities.dp(16), AndroidUtilities.dp(4));
+        TextView t = new TextView(context);
+        t.setText("Avatar Corners");
+        t.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17);
+        t.setTypeface(AndroidUtilities.bold());
+        t.setTextColor(getThemedColor(Theme.key_windowBackgroundWhiteBlueHeader));
+        head.addView(t);
+        cornerChip = new TextView(context);
+        cornerChip.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
+        cornerChip.setTypeface(AndroidUtilities.bold());
+        cornerChip.setTextColor(getThemedColor(Theme.key_windowBackgroundWhiteValueText));
+        cornerChip.setBackground(Theme.createRoundRectDrawable(AndroidUtilities.dp(8), getThemedColor(Theme.key_windowBackgroundGray)));
+        cornerChip.setPadding(AndroidUtilities.dp(8), AndroidUtilities.dp(3), AndroidUtilities.dp(8), AndroidUtilities.dp(3));
+        LinearLayout.LayoutParams cp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        cp.leftMargin = AndroidUtilities.dp(10);
+        head.addView(cornerChip, cp);
+        avatar.addView(head);
+
+        LinearLayout labels = new LinearLayout(context);
+        labels.setOrientation(LinearLayout.HORIZONTAL);
+        labels.setPadding(AndroidUtilities.dp(16), AndroidUtilities.dp(6), AndroidUtilities.dp(16), 0);
+        TextView sq = new TextView(context);
+        sq.setText("Square");
+        sq.setTextColor(getThemedColor(Theme.key_windowBackgroundWhiteGrayText2));
+        labels.addView(sq, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        TextView ci = new TextView(context);
+        ci.setText("Circle");
+        ci.setTextColor(getThemedColor(Theme.key_windowBackgroundWhiteValueText));
+        labels.addView(ci);
+        avatar.addView(labels);
+
+        SeekBar seek = new SeekBar(context);
+        seek.setMax(100);
+        seek.setProgress(OmnigramPrefs.avatarCorner());
+        seek.setProgressTintList(ColorStateList.valueOf(accent));
+        seek.setThumbTintList(ColorStateList.valueOf(accent));
+        seek.setPadding(AndroidUtilities.dp(22), AndroidUtilities.dp(10), AndroidUtilities.dp(22), AndroidUtilities.dp(10));
+        avatar.addView(seek, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        LinearLayout preview = new LinearLayout(context);
+        preview.setOrientation(LinearLayout.HORIZONTAL);
+        preview.setGravity(Gravity.CENTER_VERTICAL);
+        preview.setBackground(Theme.createRoundRectDrawable(AndroidUtilities.dp(14), getThemedColor(Theme.key_windowBackgroundGray)));
+        preview.setPadding(AndroidUtilities.dp(14), AndroidUtilities.dp(12), AndroidUtilities.dp(14), AndroidUtilities.dp(12));
+        previewAvatar = new View(context);
+        preview.addView(previewAvatar, new LinearLayout.LayoutParams(AndroidUtilities.dp(64), AndroidUtilities.dp(64)));
+        LinearLayout lines = new LinearLayout(context);
+        lines.setOrientation(LinearLayout.VERTICAL);
+        for (int i = 0; i < 3; i++) {
+            View ln = new View(context);
+            ln.setBackground(Theme.createRoundRectDrawable(AndroidUtilities.dp(6), getThemedColor(Theme.key_windowBackgroundWhiteGrayText2) & 0x00FFFFFF | 0x55000000));
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(AndroidUtilities.dp(i == 0 ? 150 : i == 1 ? 190 : 110), AndroidUtilities.dp(10));
+            lp.topMargin = AndroidUtilities.dp(i == 0 ? 0 : 8);
+            lines.addView(ln, lp);
+        }
+        LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
+        lp2.leftMargin = AndroidUtilities.dp(14);
+        preview.addView(lines, lp2);
+        LinearLayout.LayoutParams pp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        pp.setMargins(AndroidUtilities.dp(14), AndroidUtilities.dp(8), AndroidUtilities.dp(14), AndroidUtilities.dp(14));
+        avatar.addView(preview, pp);
+        updateAvatarPreview(OmnigramPrefs.avatarCorner());
+        seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override public void onProgressChanged(SeekBar s, int p, boolean fromUser) { updateAvatarPreview(p); }
+            @Override public void onStartTrackingTouch(SeekBar s) {}
+            @Override public void onStopTrackingTouch(SeekBar s) { OmnigramPrefs.setAvatarCorner(s.getProgress()); }
+        });
+        footnote(context, "Changes the shape of chat, profile and contact pictures. Reopen screens (or restart the app) to see it everywhere.");
+
+        // ---- chat list
+        section(context, "Chat List");
+        LinearLayout chat = card(context);
+        LinearLayout bar = new LinearLayout(context);
+        bar.setOrientation(LinearLayout.HORIZONTAL);
+        bar.setGravity(Gravity.CENTER_VERTICAL);
+        bar.setBackground(Theme.createRoundRectDrawable(AndroidUtilities.dp(14), getThemedColor(Theme.key_windowBackgroundGray)));
+        bar.setPadding(AndroidUtilities.dp(16), AndroidUtilities.dp(18), AndroidUtilities.dp(16), AndroidUtilities.dp(18));
+        titlePreview = new TextView(context);
+        titlePreview.setText(titleText(OmnigramPrefs.titleMode()));
+        titlePreview.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 22);
+        titlePreview.setTypeface(AndroidUtilities.bold());
+        titlePreview.setSingleLine(true);
+        titlePreview.setTextColor(getThemedColor(Theme.key_windowBackgroundWhiteBlackText));
+        bar.addView(titlePreview, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        TextView dots = new TextView(context);
+        dots.setText("\u22EE");
+        dots.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 24);
+        dots.setTextColor(getThemedColor(Theme.key_windowBackgroundWhiteBlackText));
+        bar.addView(dots);
+        LinearLayout.LayoutParams bp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        bp.setMargins(AndroidUtilities.dp(14), AndroidUtilities.dp(14), AndroidUtilities.dp(14), AndroidUtilities.dp(8));
+        chat.addView(bar, bp);
+        toggle(context, chat, "Snow Animation", "Falling snowflakes in the chat list title bar, side menu and chat backgrounds.", OmnigramPrefs.FORCE_SNOW, false);
+        titleValue = row(context, chat, 0, "Title Text", titleLabel(OmnigramPrefs.titleMode()), x -> chooseTitle());
+        footnote(context, "Title Text is what the top of the chat list shows: your name, your username, Omnigram or Chats. Reopen the chat list to see it.");
+
+        // ---- appearance
+        section(context, "Appearance");
+        LinearLayout look = card(context);
+        toggle(context, look, "Use System Font", null, OmnigramPrefs.SYSTEM_FONT, false);
+        toggle(context, look, "Use System Emoji", null, "omni_system_emoji", SharedConfig.useSystemEmoji, on -> {
+            try {
+                SharedConfig.useSystemEmoji = on;
+                MessagesController.getGlobalMainSettings().edit().putBoolean("useSystemEmoji", on).apply();
+            } catch (Throwable ignore) {}
+        });
+        footnote(context, "Use System Font uses your phone's font instead of the app's. Use System Emoji shows your phone's emoji instead of the app's emoji set. Restart the app after changing either.");
+        return root;
+    }
+
+    private void chooseTitle() {
+        if (getParentActivity() == null) return;
+        new AlertDialog.Builder(getParentActivity())
+                .setTitle("Title Text")
+                .setItems(new CharSequence[]{"Name", "Username", "Omnigram", "Chats"}, (d, which) -> {
+                    OmnigramPrefs.setTitleMode(which);
+                    if (titleValue != null) titleValue.setText(titleLabel(which));
+                    if (titlePreview != null) titlePreview.setText(titleText(which));
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+}

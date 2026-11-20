@@ -112,6 +112,7 @@
         android:usesCleartextTraffic="true"
         android:enableOnBackInvokedCallback="true"
     >
+        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-6519952735559123~4793901256"/>
         <!-- usesCleartextTraffic for browser supporting opening http:// links -->
 
         <activity-alias

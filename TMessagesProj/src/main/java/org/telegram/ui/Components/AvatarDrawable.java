@@ -651,7 +651,7 @@ public class AvatarDrawable extends Drawable {
                 AndroidUtilities.rectTmp.set(0, 0, size, size);
                 canvas.drawRoundRect(AndroidUtilities.rectTmp, roundRadius, roundRadius, backgroundPaint);
             } else {
-                canvas.drawCircle(size / 2.0f, size / 2.0f, size / 2.0f, backgroundPaint);
+                org.telegram.ui.Components.OmnigramAvatar.drawShape(canvas, size, backgroundPaint);
             }
             if (rotate45Background) {
                 canvas.restore();

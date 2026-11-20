@@ -2499,6 +2499,11 @@ public class AndroidUtilities {
     }
 
     public static Typeface getTypeface(String assetPath) {
+        if (org.telegram.ui.Components.OmnigramPrefs.systemFont() && assetPath != null && !assetPath.contains("mono")) {
+            boolean heavy = assetPath.contains("medium") || assetPath.contains("bold");
+            boolean italic = assetPath.contains("italic");
+            return Typeface.create(Typeface.DEFAULT, heavy && italic ? Typeface.BOLD_ITALIC : heavy ? Typeface.BOLD : italic ? Typeface.ITALIC : Typeface.NORMAL);
+        }
         synchronized (typefaceCache) {
             if (!typefaceCache.containsKey(assetPath)) {
                 try {

@@ -7195,6 +7195,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
     @Override
     protected void onResume() {
         super.onResume();
+        try { org.telegram.ui.Components.OmnigramAds.init(this); } catch (Throwable ignore) {}
         WidgetMedia.onAppPaused(false);
         isResumed = true;
         PipCoordinator.getInstance().onActivityResume(this);

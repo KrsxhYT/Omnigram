@@ -22,6 +22,8 @@ public final class OmnigramPrefs {
     public static final String OPEN_ARCHIVE_PULLDOWN = "open_archive_pulldown";
     public static final String DISABLE_UNARCHIVE_SWIPE = "disable_unarchive_swipe";
     public static final String PREMIUM_EMOJI = "premium_emoji";
+    public static final String FORCE_SNOW = "force_snow";
+    public static final String SYSTEM_FONT = "system_font";
     public static final int ID_TELEGRAM = 0, ID_BOT_API = 1, ID_HIDE = 2;
 
     private OmnigramPrefs() {}
@@ -59,6 +61,26 @@ public final class OmnigramPrefs {
     public static boolean openArchivePulldown() { return get(OPEN_ARCHIVE_PULLDOWN, true); }
     public static boolean disableUnarchiveSwipe() { return get(DISABLE_UNARCHIVE_SWIPE, true); }
     public static boolean premiumEmoji() { return get(PREMIUM_EMOJI, false); }
+    public static boolean forceSnow() { return get(FORCE_SNOW, false); }
+    public static boolean systemFont() { return get(SYSTEM_FONT, false); }
+
+    /** 0 = square ... 100 = circle (default). */
+    public static int avatarCorner() {
+        try { return sp().getInt("avatar_corner", 100); } catch (Throwable t) { return 100; }
+    }
+
+    public static void setAvatarCorner(int v) {
+        try { sp().edit().putInt("avatar_corner", Math.max(0, Math.min(100, v))).apply(); } catch (Throwable ignore) {}
+    }
+
+    /** Chat list title: 0 name, 1 username, 2 "Omnigram", 3 "Chats". */
+    public static int titleMode() {
+        try { return sp().getInt("title_mode", 0); } catch (Throwable t) { return 0; }
+    }
+
+    public static void setTitleMode(int m) {
+        try { sp().edit().putInt("title_mode", m).apply(); } catch (Throwable ignore) {}
+    }
 
     public static int idMode() {
         try { return sp().getInt("id_mode", ID_TELEGRAM); } catch (Throwable t) { return ID_TELEGRAM; }

@@ -111,7 +111,8 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter implements
             VIEW_TYPE_GRAY_SECTION = 20,
             VIEW_TYPE_FORWARD_TO_STORIES_CELL = 21,
             VIEW_TYPE_HEADER_3 = 22,
-            VIEW_TYPE_DIALOG_COMMUNITY = 23;
+            VIEW_TYPE_DIALOG_COMMUNITY = 23,
+            VIEW_TYPE_OMNI_AD = 24;
 
     private Context mContext;
     private ArchiveHintCell archiveHintCell;
@@ -640,7 +641,7 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter implements
         return viewType != VIEW_TYPE_FLICKER && viewType != VIEW_TYPE_EMPTY && viewType != VIEW_TYPE_DIVIDER &&
                 viewType != VIEW_TYPE_SHADOW && viewType != VIEW_TYPE_HEADER &&
                 viewType != VIEW_TYPE_LAST_EMPTY && viewType != VIEW_TYPE_NEW_CHAT_HINT && viewType != VIEW_TYPE_CONTACTS_FLICKER &&
-                viewType != VIEW_TYPE_REQUIREMENTS && viewType != VIEW_TYPE_REQUIRED_EMPTY && viewType != VIEW_TYPE_STORIES && viewType != VIEW_TYPE_ARCHIVE_FULLSCREEN && viewType != VIEW_TYPE_GRAY_SECTION;
+                viewType != VIEW_TYPE_REQUIREMENTS && viewType != VIEW_TYPE_REQUIRED_EMPTY && viewType != VIEW_TYPE_STORIES && viewType != VIEW_TYPE_ARCHIVE_FULLSCREEN && viewType != VIEW_TYPE_GRAY_SECTION && viewType != VIEW_TYPE_OMNI_AD;
     }
 
     private static final int SLOT_SHADOW_BACKGROUND = 101;
@@ -797,6 +798,9 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter implements
             case VIEW_TYPE_GRAY_SECTION:
                 view = new GraySectionCell(mContext);
                 break;
+            case VIEW_TYPE_OMNI_AD:
+                view = new org.telegram.ui.Components.OmnigramNativeAdView(mContext);
+                break;
             case VIEW_TYPE_SHADOW: {
                 view = new ShadowSectionCell(mContext);
                 Drawable drawable = Theme.getThemedDrawableByKey(mContext, R.drawable.greydivider, Theme.key_windowBackgroundGrayShadow);
@@ -926,6 +930,10 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter implements
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int i) {
         switch (holder.getItemViewType()) {
+            case VIEW_TYPE_OMNI_AD: {
+                ((org.telegram.ui.Components.OmnigramNativeAdView) holder.itemView).bind(org.telegram.ui.Components.OmnigramAds.getNativeAd());
+                break;
+            }
             case VIEW_TYPE_FORWARD_TO_STORIES_CELL: {
                 TLRPC.Dialog nextDialog = (TLRPC.Dialog) getItem(i + 1);
 
@@ -1832,6 +1840,10 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter implements
                     itemInternals.add(new ItemInternal(VIEW_TYPE_EMPTY, dialogsEmptyType()));
                 }
             } else {
+                // Omnigram: one clearly labeled native ad row after the last real chat (never between chats)
+                if (folderId == 0 && dialogsType == DialogsActivity.DIALOGS_TYPE_DEFAULT && org.telegram.ui.Components.OmnigramAds.canShowNative()) {
+                    itemInternals.add(new ItemInternal(VIEW_TYPE_OMNI_AD));
+                }
                 if (folderId == 0 && dialogsCount > 10 && dialogsType == DialogsActivity.DIALOGS_TYPE_DEFAULT) {
                     itemInternals.add(new ItemInternal(VIEW_TYPE_NEW_CHAT_HINT));
                 }

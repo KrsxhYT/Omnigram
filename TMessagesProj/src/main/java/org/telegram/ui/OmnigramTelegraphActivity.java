@@ -193,7 +193,7 @@ public class OmnigramTelegraphActivity extends OmnigramSettingsBase {
         setStatus("Creating page...", getThemedColor(Theme.key_windowBackgroundWhiteGrayText2));
         sp().edit().putString("author", author).apply();
 
-        Utilities.globalQueue.postRunnable(() -> {
+        new Thread(() -> {
             String error = null;
             String url = null;
             try {
@@ -255,8 +255,10 @@ public class OmnigramTelegraphActivity extends OmnigramSettingsBase {
                     setStatus(fError, 0xFFE53935);
                 }
             });
-        });
+        }).start();
     }
+
+    private static final String[] HOSTS = {"https://api.telegra.ph/", "https://api.graph.org/"};
 
     private static String post(String method, Map<String, String> params) throws Exception {
         StringBuilder body = new StringBuilder();
@@ -264,25 +266,33 @@ public class OmnigramTelegraphActivity extends OmnigramSettingsBase {
             if (body.length() > 0) body.append('&');
             body.append(URLEncoder.encode(e.getKey(), "UTF-8")).append('=').append(URLEncoder.encode(e.getValue() == null ? "" : e.getValue(), "UTF-8"));
         }
-        HttpURLConnection c = (HttpURLConnection) new URL("https://api.telegra.ph/" + method).openConnection();
-        try {
-            c.setRequestMethod("POST");
-            c.setDoOutput(true);
-            c.setConnectTimeout(15000);
-            c.setReadTimeout(25000);
-            c.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
-            OutputStream os = c.getOutputStream();
-            os.write(body.toString().getBytes("UTF-8"));
-            os.close();
-            InputStream is = c.getResponseCode() >= 400 ? c.getErrorStream() : c.getInputStream();
-            BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = r.readLine()) != null) sb.append(line);
-            r.close();
-            return sb.toString();
-        } finally {
-            c.disconnect();
+        Exception last = null;
+        // some networks block one of the two Telegraph hosts, so try both with short timeouts
+        for (String host : HOSTS) {
+            HttpURLConnection c = null;
+            try {
+                c = (HttpURLConnection) new URL(host + method).openConnection();
+                c.setRequestMethod("POST");
+                c.setDoOutput(true);
+                c.setConnectTimeout(8000);
+                c.setReadTimeout(15000);
+                c.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+                OutputStream os = c.getOutputStream();
+                os.write(body.toString().getBytes("UTF-8"));
+                os.close();
+                InputStream is = c.getResponseCode() >= 400 ? c.getErrorStream() : c.getInputStream();
+                BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = r.readLine()) != null) sb.append(line);
+                r.close();
+                if (sb.length() > 0) return sb.toString();
+            } catch (Exception ex) {
+                last = ex;
+            } finally {
+                if (c != null) c.disconnect();
+            }
         }
+        throw new Exception("Could not reach Telegraph. Check your internet connection" + (last != null && last.getMessage() != null ? " (" + last.getMessage() + ")" : ""));
     }
 }

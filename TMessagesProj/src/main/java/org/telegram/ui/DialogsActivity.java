@@ -3446,6 +3446,16 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 org.telegram.tgnet.TLRPC.User meTitle = UserConfig.getInstance(currentAccount).getCurrentUser();
                 String titleName = meTitle != null ? UserObject.getUserName(meTitle) : getString(R.string.AppName);
                 if (titleName == null || titleName.length() == 0) titleName = getString(R.string.AppName);
+                switch (org.telegram.ui.Components.OmnigramPrefs.titleMode()) {
+                    case 1: {
+                        String un = meTitle != null ? UserObject.getPublicUsername(meTitle) : null;
+                        if (un != null && un.length() > 0) titleName = "@" + un;
+                        break;
+                    }
+                    case 2: titleName = "Omnigram"; break;
+                    case 3: titleName = "Chats"; break;
+                    default: break;
+                }
                 actionBar.setTitle(titleName, statusDrawable);
                 updateStatus(UserConfig.getInstance(currentAccount).getCurrentUser(), false);
             }
@@ -6947,6 +6957,10 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
     @Override
     public void onResume() {
         super.onResume();
+        try {
+            org.telegram.ui.Components.OmnigramAds.refreshNativeIfNeeded(getParentActivity());
+            org.telegram.ui.Components.OmnigramAds.maybeShowInterstitial(getParentActivity());
+        } catch (Throwable ignore) {}
         if (dialogStoriesCell != null) {
             dialogStoriesCell.onResume();
         }

@@ -3347,6 +3347,7 @@ public class ChatActivity extends BaseFragment implements
     @Override
     public void onFragmentDestroy() {
         super.onFragmentDestroy();
+        try { org.telegram.ui.Components.OmnigramAds.onChatClosed(); } catch (Throwable ignore) {}
         if (messageMetricsView != null) {
             messageMetricsView.finish();
         }

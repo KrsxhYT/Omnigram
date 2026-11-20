@@ -12569,6 +12569,16 @@ public class MessagesController extends BaseController implements NotificationCe
         if (fromCache) {
             getMessagesStorage().getDialogs(folderId, offset == 0 ? 0 : nextDialogsCacheOffset.get(folderId, 0), count, folderId == 0 && offset == 0);
         } else {
+            TLRPC.User omniMe = getUserConfig().getCurrentUser();
+            if (omniMe != null && omniMe.bot) {
+                // Bot accounts cannot list dialogs from the server. Their chat list is built from the local cache and
+                // from messages that arrive, so mark loading as finished instead of waiting for a request that cannot work.
+                dialogsEndReached.put(folderId, true);
+                serverDialogsEndReached.put(folderId, true);
+                loadingDialogs.put(folderId, false);
+                getNotificationCenter().postNotificationName(NotificationCenter.dialogsNeedReload);
+                return;
+            }
             TLRPC.TL_messages_getDialogs req = new TLRPC.TL_messages_getDialogs();
             req.limit = count;
             req.exclude_pinned = true;
