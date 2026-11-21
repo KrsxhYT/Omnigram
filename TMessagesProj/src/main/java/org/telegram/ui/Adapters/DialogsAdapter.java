@@ -183,7 +183,13 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter implements
         isReordering = reordering;
     }
 
+    /** Index of the Omnigram ad row in the list, or -1. Chats after it are shifted by one. */
+    private int omniAdRaw = -1;
+
     public int fixPosition(int position) {
+        if (omniAdRaw >= 0 && position > omniAdRaw) {
+            position--;
+        }
         if (hasChatlistHint) {
             position--;
         }
@@ -1840,10 +1846,6 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter implements
                     itemInternals.add(new ItemInternal(VIEW_TYPE_EMPTY, dialogsEmptyType()));
                 }
             } else {
-                // Omnigram: one clearly labeled native ad row after the last real chat (never between chats)
-                if (folderId == 0 && dialogsType == DialogsActivity.DIALOGS_TYPE_DEFAULT && org.telegram.ui.Components.OmnigramAds.canShowNative()) {
-                    itemInternals.add(new ItemInternal(VIEW_TYPE_OMNI_AD));
-                }
                 if (folderId == 0 && dialogsCount > 10 && dialogsType == DialogsActivity.DIALOGS_TYPE_DEFAULT) {
                     itemInternals.add(new ItemInternal(VIEW_TYPE_NEW_CHAT_HINT));
                 }
@@ -1860,7 +1862,30 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter implements
                 }
             }
         }
-    }
+    
+        // Omnigram: one clearly labeled native ad row after the pinned chats and two normal chats.
+        // It sits between chats, so the position shift is handled in fixPosition().
+        omniAdRaw = -1;
+        try {
+            if (folderId == 0 && dialogsType == DialogsActivity.DIALOGS_TYPE_DEFAULT && org.telegram.ui.Components.OmnigramAds.canShowNative()) {
+                int firstNormal = -1;
+                for (int k = 0; k < itemInternals.size(); k++) {
+                    ItemInternal it = itemInternals.get(k);
+                    if (it.viewType == VIEW_TYPE_DIALOG && it.dialog != null && !it.dialog.pinned) {
+                        firstNormal = k;
+                        break;
+                    }
+                }
+                int pos = firstNormal + 2;
+                if (firstNormal >= 0 && pos < itemInternals.size() && itemInternals.get(pos).viewType == VIEW_TYPE_DIALOG) {
+                    itemInternals.add(pos, new ItemInternal(VIEW_TYPE_OMNI_AD));
+                    omniAdRaw = pos;
+                }
+            }
+        } catch (Throwable ignore) {
+            omniAdRaw = -1;
+        }
+}
 
     public int getItemHeight(int position) {
         if (itemInternals.get(position).viewType == VIEW_TYPE_DIALOG) {

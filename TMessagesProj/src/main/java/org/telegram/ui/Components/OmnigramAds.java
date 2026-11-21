@@ -53,10 +53,16 @@ public final class OmnigramAds {
     private static int chatClosedCount;
     private static boolean chatJustClosed;
 
-    /** The user's own "No Ads" switch turns every ad off. */
+    /**
+     * Omnigram's own AdMob ads. The "No Ads" switch in Omni Preference only hides Telegram's sponsored messages,
+     * it does not hide these.
+     */
     public static boolean enabled() {
-        return !OmnigramPrefs.noAds();
+        return true;
     }
+
+    private static int nativeRetries;
+    private static int interstitialRetries;
 
     // ------------------------------------------------------------------ start (consent first)
 
@@ -116,6 +122,7 @@ public final class OmnigramAds {
                         nativeAd = ad;
                         nativeLoadedAt = System.currentTimeMillis();
                         loadingNative = false;
+                        nativeRetries = 0;
                         if (old != null) old.destroy();
                         NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.dialogsNeedReload);
                     })
@@ -123,6 +130,8 @@ public final class OmnigramAds {
                         @Override
                         public void onAdFailedToLoad(LoadAdError error) {
                             loadingNative = false;
+                            // new ad units can take a while to fill: try again a few times
+                            if (nativeRetries++ < 6) MAIN.postDelayed(() -> loadNative(context.getApplicationContext()), 60_000L * nativeRetries);
                         }
                     })
                     .withNativeAdOptions(new NativeAdOptions.Builder().build())
@@ -149,12 +158,14 @@ public final class OmnigramAds {
                 public void onAdLoaded(InterstitialAd ad) {
                     interstitial = ad;
                     loadingInterstitial = false;
+                    interstitialRetries = 0;
                 }
 
                 @Override
                 public void onAdFailedToLoad(LoadAdError error) {
                     interstitial = null;
                     loadingInterstitial = false;
+                    if (interstitialRetries++ < 6) MAIN.postDelayed(() -> loadInterstitial(context.getApplicationContext()), 60_000L * interstitialRetries);
                 }
             });
         } catch (Throwable t) {
