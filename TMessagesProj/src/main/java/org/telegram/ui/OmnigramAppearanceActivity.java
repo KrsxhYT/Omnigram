@@ -25,6 +25,9 @@ public class OmnigramAppearanceActivity extends OmnigramSettingsBase {
     private View previewAvatar;
     private TextView titlePreview;
     private TextView titleValue;
+    private android.widget.ImageView deletedIconView;
+    private TextView deletedIconValue;
+    private final View[] colorDots = new View[org.telegram.ui.Components.OmnigramIconSpan.COLORS.length];
     private android.widget.ImageView delIcon;
     private TextView delIconValue;
     private LinearLayout delDots;
@@ -235,6 +238,81 @@ public class OmnigramAppearanceActivity extends OmnigramSettingsBase {
         refreshDeletedPreview();
         footnote(context, "The icon shown on messages that were deleted. Reopen a chat to see the new icon there.");
 
+        // ---- deleted message icon
+        section(context, "Deleted Message Icon");
+        LinearLayout del = card(context);
+        LinearLayout prev = new LinearLayout(context);
+        prev.setOrientation(LinearLayout.HORIZONTAL);
+        prev.setGravity(Gravity.BOTTOM);
+        prev.setBackground(Theme.createRoundRectDrawable(AndroidUtilities.dp(14), getThemedColor(Theme.key_windowBackgroundGray)));
+        prev.setPadding(AndroidUtilities.dp(12), AndroidUtilities.dp(14), AndroidUtilities.dp(12), AndroidUtilities.dp(14));
+        View pAvatar = new View(context);
+        android.graphics.drawable.GradientDrawable pg = new android.graphics.drawable.GradientDrawable();
+        pg.setShape(android.graphics.drawable.GradientDrawable.OVAL);
+        pg.setColor(0xFF8E6BBF);
+        pAvatar.setBackground(pg);
+        prev.addView(pAvatar, new LinearLayout.LayoutParams(AndroidUtilities.dp(40), AndroidUtilities.dp(40)));
+        LinearLayout bubble = new LinearLayout(context);
+        bubble.setOrientation(LinearLayout.VERTICAL);
+        bubble.setAlpha(0.7f);
+        bubble.setBackground(Theme.createRoundRectDrawable(AndroidUtilities.dp(14), getThemedColor(Theme.key_chat_inBubble)));
+        bubble.setPadding(AndroidUtilities.dp(12), AndroidUtilities.dp(8), AndroidUtilities.dp(12), AndroidUtilities.dp(6));
+        TextView pName = new TextView(context);
+        pName.setText("Omnigram");
+        pName.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
+        pName.setTypeface(AndroidUtilities.bold());
+        pName.setTextColor(0xFF4CAF50);
+        bubble.addView(pName);
+        TextView pText = new TextView(context);
+        pText.setText("This message was deleted");
+        pText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+        pText.setTextColor(getThemedColor(Theme.key_chat_messageTextIn));
+        bubble.addView(pText);
+        LinearLayout timeRow = new LinearLayout(context);
+        timeRow.setOrientation(LinearLayout.HORIZONTAL);
+        timeRow.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
+        deletedIconView = new android.widget.ImageView(context);
+        timeRow.addView(deletedIconView, new LinearLayout.LayoutParams(AndroidUtilities.dp(13), AndroidUtilities.dp(13)));
+        TextView pTime = new TextView(context);
+        pTime.setText("  3:09 PM");
+        pTime.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
+        pTime.setTextColor(getThemedColor(Theme.key_chat_inTimeText));
+        timeRow.addView(pTime);
+        bubble.addView(timeRow, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        LinearLayout.LayoutParams bl = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
+        bl.leftMargin = AndroidUtilities.dp(8);
+        prev.addView(bubble, bl);
+        LinearLayout.LayoutParams pl = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        pl.setMargins(AndroidUtilities.dp(14), AndroidUtilities.dp(14), AndroidUtilities.dp(14), AndroidUtilities.dp(6));
+        del.addView(prev, pl);
+
+        deletedIconValue = row(context, del, 0, "Icon", org.telegram.ui.Components.OmnigramIconSpan.ICON_NAMES[OmnigramPrefs.deletedIcon()], x -> chooseDeletedIcon());
+
+        LinearLayout colorsRow = new LinearLayout(context);
+        colorsRow.setOrientation(LinearLayout.HORIZONTAL);
+        colorsRow.setGravity(Gravity.CENTER_VERTICAL);
+        colorsRow.setPadding(AndroidUtilities.dp(14), AndroidUtilities.dp(6), AndroidUtilities.dp(14), AndroidUtilities.dp(16));
+        TextView colorLabel = new TextView(context);
+        colorLabel.setText("Colour");
+        colorLabel.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17);
+        colorLabel.setTextColor(getThemedColor(Theme.key_windowBackgroundWhiteBlackText));
+        colorsRow.addView(colorLabel, new LinearLayout.LayoutParams(AndroidUtilities.dp(70), ViewGroup.LayoutParams.WRAP_CONTENT));
+        for (int i = 0; i < colorDots.length; i++) {
+            final int idx = i;
+            View dot = new View(context);
+            dot.setOnClickListener(v -> {
+                OmnigramPrefs.setInt("deleted_color", idx);
+                refreshDeletedPreview();
+            });
+            LinearLayout.LayoutParams dl = new LinearLayout.LayoutParams(AndroidUtilities.dp(34), AndroidUtilities.dp(34));
+            dl.rightMargin = AndroidUtilities.dp(8);
+            colorsRow.addView(dot, dl);
+            colorDots[i] = dot;
+        }
+        del.addView(colorsRow, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        footnote(context, "The icon next to the time of a deleted message. Pick an icon and a colour, the preview above shows how it will look. Reopen a chat to see the change.");
+        refreshDeletedPreview();
+
         // ---- appearance
         section(context, "Appearance");
         LinearLayout look = card(context);
@@ -283,6 +361,38 @@ public class OmnigramAppearanceActivity extends OmnigramSettingsBase {
         if (getParentActivity() == null) return;
         new AlertDialog.Builder(getParentActivity())
                 .setTitle("Deleted message icon")
+                .setItems(org.telegram.ui.Components.OmnigramIconSpan.ICON_NAMES, (d, which) -> {
+                    OmnigramPrefs.setInt("deleted_icon", which);
+                    refreshDeletedPreview();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void refreshDeletedPreview() {
+        try {
+            int icon = OmnigramPrefs.deletedIcon();
+            int colorIdx = Math.max(0, Math.min(org.telegram.ui.Components.OmnigramIconSpan.COLORS.length - 1, OmnigramPrefs.deletedColor()));
+            int color = org.telegram.ui.Components.OmnigramIconSpan.COLORS[colorIdx];
+            if (color == 0) color = getThemedColor(Theme.key_chat_inTimeText);
+            deletedIconView.setImageResource(org.telegram.ui.Components.OmnigramIconSpan.iconRes(icon));
+            deletedIconView.setColorFilter(new android.graphics.PorterDuffColorFilter(color, android.graphics.PorterDuff.Mode.SRC_IN));
+            if (deletedIconValue != null) deletedIconValue.setText(org.telegram.ui.Components.OmnigramIconSpan.ICON_NAMES[icon]);
+            for (int i = 0; i < colorDots.length; i++) {
+                int c = org.telegram.ui.Components.OmnigramIconSpan.COLORS[i];
+                android.graphics.drawable.GradientDrawable g = new android.graphics.drawable.GradientDrawable();
+                g.setShape(android.graphics.drawable.GradientDrawable.OVAL);
+                g.setColor(c == 0 ? (getThemedColor(Theme.key_windowBackgroundWhiteGrayText2) & 0x00FFFFFF | 0xAA000000) : c);
+                if (i == colorIdx) g.setStroke(AndroidUtilities.dp(3), getThemedColor(Theme.key_windowBackgroundWhiteBlackText));
+                colorDots[i].setBackground(g);
+            }
+        } catch (Throwable ignore) {}
+    }
+
+    private void chooseDeletedIcon() {
+        if (getParentActivity() == null) return;
+        new AlertDialog.Builder(getParentActivity())
+                .setTitle("Deleted Message Icon")
                 .setItems(org.telegram.ui.Components.OmnigramIconSpan.ICON_NAMES, (d, which) -> {
                     OmnigramPrefs.setInt("deleted_icon", which);
                     refreshDeletedPreview();

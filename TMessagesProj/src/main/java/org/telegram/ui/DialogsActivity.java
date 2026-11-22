@@ -13423,6 +13423,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 org.telegram.messenger.browser.Browser.openUrl(getParentActivity(), android.net.Uri.parse("https://funni.games/graph"), true, true, false, null, null, false, true, false);
             } catch (Throwable ignore) {}
         });
+        io.add(R.drawable.msg_secret, "Ghost Mode", () -> presentFragment(new OmnigramGhostActivity()));
         io.add(R.drawable.msg_search, "ID Finder", () -> presentFragment(new OmnigramIdFinderActivity()));
         io.add(R.drawable.msg_secret, "Ghost Mode", () -> presentFragment(new OmnigramGhostActivity()));
         if (ApplicationLoader.applicationLoaderInstance != null) {
