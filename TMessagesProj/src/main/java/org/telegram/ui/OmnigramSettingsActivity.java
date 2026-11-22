@@ -62,7 +62,6 @@ public class OmnigramSettingsActivity extends OmnigramSettingsBase {
         row(context, cats, R.drawable.settings_features, "General", null, x -> presentFragment(new OmnigramGeneralActivity()));
         row(context, cats, R.drawable.msg_secret, "Ghost Mode", null, x -> presentFragment(new OmnigramGhostActivity()));
         row(context, cats, R.drawable.msg_theme, "Appearance", null, x -> presentFragment(new OmnigramAppearanceActivity()));
-        row(context, cats, R.drawable.msg_secret, "Ghost Mode", null, x -> presentFragment(new OmnigramGhostActivity()));
         row(context, cats, R.drawable.msg_discuss, "Chat", null, x -> presentFragment(new OmnigramChatActivity()));
 
         section(context, "Support");

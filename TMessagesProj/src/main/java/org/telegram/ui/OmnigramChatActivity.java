@@ -16,8 +16,7 @@ public class OmnigramChatActivity extends OmnigramSettingsBase {
         LinearLayout c = card(context);
         row(context, c, R.drawable.msg_customize, "Advanced Settings", null, x -> presentFragment(new OmnigramChatAdvancedActivity()));
         row(context, c, R.drawable.msg_discuss, "Auto Answer When Offline", null, x -> presentFragment(new OmnigramAutoAnswerActivity()));
-        row(context, c, R.drawable.msg_theme, "Chat Bubble", null, x -> presentFragment(new OmnigramBubbleStyleActivity()));
-        row(context, c, R.drawable.msg_customize, "Check Style", null, x -> presentFragment(new OmnigramCheckStyleActivity()));
+
         row(context, c, R.drawable.msg_customize, "Chat Bubble", org.telegram.ui.Components.OmnigramBubble.NAMES[org.telegram.ui.Components.OmnigramPrefs.bubbleStyle()], x -> presentFragment(new OmnigramBubbleStyleActivity()));
         row(context, c, R.drawable.msg_customize, "Check Style", org.telegram.ui.Components.OmnigramCheckStyle.NAMES[org.telegram.ui.Components.OmnigramPrefs.checkStyle()], x -> presentFragment(new OmnigramCheckStyleActivity()));
         return root;
