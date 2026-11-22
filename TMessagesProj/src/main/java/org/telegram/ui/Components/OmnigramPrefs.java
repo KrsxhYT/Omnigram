@@ -64,6 +64,19 @@ public final class OmnigramPrefs {
     public static boolean forceSnow() { return get(FORCE_SNOW, false); }
     public static boolean systemFont() { return get(SYSTEM_FONT, false); }
 
+    public static int getInt(String key, int def) {
+        try { return sp().getInt(key, def); } catch (Throwable t) { return def; }
+    }
+
+    public static void setInt(String key, int value) {
+        try { sp().edit().putInt(key, value).apply(); } catch (Throwable ignore) {}
+    }
+
+    public static int bubbleStyle() { return getInt("bubble_style", 0); }
+    public static int checkStyle() { return getInt("check_style", 0); }
+    public static int deletedIcon() { return getInt("deleted_icon", 0); }
+    public static int deletedColor() { return getInt("deleted_color", 0); }
+
     /** 0 = square ... 100 = circle (default). */
     public static int avatarCorner() {
         try { return sp().getInt("avatar_corner", 100); } catch (Throwable t) { return 100; }

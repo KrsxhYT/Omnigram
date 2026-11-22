@@ -20,9 +20,26 @@ import org.telegram.messenger.R;
  */
 public class OmnigramIconSpan extends ReplacementSpan {
     private final Drawable drawable;
+    private final int fixedColor;
 
-    private OmnigramIconSpan(Drawable drawable) {
+    private OmnigramIconSpan(Drawable drawable, int fixedColor) {
         this.drawable = drawable;
+        this.fixedColor = fixedColor;
+    }
+
+    public static final String[] ICON_NAMES = {"Dustbin", "Cross", "Eye crossed", "Block", "Warning", "Cancel"};
+    public static final int[] COLORS = {0, 0xFF2196F3, 0xFF9C27B0, 0xFF29B6F6, 0xFFE53935, 0xFFEC407A};
+    public static final String[] COLOR_NAMES = {"Default", "Blue", "Purple", "Sky blue", "Red", "Pink"};
+
+    public static int iconRes(int index) {
+        switch (index) {
+            case 1: return R.drawable.omni_ic_cross;
+            case 2: return R.drawable.omni_ic_eye_off;
+            case 3: return R.drawable.omni_ic_block;
+            case 4: return R.drawable.omni_ic_warning;
+            case 5: return R.drawable.omni_ic_cancel;
+            default: return R.drawable.omni_ic_bin;
+        }
     }
 
     @Override
@@ -36,7 +53,7 @@ public class OmnigramIconSpan extends ReplacementSpan {
         int size = Math.round(paint.getTextSize() * 0.9f);
         int bottomY = Math.round(y - paint.getTextSize() * 0.04f);
         drawable.setBounds(0, 0, size, size);
-        drawable.setColorFilter(new PorterDuffColorFilter(paint.getColor(), PorterDuff.Mode.SRC_IN));
+        drawable.setColorFilter(new PorterDuffColorFilter(fixedColor != 0 ? fixedColor : paint.getColor(), PorterDuff.Mode.SRC_IN));
         drawable.setAlpha(paint.getAlpha());
         canvas.save();
         canvas.translate(x, bottomY - size);
@@ -56,9 +73,11 @@ public class OmnigramIconSpan extends ReplacementSpan {
             int idx;
             int len;
             int res;
+            int color = 0;
             if ((idx = s.indexOf(BIN)) >= 0) {
                 len = BIN.length();
-                res = R.drawable.omni_ic_bin;
+                res = iconRes(OmnigramPrefs.deletedIcon());
+                color = COLORS[Math.max(0, Math.min(COLORS.length - 1, OmnigramPrefs.deletedColor()))];
             } else if ((idx = s.indexOf(PENCIL_A)) >= 0 || (idx = s.indexOf(PENCIL_B)) >= 0) {
                 len = 1;
                 res = R.drawable.omni_ic_pencil;
@@ -69,7 +88,7 @@ public class OmnigramIconSpan extends ReplacementSpan {
             if (d == null) return text;
             d = d.getConstantState() != null ? d.getConstantState().newDrawable().mutate() : d.mutate();
             SpannableStringBuilder sb = new SpannableStringBuilder(text);
-            sb.setSpan(new OmnigramIconSpan(d), idx, idx + len, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            sb.setSpan(new OmnigramIconSpan(d, color), idx, idx + len, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             return sb;
         } catch (Throwable t) {
             return text;

@@ -2074,6 +2074,7 @@ public class MessageObject {
         this.searchType = searchType;
 
         org.telegram.ui.Components.OmnigramCustomEmoji.apply(message);
+        org.telegram.ui.Components.OmnigramEditHistory.remember(message);
         currentAccount = accountNum;
         messageOwner = message;
         replyMessageObject = replyToMessage;

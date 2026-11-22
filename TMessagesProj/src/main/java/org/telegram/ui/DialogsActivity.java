@@ -13424,6 +13424,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             } catch (Throwable ignore) {}
         });
         io.add(R.drawable.msg_search, "ID Finder", () -> presentFragment(new OmnigramIdFinderActivity()));
+        io.add(R.drawable.msg_secret, "Ghost Mode", () -> presentFragment(new OmnigramGhostActivity()));
         if (ApplicationLoader.applicationLoaderInstance != null) {
             ApplicationLoader.applicationLoaderInstance.addItemOptions(io);
         }

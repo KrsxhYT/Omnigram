@@ -535,7 +535,13 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
         boolean result = super.drawChild(canvas, child, drawingTime);
         if (supportsHolidayImage && !titleOverlayShown && !LocaleController.isRTL && (child == titleTextView[0] || child == titleTextView[1] || child == titlesContainer && useContainerForTitles)) {
             Drawable drawable = Theme.getCurrentHolidayDrawable();
-            if (drawable != null) {
+            if (drawable == null && org.telegram.ui.Components.OmnigramPrefs.forceSnow()) {
+                // no holiday picture is set: still show the snowfall when the user turned it on
+                if (snowflakesEffect == null) {
+                    snowflakesEffect = new SnowflakesEffect(0);
+                }
+                snowflakesEffect.onDraw(this, canvas);
+            } else if (drawable != null) {
                 SimpleTextView titleView = child == titlesContainer ? titleTextView[0] : (SimpleTextView) child;
                 if (titleView != null && titleView.getVisibility() == View.VISIBLE && titleView.getText() instanceof String) {
                     TextPaint textPaint = titleView.getTextPaint();

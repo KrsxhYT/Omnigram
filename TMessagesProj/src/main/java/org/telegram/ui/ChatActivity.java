@@ -1259,6 +1259,7 @@ public class ChatActivity extends BaseFragment implements
     public final static int OPTION_OMNI_LINK = 9108;
     public final static int OPTION_OMNI_SPEAK = 9109;
     public final static int OPTION_OMNI_TOOLS = 9110;
+    public final static int OPTION_OMNI_EDIT_HISTORY = 9111;
     private org.telegram.ui.Components.OmnigramComposerBar omniComposerBarRef;
     public final static int OPTION_ADD_TO_STICKERS_OR_MASKS = 9;
     public final static int OPTION_SAVE_TO_DOWNLOADS_OR_MUSIC = 10;
@@ -34469,7 +34470,40 @@ public class ChatActivity extends BaseFragment implements
                 .show();
     }
 
+    private void omnigramShowEditHistory() {
+        try {
+            if (selectedObject == null || getParentActivity() == null) return;
+            org.json.JSONArray arr = org.telegram.ui.Components.OmnigramEditHistory.get(dialog_id, selectedObject.getId());
+            StringBuilder sb = new StringBuilder();
+            java.text.SimpleDateFormat f = new java.text.SimpleDateFormat("dd MMM yyyy, HH:mm:ss", java.util.Locale.getDefault());
+            for (int i = arr.length() - 1; i >= 0; i--) {
+                org.json.JSONObject o = arr.optJSONObject(i);
+                if (o == null) continue;
+                if (sb.length() > 0) sb.append("\n\n");
+                sb.append("Edited: ").append(f.format(new java.util.Date(o.optLong("t") * 1000L))).append("\nBefore:\n").append(o.optString("o"));
+            }
+            String text = sb.length() > 0 ? sb.toString() : "No earlier version was saved on this device. Omnigram can only keep the text of edits that happen while it is running and has already seen the original message.";
+            android.widget.ScrollView scroll = new android.widget.ScrollView(getParentActivity());
+            TextView tv = new TextView(getParentActivity());
+            tv.setText(text);
+            tv.setTextSize(15);
+            tv.setTextColor(getThemedColor(Theme.key_dialogTextBlack));
+            tv.setPadding(AndroidUtilities.dp(22), AndroidUtilities.dp(8), AndroidUtilities.dp(22), AndroidUtilities.dp(8));
+            tv.setTextIsSelectable(true);
+            scroll.addView(tv);
+            new org.telegram.ui.ActionBar.AlertDialog.Builder(getParentActivity())
+                    .setTitle("Edited history")
+                    .setView(scroll)
+                    .setPositiveButton("Close", null)
+                    .show();
+        } catch (Throwable ignore) {}
+    }
+
     private void processSelectedOption(int option) {
+        if (option == OPTION_OMNI_EDIT_HISTORY) {
+            omnigramShowEditHistory();
+            return;
+        }
         if (option == OPTION_OMNI_LINK) {
             omnigramCopyPrivateLink();
             return;
@@ -46886,6 +46920,12 @@ public class ChatActivity extends BaseFragment implements
                     items.add(LocaleController.getString(R.string.Copy));
                     options.add(OPTION_COPY);
                     icons.add(R.drawable.msg_copy);
+                }
+                // Omnigram: edit history for edited messages
+                if (selectedObject != null && selectedObject.messageOwner != null && selectedObject.messageOwner.edit_date != 0 && selectedObject.getId() > 0) {
+                    items.add("View edited history");
+                    options.add(OPTION_OMNI_EDIT_HISTORY);
+                    icons.add(R.drawable.msg_edit);
                 }
                 // Omnigram: private link + speak
                 if (selectedObject != null && selectedObject.getId() > 0 && chatMode != MODE_SCHEDULED) {
