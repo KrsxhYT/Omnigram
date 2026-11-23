@@ -53,7 +53,7 @@ public final class OmnigramGhost {
             if (object == null) return null;
             if (ALLOWED.remove(object)) return object;
 
-            if (object instanceof TLRPC.TL_messages_setTyping) {
+            if (object instanceof TLRPC.TL_messages_setTyping || object instanceof TLRPC.TL_messages_setEncryptedTyping) {
                 return on(NO_TYPING) ? null : object;
             }
             if (object instanceof TL_account.updateStatus) {
@@ -62,7 +62,12 @@ public final class OmnigramGhost {
                 }
                 return object;
             }
-            if (object instanceof TLRPC.TL_messages_readHistory || object instanceof TLRPC.TL_channels_readHistory || object instanceof TLRPC.TL_messages_readDiscussion) {
+            if (object instanceof TLRPC.TL_messages_readHistory
+                    || object instanceof TLRPC.TL_messages_readEncryptedHistory
+                    || object instanceof TLRPC.TL_messages_readDiscussion
+                    || object instanceof TLRPC.TL_messages_readMessageContents
+                    || object instanceof TLRPC.TL_channels_readHistory
+                    || object instanceof TLRPC.TL_channels_readMessageContents) {
                 return on(NO_READ) ? null : object;
             }
             if (object instanceof TL_stories.TL_stories_readStories || object instanceof TL_stories.TL_stories_incrementStoryViews) {
@@ -74,6 +79,10 @@ public final class OmnigramGhost {
                     markRead(account, r.peer, r.msg_id);
                 } else if (object instanceof TLRPC.TL_messages_sendMessage) {
                     markRead(account, ((TLRPC.TL_messages_sendMessage) object).peer, 0);
+                } else if (object instanceof TLRPC.TL_messages_sendMedia) {
+                    markRead(account, ((TLRPC.TL_messages_sendMedia) object).peer, 0);
+                } else if (object instanceof TLRPC.TL_messages_sendMultiMedia) {
+                    markRead(account, ((TLRPC.TL_messages_sendMultiMedia) object).peer, 0);
                 }
             }
         } catch (Throwable ignore) {}

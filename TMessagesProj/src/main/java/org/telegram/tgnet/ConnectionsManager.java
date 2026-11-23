@@ -420,9 +420,26 @@ public class ConnectionsManager extends BaseController {
     }
 
     private void sendRequestInternal(TLObject objectIn, RequestDelegate onComplete, RequestDelegateTimestamp onCompleteTimestamp, QuickAckDelegate onQuickAck, WriteToSocketDelegate onWriteToSocket, int flags, int datacenterId, int connectionType, boolean immediate, int requestToken) {
-        // Omnigram Ghost Mode: may drop (typing, read receipts, story views) or change (online) a request
+        // Omnigram Ghost Mode: filter outgoing presence, typing, read receipts and story-view requests.
         final TLObject object = org.telegram.ui.Components.OmnigramGhost.filter(objectIn, currentAccount);
         if (object == null) {
+            // Complete suppressed read requests locally. Telegram clients expect an affectedMessages
+            // response to advance their local read state even when no receipt is sent to the server.
+            if (onComplete != null && (objectIn instanceof TLRPC.TL_messages_readHistory
+                    || objectIn instanceof TLRPC.TL_messages_readEncryptedHistory
+                    || objectIn instanceof TLRPC.TL_messages_readDiscussion
+                    || objectIn instanceof TLRPC.TL_messages_readMessageContents
+                    || objectIn instanceof TLRPC.TL_channels_readHistory
+                    || objectIn instanceof TLRPC.TL_channels_readMessageContents)) {
+                TLRPC.TL_messages_affectedMessages fakeResponse = new TLRPC.TL_messages_affectedMessages();
+                fakeResponse.pts = -1;
+                fakeResponse.pts_count = 0;
+                try {
+                    onComplete.run(fakeResponse, null);
+                } catch (Exception e) {
+                    FileLog.e(e);
+                }
+            }
             return;
         }
         if (BuildVars.LOGS_ENABLED) {
