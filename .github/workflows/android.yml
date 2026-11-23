@@ -11,7 +11,7 @@ name: Omnigram Android Build
 
 on:
   push:
-    branches: [master]
+    branches: [master, omnigram-ghost-extera-preferences]
   workflow_dispatch:
 
 permissions:
