@@ -1,5 +1,6 @@
 package org.telegram.ui.Components;
 
+import org.telegram.messenger.MessagesStorage;
 import org.telegram.tgnet.ConnectionsManager;
 import org.telegram.tgnet.TLObject;
 import org.telegram.tgnet.TLRPC;
@@ -47,7 +48,47 @@ public final class OmnigramGhost {
         return OmnigramPrefs.get(READ_ON_INTERACT, true);
     }
 
-    /** Returns the request to send (maybe changed) or null when it must not be sent. */
+    /** True when a read RPC is intentionally suppressed by Ghost Mode. */
+    public static boolean isSuppressedReadRequest(TLObject object) {
+        return on(NO_READ) && (object instanceof TLRPC.TL_messages_readHistory
+                || object instanceof TLRPC.TL_messages_readEncryptedHistory
+                || object instanceof TLRPC.TL_messages_readDiscussion
+                || object instanceof TLRPC.TL_messages_readMessageContents
+                || object instanceof TLRPC.TL_channels_readHistory
+                || object instanceof TLRPC.TL_channels_readMessageContents);
+    }
+
+    /** Peer for outgoing message requests that should mark the dialog read after success. */
+    public static TLRPC.InputPeer peerForSend(TLObject object) {
+        if (object instanceof TLRPC.TL_messages_sendMessage) {
+            return ((TLRPC.TL_messages_sendMessage) object).peer;
+        } else if (object instanceof TLRPC.TL_messages_sendMedia) {
+            return ((TLRPC.TL_messages_sendMedia) object).peer;
+        } else if (object instanceof TLRPC.TL_messages_sendMultiMedia) {
+            return ((TLRPC.TL_messages_sendMultiMedia) object).peer;
+        }
+        return null;
+    }
+
+    /** Read up to the newest locally stored message after an outgoing message succeeds. */
+    public static void markDialogReadAfterSend(int account, TLRPC.InputPeer peer) {
+        if (peer == null) return;
+        long dialogId;
+        if (peer.channel_id != 0) {
+            dialogId = -peer.channel_id;
+        } else if (peer.chat_id != 0) {
+            dialogId = -peer.chat_id;
+        } else {
+            dialogId = peer.user_id;
+        }
+        MessagesStorage.getInstance(account).getDialogMaxMessageId(dialogId, maxId -> {
+            if (maxId > 0) {
+                markRead(account, peer, maxId);
+            }
+        });
+    }
+
+    /** Returns the request to send (possibly modified), or null when Ghost Mode blocks it. */
     public static TLObject filter(TLObject object, int account) {
         try {
             if (object == null) return null;
@@ -62,19 +103,15 @@ public final class OmnigramGhost {
                 }
                 return object;
             }
-            if (object instanceof TLRPC.TL_messages_readHistory || object instanceof TLRPC.TL_channels_readHistory || object instanceof TLRPC.TL_messages_readDiscussion) {
-                return on(NO_READ) ? null : object;
+            if (isSuppressedReadRequest(object)) {
+                return null;
             }
             if (object instanceof TL_stories.TL_stories_readStories || object instanceof TL_stories.TL_stories_incrementStoryViews) {
                 return on(NO_STORIES) ? null : object;
             }
-            if (on(NO_READ) && readOnInteract()) {
-                if (object instanceof TLRPC.TL_messages_sendReaction) {
-                    TLRPC.TL_messages_sendReaction r = (TLRPC.TL_messages_sendReaction) object;
-                    markRead(account, r.peer, r.msg_id);
-                } else if (object instanceof TLRPC.TL_messages_sendMessage) {
-                    markRead(account, ((TLRPC.TL_messages_sendMessage) object).peer, 0);
-                }
+            if (on(NO_READ) && readOnInteract() && object instanceof TLRPC.TL_messages_sendReaction) {
+                TLRPC.TL_messages_sendReaction reaction = (TLRPC.TL_messages_sendReaction) object;
+                markRead(account, reaction.peer, reaction.msg_id);
             }
         } catch (Throwable ignore) {}
         return object;
