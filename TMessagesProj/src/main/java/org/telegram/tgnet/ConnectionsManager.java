@@ -420,11 +420,32 @@ public class ConnectionsManager extends BaseController {
     }
 
     private void sendRequestInternal(TLObject objectIn, RequestDelegate onComplete, RequestDelegateTimestamp onCompleteTimestamp, QuickAckDelegate onQuickAck, WriteToSocketDelegate onWriteToSocket, int flags, int datacenterId, int connectionType, boolean immediate, int requestToken) {
-        // Omnigram Ghost Mode: may drop (typing, read receipts, story views) or change (online) a request
+        // Omnigram Ghost Mode filters presence/read RPCs before serialization.
         final TLObject object = org.telegram.ui.Components.OmnigramGhost.filter(objectIn, currentAccount);
         if (object == null) {
+            if (org.telegram.ui.Components.OmnigramGhost.isSuppressedReadRequest(objectIn) && onComplete != null) {
+                TLRPC.TL_messages_affectedMessages suppressedReadResult = new TLRPC.TL_messages_affectedMessages();
+                suppressedReadResult.pts = -1;
+                suppressedReadResult.pts_count = 0;
+                onComplete.run(suppressedReadResult, null);
+            }
             return;
         }
+        final TLRPC.InputPeer ghostReadPeer = org.telegram.ui.Components.OmnigramGhost.on(org.telegram.ui.Components.OmnigramGhost.NO_READ)
+                && org.telegram.ui.Components.OmnigramGhost.readOnInteract()
+                ? org.telegram.ui.Components.OmnigramGhost.peerForSend(object) : null;
+        final RequestDelegate requestCompletion = ghostReadPeer == null || onComplete == null ? onComplete : (response, error) -> {
+            onComplete.run(response, error);
+            if (error == null) {
+                org.telegram.ui.Components.OmnigramGhost.markDialogReadAfterSend(currentAccount, ghostReadPeer);
+            }
+        };
+        final RequestDelegateTimestamp requestCompletionTimestamp = ghostReadPeer == null || onCompleteTimestamp == null ? onCompleteTimestamp : (response, error, timestamp) -> {
+            onCompleteTimestamp.run(response, error, timestamp);
+            if (error == null) {
+                org.telegram.ui.Components.OmnigramGhost.markDialogReadAfterSend(currentAccount, ghostReadPeer);
+            }
+        };
         if (BuildVars.LOGS_ENABLED) {
             FileLog.d("send request " + object + " with token = " + requestToken);
         }
@@ -477,7 +498,7 @@ public class ConnectionsManager extends BaseController {
                             FileLog.d("Cleanup keys for " + currentAccount + " because of CONNECTION_NOT_INITED");
                         }
                         cleanup(true);
-                        sendRequest(object, onComplete, onCompleteTimestamp, onQuickAck, onWriteToSocket, flags, datacenterId, connectionType, immediate);
+                        sendRequest(object, requestCompletion, requestCompletionTimestamp, onQuickAck, onWriteToSocket, flags, datacenterId, connectionType, immediate);
                         return;
                     }
                     if (resp != null) {
@@ -490,10 +511,10 @@ public class ConnectionsManager extends BaseController {
                     final TLObject finalResponse = resp;
                     final TLRPC.TL_error finalError = error;
                     Utilities.stageQueue.postRunnable(() -> {
-                        if (onComplete != null) {
-                            onComplete.run(finalResponse, finalError);
-                        } else if (onCompleteTimestamp != null) {
-                            onCompleteTimestamp.run(finalResponse, finalError, timestamp);
+                        if (requestCompletion != null) {
+                            requestCompletion.run(finalResponse, finalError);
+                        } else if (requestCompletionTimestamp != null) {
+                            requestCompletionTimestamp.run(finalResponse, finalError, timestamp);
                         } else if (finalResponse instanceof TLRPC.Updates) {
                             KeepAliveJob.finishJob();
                             AccountInstance.getInstance(currentAccount).getMessagesController().processUpdates((TLRPC.Updates) finalResponse, false);
