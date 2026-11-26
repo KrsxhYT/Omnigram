@@ -297,7 +297,7 @@ public class FilterCreateActivity extends BaseFragment {
         items.add(ItemInner.asEdit());
         items.add(ItemInner.asShadow(null));
         items.add(ItemInner.asHeader(LocaleController.getString(R.string.FilterInclude)));
-        items.add(ItemInner.asButton(R.drawable.msg2_chats_add, LocaleController.getString(R.string.FilterAddChats), false).whenClicked(v -> selectChatsFor(true)));
+        items.add(ItemInner.asButton(R.drawable.solar_msg_contacts, LocaleController.getString(R.string.FilterAddChats), false).whenClicked(v -> selectChatsFor(true)));
 
         if ((newFilterFlags & MessagesController.DIALOG_FILTER_FLAG_CONTACTS) != 0) {
             items.add(ItemInner.asChat(true, LocaleController.getString(R.string.FilterContacts), "contacts", MessagesController.DIALOG_FILTER_FLAG_CONTACTS));
@@ -333,7 +333,7 @@ public class FilterCreateActivity extends BaseFragment {
         items.add(ItemInner.asShadow(LocaleController.getString(R.string.FilterIncludeInfo)));
         if (!filter.isChatlist()) {
             items.add(ItemInner.asHeader(LocaleController.getString(R.string.FilterExclude)));
-            items.add(ItemInner.asButton(R.drawable.msg2_chats_add, LocaleController.getString(R.string.FilterRemoveChats), false).whenClicked(v -> selectChatsFor(false)));
+            items.add(ItemInner.asButton(R.drawable.solar_msg_contacts, LocaleController.getString(R.string.FilterRemoveChats), false).whenClicked(v -> selectChatsFor(false)));
             if ((newFilterFlags & MessagesController.DIALOG_FILTER_FLAG_EXCLUDE_MUTED) != 0) {
                 items.add(ItemInner.asChat(false, LocaleController.getString(R.string.FilterMuted), "muted", MessagesController.DIALOG_FILTER_FLAG_EXCLUDE_MUTED));
             }
@@ -369,7 +369,7 @@ public class FilterCreateActivity extends BaseFragment {
 
         if (invites.isEmpty()) {
             items.add(ItemInner.asHeader(LocaleController.getString(R.string.FilterShareFolder), true));
-            items.add(ItemInner.asButton(R.drawable.msg2_link2, LocaleController.getString(R.string.FilterShareFolderButton), false));
+            items.add(ItemInner.asButton(R.drawable.solar_msg_link, LocaleController.getString(R.string.FilterShareFolderButton), false));
             items.add(ItemInner.asShadow(LocaleController.getString(R.string.FilterInviteLinksHintNew)));
         } else {
             items.add(ItemInner.asHeader(LocaleController.getString(R.string.FilterInviteLinks), true));
@@ -408,7 +408,7 @@ public class FilterCreateActivity extends BaseFragment {
     @Override
     public View createView(Context context) {
         setHasOwnBackground(true);
-        simpleActionBar.setBackButtonImage(R.drawable.ic_ab_back);
+        simpleActionBar.setBackButtonImage(R.drawable.solar_msg_back);
         if (creatingNew) {
             simpleActionBar.setTitle(LocaleController.getString(R.string.FilterNew));
         } else {
@@ -582,7 +582,7 @@ public class FilterCreateActivity extends BaseFragment {
                 } else {
                     open.run();
                 }
-            } else if (item.viewType == VIEW_TYPE_CREATE_LINK || item.viewType == VIEW_TYPE_BUTTON && item.iconResId == R.drawable.msg2_link2) {
+            } else if (item.viewType == VIEW_TYPE_CREATE_LINK || item.viewType == VIEW_TYPE_BUTTON && item.iconResId == R.drawable.solar_msg_link) {
                 onClickCreateLink(view);
             } else if (item.viewType == VIEW_TYPE_EDIT) {
 //                PollEditTextCell cell = (PollEditTextCell) view;
@@ -1922,7 +1922,7 @@ public class FilterCreateActivity extends BaseFragment {
             addView(subtitleTextView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 16, Gravity.TOP | Gravity.FILL_HORIZONTAL, LocaleController.isRTL ? 56 : 64, 33.33f, LocaleController.isRTL ? 64 : 56, 0));
 
             optionsIcon = new ImageView(context);
-            optionsIcon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_ab_other));
+            optionsIcon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.solar_msg_settings));
             optionsIcon.setScaleType(ImageView.ScaleType.CENTER);
             ThemeBind.selectorBackground(optionsIcon, Theme.createSelectorDrawable(Theme.getColor(Theme.key_listSelector)), null, ThemeBind.of(Theme.key_listSelector));
             ThemeBind.colorFilter(optionsIcon, Theme.key_stickers_menu, PorterDuff.Mode.SRC_IN);
@@ -1934,9 +1934,9 @@ public class FilterCreateActivity extends BaseFragment {
             paint.setColor(Theme.getColor(Theme.key_featuredStickers_addButton));
             revokedPaint = new Paint();
             revokedPaint.setColor(Theme.getColor(Theme.key_color_red));
-            linkIcon = getContext().getResources().getDrawable(R.drawable.msg_link_1).mutate();
+            linkIcon = getContext().getResources().getDrawable(R.drawable.solar_msg_link).mutate();
             linkIcon.setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN));
-            revokedLinkIcon = getContext().getResources().getDrawable(R.drawable.msg_link_2).mutate();
+            revokedLinkIcon = getContext().getResources().getDrawable(R.drawable.solar_msg_link).mutate();
             revokedLinkIcon.setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN));
 
             setWillNotDraw(false);
@@ -2039,7 +2039,7 @@ public class FilterCreateActivity extends BaseFragment {
             ItemOptions options = ItemOptions.makeOptions(fragment, this);
             options.setScrimViewBackground(listView.getClipBackground(this));
             options.add(R.drawable.msg_qrcode, LocaleController.getString(R.string.GetQRCode), this::qrcode);
-            options.add(R.drawable.msg_delete, LocaleController.getString(R.string.DeleteLink), true, this::deleteLink);
+            options.add(R.drawable.solar_msg_delete, LocaleController.getString(R.string.DeleteLink), true, this::deleteLink);
             if (LocaleController.isRTL) {
                 options.setGravity(Gravity.LEFT);
             }
@@ -2154,12 +2154,12 @@ public class FilterCreateActivity extends BaseFragment {
         text.append("  ");
         SpannableString newText = new SpannableString("NEW"); // new SpannableString(LocaleController.getString(R.string.New));
         if (outline) {
-            Drawable drawable = context.getResources().getDrawable(R.drawable.msg_other_new_outline).mutate();
+            Drawable drawable = context.getResources().getDrawable(R.drawable.solar_msg_add).mutate();
             drawable.setBounds(0, -dp(8), drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight() - dp(8));
             newText.setSpan(new ColorImageSpan(drawable, DynamicDrawableSpan.ALIGN_BOTTOM), 0, newText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         } else {
-            Drawable bg = context.getResources().getDrawable(R.drawable.msg_other_new_filled).mutate();
-            Drawable txt = context.getResources().getDrawable(R.drawable.msg_other_new_filled_text).mutate();
+            Drawable bg = context.getResources().getDrawable(R.drawable.solar_msg_add).mutate();
+            Drawable txt = context.getResources().getDrawable(R.drawable.solar_msg_add).mutate();
             bg.setColorFilter(new PorterDuffColorFilter(Theme.getColor(Theme.key_featuredStickers_unread), PorterDuff.Mode.MULTIPLY));
             txt.setColorFilter(new PorterDuffColorFilter(Theme.getColor(Theme.key_featuredStickers_buttonText), PorterDuff.Mode.MULTIPLY));
             Drawable drawable = new CombinedDrawable(bg, txt);
@@ -2591,9 +2591,9 @@ public class FilterCreateActivity extends BaseFragment {
                             @Override
                             public void options() {
                                 ItemOptions options = ItemOptions.makeOptions(container, this);
-                                options.add(R.drawable.msg_copy, LocaleController.getString(R.string.CopyLink), this::copy);
+                                options.add(R.drawable.solar_msg_copy, LocaleController.getString(R.string.CopyLink), this::copy);
                                 options.add(R.drawable.msg_qrcode, LocaleController.getString(R.string.GetQRCode), this::qrcode);
-                                options.add(R.drawable.msg_delete, LocaleController.getString(R.string.DeleteLink), true, this::deleteLink);
+                                options.add(R.drawable.solar_msg_delete, LocaleController.getString(R.string.DeleteLink), true, this::deleteLink);
                                 if (LocaleController.isRTL) {
                                     options.setGravity(Gravity.LEFT);
                                 }
@@ -2684,7 +2684,7 @@ public class FilterCreateActivity extends BaseFragment {
 
                 imageView = new ImageView(context);
                 imageView.setScaleType(ImageView.ScaleType.CENTER);
-                imageView.setImageResource(R.drawable.msg_limit_links);
+                imageView.setImageResource(R.drawable.solar_msg_info);
                 imageView.setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN));
                 ThemeBind.fillBackground(imageView, Theme.createRoundRectDrawable(dp(22), Theme.getColor(Theme.key_featuredStickers_addButton)), ThemeBind.of(Theme.key_featuredStickers_addButton));
                 addView(imageView, LayoutHelper.createFrame(54, 44, Gravity.CENTER_HORIZONTAL | Gravity.TOP, 0, 22, 0, 0));
@@ -2711,7 +2711,7 @@ public class FilterCreateActivity extends BaseFragment {
 
                 closeImageView = new ImageView(context);
                 closeImageView.setScaleType(ImageView.ScaleType.CENTER);
-                closeImageView.setImageResource(R.drawable.msg_close);
+                closeImageView.setImageResource(R.drawable.solar_msg_close);
                 ThemeBind.colorFilter(closeImageView, Theme.key_windowBackgroundWhiteGrayText5, PorterDuff.Mode.MULTIPLY);
                 closeImageView.setOnClickListener(e -> dismiss());
                 addView(closeImageView, LayoutHelper.createFrame(48, 48, Gravity.RIGHT | Gravity.TOP, 0, -4, 2, 0));
