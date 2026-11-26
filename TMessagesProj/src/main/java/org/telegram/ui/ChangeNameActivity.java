@@ -58,7 +58,7 @@ public class ChangeNameActivity extends BaseFragment {
     public View createView(Context context) {
         ThemeBind.actionBarItemsBackgroundColor(actionBar, Theme.key_avatar_actionBarSelectorBlue, resourcesProvider, false);
         ThemeBind.actionBarItemsColor(actionBar, Theme.key_actionBarDefaultIcon, resourcesProvider, false);
-        actionBar.setBackButtonImage(R.drawable.ic_ab_back);
+        actionBar.setBackButtonImage(R.drawable.solar_msg_back);
         actionBar.setAllowOverlayTitle(true);
         actionBar.setTitle(LocaleController.getString(R.string.EditName));
         actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
@@ -76,7 +76,7 @@ public class ChangeNameActivity extends BaseFragment {
         });
 
         ActionBarMenu menu = actionBar.createMenu();
-        doneButton = menu.addItemWithWidth(done_button, R.drawable.ic_ab_done, AndroidUtilities.dp(56), LocaleController.getString(R.string.Done));
+        doneButton = menu.addItemWithWidth(done_button, R.drawable.solar_msg_done, AndroidUtilities.dp(56), LocaleController.getString(R.string.Done));
 
         TLRPC.User user = MessagesController.getInstance(currentAccount).getUser(UserConfig.getInstance(currentAccount).getClientUserId());
         if (user == null) {
