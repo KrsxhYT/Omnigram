@@ -537,7 +537,7 @@ public class PrivacyControlActivity extends BaseFragment implements Notification
             messageCell = new MessageCell(context);
         }
 
-        simpleActionBar.setBackButtonImage(R.drawable.ic_ab_back);
+        simpleActionBar.setBackButtonImage(R.drawable.solar_msg_back);
         if (rulesType == PRIVACY_RULES_TYPE_PHONE) {
             simpleActionBar.setTitle(LocaleController.getString(R.string.PrivacyPhone));
         } else if (rulesType == PRIVACY_RULES_TYPE_FORWARDS) {
@@ -1824,9 +1824,9 @@ public class PrivacyControlActivity extends BaseFragment implements Notification
                 case 6:
                     setAvatarCell = new TextCell(getContext());
                     if (avatarForRest == null) {
-                        setAvatarCell.setTextAndIcon(formatString(R.string.SetPhotoForRest), R.drawable.msg_addphoto, false);
+                        setAvatarCell.setTextAndIcon(formatString(R.string.SetPhotoForRest), R.drawable.solar_msg_camera, false);
                     } else {
-                        setAvatarCell.setTextAndIcon(formatString("UpdatePhotoForRest", R.string.UpdatePhotoForRest), R.drawable.msg_addphoto, true);
+                        setAvatarCell.setTextAndIcon(formatString("UpdatePhotoForRest", R.string.UpdatePhotoForRest), R.drawable.solar_msg_camera, true);
                     }
                     setAvatarCell.setBackgroundDrawable(Theme.getSelectorDrawable(false));
                     setAvatarCell.setColors(Theme.key_windowBackgroundWhiteBlueIcon, Theme.key_windowBackgroundWhiteBlueButton);
@@ -1879,7 +1879,7 @@ public class PrivacyControlActivity extends BaseFragment implements Notification
                 case 10:
                     final FrameLayout frameLayout = new FrameLayout(mContext);
                     final ButtonWithCounterView button = new ButtonWithCounterView(mContext, resourceProvider).setRound();
-                    final ColoredImageSpan lockSpan = new ColoredImageSpan(R.drawable.msg_mini_lock3);
+                    final ColoredImageSpan lockSpan = new ColoredImageSpan(R.drawable.solar_ghost);
                     SpannableStringBuilder ssb = new SpannableStringBuilder(getString(R.string.PrivateMessagesChargePremiumLocked));
                     ssb.append(" l");
                     ssb.setSpan(lockSpan, ssb.length() - 1, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -2141,7 +2141,7 @@ public class PrivacyControlActivity extends BaseFragment implements Notification
                         privacyCell.setText(formatString(R.string.PrivateMessagesPriceInfo, percents(getMessagesController().starsPaidMessageCommissionPermille), income));
                     } else if (position == showGiftIconInfoRow) {
                         final SpannableString giftIcon = new SpannableString("g");
-                        final ColoredImageSpan span = new ColoredImageSpan(R.drawable.msg_input_gift);
+                        final ColoredImageSpan span = new ColoredImageSpan(R.drawable.solar_msg_gift_premium);
                         span.setScale(0.583f, 0.583f);
                         giftIcon.setSpan(span, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         privacyCell.setText(LocaleController.formatSpannable(R.string.PrivacyGiftsShowIconInfo, giftIcon));
@@ -2208,7 +2208,7 @@ public class PrivacyControlActivity extends BaseFragment implements Notification
                             }
                         } else if (position == myContactsRow) {
                             if (rulesType == PRIVACY_RULES_TYPE_VOICE_MESSAGES && !getUserConfig().isPremium() || rulesType == PRIVACY_RULES_TYPE_MESSAGES && !getMessagesController().newNoncontactPeersRequirePremiumWithoutOwnpremium && !getUserConfig().isPremium()) {
-                                radioCell.setRadioIcon(getContext().getResources().getDrawable(R.drawable.mini_switch_lock).mutate());
+                                radioCell.setRadioIcon(getContext().getResources().getDrawable(R.drawable.solar_ghost).mutate());
                             }
                             if (rulesType == PRIVACY_RULES_TYPE_P2P) {
                                 radioCell.setText(LocaleController.getString(R.string.P2PContacts), currentType == TYPE_CONTACTS, nobodyRow != -1 || payRow != -1);
@@ -2219,12 +2219,12 @@ public class PrivacyControlActivity extends BaseFragment implements Notification
                             }
                         } else if (position == payRow) {
                             if (rulesType == PRIVACY_RULES_TYPE_MESSAGES && !getUserConfig().isPremium()/* || rulesType == PRIVACY_RULES_TYPE_MESSAGES && !getMessagesController().newNoncontactPeersRequirePremiumWithoutOwnpremium && !getUserConfig().isPremium()*/) {
-                                radioCell.setRadioIcon(getContext().getResources().getDrawable(R.drawable.mini_switch_lock).mutate());
+                                radioCell.setRadioIcon(getContext().getResources().getDrawable(R.drawable.solar_ghost).mutate());
                             }
                             radioCell.setText(getString(R.string.PrivateMessagesChargePrice), currentType == TYPE_PAY, false);
                         } else {
                             if (rulesType == PRIVACY_RULES_TYPE_VOICE_MESSAGES && !getUserConfig().isPremium() || rulesType == PRIVACY_RULES_TYPE_MESSAGES && !getMessagesController().newNoncontactPeersRequirePremiumWithoutOwnpremium && !getUserConfig().isPremium()) {
-                                radioCell.setRadioIcon(getContext().getResources().getDrawable(R.drawable.mini_switch_lock).mutate());
+                                radioCell.setRadioIcon(getContext().getResources().getDrawable(R.drawable.solar_ghost).mutate());
                             }
                             if (rulesType == PRIVACY_RULES_TYPE_P2P) {
                                 radioCell.setText(LocaleController.getString(R.string.P2PNobody), currentType == TYPE_NOBODY, false);
@@ -2276,7 +2276,7 @@ public class PrivacyControlActivity extends BaseFragment implements Notification
                                 if (!getUserConfig().isPremium()) {
                                     if (lockSpan == null) {
                                         SpannableString s = new SpannableString("l");
-                                        ColoredImageSpan span = new ColoredImageSpan(R.drawable.msg_mini_lock3);
+                                        ColoredImageSpan span = new ColoredImageSpan(R.drawable.solar_ghost);
                                         span.translate(dp(2), dp(1));
                                         s.setSpan(span, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                                         lockSpan = s;
