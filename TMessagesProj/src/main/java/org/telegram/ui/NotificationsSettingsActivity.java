@@ -479,7 +479,7 @@ public class NotificationsSettingsActivity extends BaseFragment implements Notif
     @Override
     public View createView(Context context) {
         setHasOwnBackground(true);
-        simpleActionBar.setBackButtonImage(R.drawable.ic_ab_back);
+        simpleActionBar.setBackButtonImage(R.drawable.solar_msg_back);
         simpleActionBar.setTitle(getString(R.string.NotificationsAndSounds));
         simpleActionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
             @Override
@@ -490,7 +490,7 @@ public class NotificationsSettingsActivity extends BaseFragment implements Notif
             }
         });
         if (parentLayout != null && parentLayout.isRightLayout()) {
-            simpleActionBar.setBackButtonImage(R.drawable.ic_ab_close);
+            simpleActionBar.setBackButtonImage(R.drawable.solar_msg_close);
         }
 
         fragmentView = new FrameLayout(context);
@@ -1071,29 +1071,29 @@ public class NotificationsSettingsActivity extends BaseFragment implements Notif
                         text = getString(R.string.NotificationsPrivateChats);
                         exceptions = exceptionUsers;
                         offUntil = preferences.getInt("EnableAll2", 0);
-                        icon = R.drawable.msg_openprofile;
+                        icon = R.drawable.solar_msg_contacts;
                     } else if (position == groupRow) {
                         text = getString(R.string.NotificationsGroups);
                         exceptions = exceptionChats;
                         offUntil = preferences.getInt("EnableGroup2", 0);
-                        icon = R.drawable.msg_groups;
+                        icon = R.drawable.solar_msg_groups;
                     } else if (position == storiesRow) {
                         text = getString(R.string.NotificationStories);
                         exceptions = exceptionStories;
                         autoExceptions = exceptionAutoStories;
                         offUntil = preferences.getBoolean("EnableAllStories", false) ? 0 : Integer.MAX_VALUE;
-                        icon = R.drawable.msg_menu_stories;
+                        icon = R.drawable.solar_msg_camera;
                     } else if (position == reactionsRow) {
                         text = getString(R.string.NotificationReactions);
                         exceptions = null;
                         autoExceptions = null;
                         offUntil = preferences.getBoolean("EnableReactionsMessages", true) || preferences.getBoolean("EnableReactionsStories", true) ? 0 : Integer.MAX_VALUE;
-                        icon = R.drawable.msg_reactions;
+                        icon = R.drawable.solar_msg_reactions;
                     } else {
                         text = getString(R.string.NotificationsChannels);
                         exceptions = exceptionChannels;
                         offUntil = preferences.getInt("EnableChannel2", 0);
-                        icon = R.drawable.msg_channel;
+                        icon = R.drawable.solar_msg_channel;
                     }
                     int iconType;
                     if (enabled = offUntil < currentTime) {
