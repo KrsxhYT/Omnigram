@@ -12308,7 +12308,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                             }
                             otherItem.addSubItem(report, R.drawable.solar_msg_info, LocaleController.getString(R.string.ReportBot)).setColorKeys(Theme.key_text_RedRegular, Theme.key_text_RedRegular);
                             if (!userBlocked) {
-                                otherItem.addSubItem(block_contact, R.drawable.solar_ghost2, LocaleController.getString(R.string.DeleteAndBlock)).setColorKeys(Theme.key_text_RedRegular, Theme.key_text_RedRegular);
+                                otherItem.addSubItem(block_contact, R.drawable.solar_ghost, LocaleController.getString(R.string.DeleteAndBlock)).setColorKeys(Theme.key_text_RedRegular, Theme.key_text_RedRegular);
                             } else {
                                 otherItem.addSubItem(block_contact, R.drawable.msg_retry, LocaleController.getString(R.string.BotRestart));
                             }
@@ -13951,7 +13951,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     } else if (position == reportReactionRow) {
                         TLRPC.Chat chat = getMessagesController().getChat(-reportReactionFromDialogId);
                         if (chat != null && ChatObject.canBlockUsers(chat)) {
-                            textCell.setTextAndIcon(LocaleController.getString(R.string.ReportReactionAndBan2), R.drawable.solar_ghost2, false);
+                            textCell.setTextAndIcon(LocaleController.getString(R.string.ReportReactionAndBan2), R.drawable.solar_ghost, false);
                         } else {
                             textCell.setTextAndIcon(LocaleController.getString(R.string.ReportReaction2), R.drawable.solar_msg_info, false);
                         }
@@ -16603,10 +16603,10 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         if (getUserConfig().isPremium()) {
             editColorItem.setIcon(R.drawable.solar_msg_theme);
         } else {
-            Drawable icon = ContextCompat.getDrawable(getContext(), R.drawable.solar_msg_theme_locked);
+            Drawable icon = ContextCompat.getDrawable(getContext(), R.drawable.solar_msg_theme);
             icon.setColorFilter(new PorterDuffColorFilter(getThemedColor(Theme.key_actionBarDefaultSubmenuItemIcon), PorterDuff.Mode.SRC_IN));
             editColorLockedIcon = icon;
-            Drawable lockIcon = ContextCompat.getDrawable(getContext(), R.drawable.solar_msg_camera_locked2);
+            Drawable lockIcon = ContextCompat.getDrawable(getContext(), R.drawable.solar_msg_camera);
             lockIcon.setColorFilter(new PorterDuffColorFilter(ColorUtils.blendARGB(Color.WHITE, Color.BLACK, 0.5f), PorterDuff.Mode.MULTIPLY));
             CombinedDrawable combinedDrawable = new CombinedDrawable(icon, lockIcon, dp(1), -dp(1)) {
                 @Override
