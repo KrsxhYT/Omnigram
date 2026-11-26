@@ -238,9 +238,9 @@ public class StickersActivity extends BaseFragment implements NotificationCenter
 
 
         SimpleActionBarMenu actionMode = simpleActionBar.createActionMode();
-        shareMenuItem = actionMode.addItemWithWidth(MENU_SHARE, R.drawable.msg_share, dp(54));
-        archiveMenuItem = actionMode.addItemWithWidth(MENU_ARCHIVE, R.drawable.msg_archive, dp(54));
-        deleteMenuItem = actionMode.addItemWithWidth(MENU_DELETE, R.drawable.msg_delete, dp(54));
+        shareMenuItem = actionMode.addItemWithWidth(MENU_SHARE, R.drawable.solar_msg_share, dp(54));
+        archiveMenuItem = actionMode.addItemWithWidth(MENU_ARCHIVE, R.drawable.solar_msg_archive, dp(54));
+        deleteMenuItem = actionMode.addItemWithWidth(MENU_DELETE, R.drawable.solar_msg_delete, dp(54));
 
         if (currentType == TYPE_EMOJIPACKS && frozenEmojiPacks != null) {
             sets = frozenEmojiPacks;
@@ -357,22 +357,22 @@ public class StickersActivity extends BaseFragment implements NotificationCenter
 
         if (currentType == TYPE_IMAGE) {
             featuredRow = items.size();
-            items.add(UItem.asButton(ID_FEATURED, R.drawable.msg2_trending, getString(R.string.FeaturedStickers), featuredCount > 0 ? formatNumber(featuredCount, ',') : ""));
+            items.add(UItem.asButton(ID_FEATURED, R.drawable.solar_msg_sticker, getString(R.string.FeaturedStickers), featuredCount > 0 ? formatNumber(featuredCount, ',') : ""));
             if (archivedCount > 0) {
                 archivedRow = items.size();
                 if (currentType == TYPE_IMAGE) {
-                    items.add(UItem.asButton(ID_ARCHIVED, R.drawable.msg2_archived_stickers, getString(R.string.ArchivedStickers), formatNumber(archivedCount, ',')));
+                    items.add(UItem.asButton(ID_ARCHIVED, R.drawable.solar_msg_sticker, getString(R.string.ArchivedStickers), formatNumber(archivedCount, ',')));
                 } else {
                     items.add(UItem.asButton(ID_ARCHIVED, getString(currentType == TYPE_EMOJIPACKS ? R.string.ArchivedEmojiPacks : R.string.ArchivedMasks), formatNumber(archivedCount, ',')));
                 }
             }
             emojiPacksRow = items.size();
-            items.add(UItem.asSettingsCell(ID_EMOJI, R.drawable.msg2_smile_status, getString(R.string.Emoji), emojiCount > 0 ? LocaleController.formatNumber(emojiCount, ',') : ""));
+            items.add(UItem.asSettingsCell(ID_EMOJI, R.drawable.solar_msg_sticker, getString(R.string.Emoji), emojiCount > 0 ? LocaleController.formatNumber(emojiCount, ',') : ""));
         } else {
             if (archivedCount > 0) {
                 archivedRow = items.size();
                 if (currentType == TYPE_IMAGE) {
-                    items.add(UItem.asButton(ID_ARCHIVED, R.drawable.msg2_archived_stickers, getString(R.string.ArchivedStickers), formatNumber(archivedCount, ',')));
+                    items.add(UItem.asButton(ID_ARCHIVED, R.drawable.solar_msg_sticker, getString(R.string.ArchivedStickers), formatNumber(archivedCount, ',')));
                 } else {
                     items.add(UItem.asButton(ID_ARCHIVED, getString(currentType == TYPE_EMOJIPACKS ? R.string.ArchivedEmojiPacks : R.string.ArchivedMasks), formatNumber(archivedCount, ',')));
                 }
@@ -384,7 +384,7 @@ public class StickersActivity extends BaseFragment implements NotificationCenter
 
         if (currentType == TYPE_IMAGE) {
             reactionsDoubleTapRow = items.size();
-            items.add(UItem.asSettingsCell(ID_QUICK_REACTION, R.drawable.msg2_reactions2, getString(R.string.DoubleTapSetting)).onBind(this::setQuickReactionImage));
+            items.add(UItem.asSettingsCell(ID_QUICK_REACTION, R.drawable.solar_msg_reactions, getString(R.string.DoubleTapSetting)).onBind(this::setQuickReactionImage));
             items.add(UItem.asShadow(addStickersBotSpan(getString(currentType == TYPE_EMOJIPACKS ? R.string.EmojiBotInfo : R.string.StickersBotInfo))));
 
             items.add(UItem.asHeader(getString(R.string.StickersSettings)));
@@ -447,7 +447,7 @@ public class StickersActivity extends BaseFragment implements NotificationCenter
             }
 
             if (truncatedFeaturedStickers) {
-                items.add(UItem.asButton(ID_SHOW_MORE_FEATURED, R.drawable.msg2_trending, getString(R.string.ShowMoreEmojiPacks)).accent());
+                items.add(UItem.asButton(ID_SHOW_MORE_FEATURED, R.drawable.solar_msg_sticker, getString(R.string.ShowMoreEmojiPacks)).accent());
             }
         }
 
@@ -630,10 +630,10 @@ public class StickersActivity extends BaseFragment implements NotificationCenter
         final StickerSetCell cell = (StickerSetCell) view.getParent();
         final TLRPC.TL_messages_stickerSet set = cell.getStickersSet();
         ItemOptions.makeOptions(StickersActivity.this, cell)
-            .add(R.drawable.msg_archive, LocaleController.getString(R.string.StickersHide), () -> {
+            .add(R.drawable.solar_msg_archive, LocaleController.getString(R.string.StickersHide), () -> {
                 MediaDataController.getInstance(currentAccount).toggleStickerSet(getParentActivity(), set, !set.set.archived ? 1 : 2, StickersActivity.this, true, true);
             })
-            .addIf(!set.set.official, R.drawable.msg_link, LocaleController.getString(R.string.StickersCopy), () -> {
+            .addIf(!set.set.official, R.drawable.solar_msg_link, LocaleController.getString(R.string.StickersCopy), () -> {
                 try {
                     final android.content.ClipboardManager clipboard = (android.content.ClipboardManager) ApplicationLoader.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE);
                     final android.content.ClipData clip = android.content.ClipData.newPlainText("label", getLinkForSet(set));
@@ -643,10 +643,10 @@ public class StickersActivity extends BaseFragment implements NotificationCenter
                     FileLog.e(e);
                 }
             })
-            .add(R.drawable.msg_reorder, LocaleController.getString(R.string.StickersReorder), () -> {
+            .add(R.drawable.solar_msg_settings, LocaleController.getString(R.string.StickersReorder), () -> {
                 toggleSelected(cell);
             })
-            .addIf(!set.set.official, R.drawable.msg_share, LocaleController.getString(R.string.StickersShare), () -> {
+            .addIf(!set.set.official, R.drawable.solar_msg_share, LocaleController.getString(R.string.StickersShare), () -> {
                 try {
                     final Intent intent = new Intent(Intent.ACTION_SEND);
                     intent.setType("text/plain");
@@ -656,7 +656,7 @@ public class StickersActivity extends BaseFragment implements NotificationCenter
                     FileLog.e(e);
                 }
             })
-            .addIf(!set.set.official, R.drawable.msg_delete, LocaleController.getString(R.string.StickersRemove), true, () -> {
+            .addIf(!set.set.official, R.drawable.solar_msg_delete, LocaleController.getString(R.string.StickersRemove), true, () -> {
                 MediaDataController.getInstance(currentAccount).toggleStickerSet(getParentActivity(), set, 0, StickersActivity.this, true, true);
             })
             .setMinWidth(190)
