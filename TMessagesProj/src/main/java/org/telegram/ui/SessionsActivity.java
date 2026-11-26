@@ -207,7 +207,7 @@ public class SessionsActivity extends BaseFragment implements NotificationCenter
         globalFlickerLoadingView = new FlickerLoadingView(context);
         globalFlickerLoadingView.setIsSingleCell(true);
 
-        simpleActionBar.setBackButtonImage(R.drawable.ic_ab_back);
+        simpleActionBar.setBackButtonImage(R.drawable.solar_msg_back);
         if (currentType == 0) {
             simpleActionBar.setTitle(getString(R.string.Devices));
         } else {
@@ -222,7 +222,7 @@ public class SessionsActivity extends BaseFragment implements NotificationCenter
             }
         });
         if (parentLayout != null && parentLayout.isRightLayout()) {
-            simpleActionBar.setBackButtonImage(R.drawable.ic_ab_close);
+            simpleActionBar.setBackButtonImage(R.drawable.solar_msg_close);
         }
 
         listAdapter = new ListAdapter(context);
@@ -926,9 +926,9 @@ public class SessionsActivity extends BaseFragment implements NotificationCenter
                         textCell.setColors(Theme.key_text_RedRegular, Theme.key_text_RedRegular);
                         textCell.setTag(Theme.key_text_RedRegular);
                         if (currentType == 0) {
-                            textCell.setTextAndIcon(getString(R.string.TerminateAllSessions), R.drawable.msg_block2, false);
+                            textCell.setTextAndIcon(getString(R.string.TerminateAllSessions), R.drawable.solar_ghost2, false);
                         } else {
-                            textCell.setTextAndIcon(getString(R.string.TerminateAllWebSessions), R.drawable.msg_block2, false);
+                            textCell.setTextAndIcon(getString(R.string.TerminateAllWebSessions), R.drawable.solar_ghost2, false);
                         }
                     } else if (position == qrCodeRow) {
                         textCell.setColors(Theme.key_windowBackgroundWhiteBlueText4, Theme.key_windowBackgroundWhiteBlueText4);
