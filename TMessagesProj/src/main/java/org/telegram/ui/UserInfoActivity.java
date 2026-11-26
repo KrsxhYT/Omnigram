@@ -258,7 +258,7 @@ public class UserInfoActivity extends UniversalFragment implements NotificationC
         listView.setSectionsDrawBackground(true);
         listView.setClipToPadding(false);
         if (parentLayout != null && parentLayout.isRightLayout()) {
-            simpleActionBar.setBackButtonImage(R.drawable.ic_ab_close);
+            simpleActionBar.setBackButtonImage(R.drawable.solar_msg_close);
         }
 
         simpleActionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
@@ -357,19 +357,19 @@ public class UserInfoActivity extends UniversalFragment implements NotificationC
         items.add(UItem.asHeader(getString(R.string.EditAccountInfoHeader)));
         if (user != null) {
             numberRow = items.size();
-            items.add(SettingsActivity.SettingCell.Factory.of(INFO_PHONE, IconBackgroundColors.GREEN.top, IconBackgroundColors.GREEN.bottom, R.drawable.settings_calls, PhoneFormat.getInstance().format("+" + user.phone), getString(R.string.TapToChangePhone)));
+            items.add(SettingsActivity.SettingCell.Factory.of(INFO_PHONE, IconBackgroundColors.GREEN.top, IconBackgroundColors.GREEN.bottom, R.drawable.solar_msg_call, PhoneFormat.getInstance().format("+" + user.phone), getString(R.string.TapToChangePhone)));
         }
         usernameRow = items.size();
         if (UserObject.getPublicUsername(user) != null) {
-            items.add(SettingsActivity.SettingCell.Factory.of(INFO_USERNAME, IconBackgroundColors.ORANGE.top, IconBackgroundColors.ORANGE.bottom, R.drawable.filled_chatlist_mention, "@" + UserObject.getPublicUsername(user), getString(R.string.Username)));
+            items.add(SettingsActivity.SettingCell.Factory.of(INFO_USERNAME, IconBackgroundColors.ORANGE.top, IconBackgroundColors.ORANGE.bottom, R.drawable.solar_msg_notifications, "@" + UserObject.getPublicUsername(user), getString(R.string.Username)));
         } else {
-            items.add(SettingsActivity.SettingCell.Factory.of(INFO_USERNAME, IconBackgroundColors.ORANGE.top, IconBackgroundColors.ORANGE.bottom, R.drawable.filled_chatlist_mention, getString(R.string.AddUsername), null));
+            items.add(SettingsActivity.SettingCell.Factory.of(INFO_USERNAME, IconBackgroundColors.ORANGE.top, IconBackgroundColors.ORANGE.bottom, R.drawable.solar_msg_notifications, getString(R.string.AddUsername), null));
         }
         birthdayRow = items.size();
         if (birthday != null) {
-            items.add(SettingsActivity.SettingCell.Factory.of(INFO_BIRTHDAY, IconBackgroundColors.BLUE.top, IconBackgroundColors.BLUE.bottom, R.drawable.filled_birthday, birthdayString(birthday), getString(R.string.ContactBirthday)));
+            items.add(SettingsActivity.SettingCell.Factory.of(INFO_BIRTHDAY, IconBackgroundColors.BLUE.top, IconBackgroundColors.BLUE.bottom, R.drawable.solar_msg_calendar, birthdayString(birthday), getString(R.string.ContactBirthday)));
         } else {
-            items.add(SettingsActivity.SettingCell.Factory.of(INFO_BIRTHDAY, IconBackgroundColors.BLUE.top, IconBackgroundColors.BLUE.bottom, R.drawable.filled_birthday, getString(R.string.AddBirthday), null));
+            items.add(SettingsActivity.SettingCell.Factory.of(INFO_BIRTHDAY, IconBackgroundColors.BLUE.top, IconBackgroundColors.BLUE.bottom, R.drawable.solar_msg_calendar, getString(R.string.AddBirthday), null));
         }
         if (!getContactsController().getLoadingPrivacyInfo(ContactsController.PRIVACY_RULES_TYPE_BIRTHDAY)) {
             ArrayList<TLRPC.PrivacyRule> rules = getContactsController().getPrivacyRules(ContactsController.PRIVACY_RULES_TYPE_BIRTHDAY);
@@ -395,12 +395,12 @@ public class UserInfoActivity extends UniversalFragment implements NotificationC
 
         channelRow = items.size();
         if (channel == null) {
-            items.add(SettingsActivity.SettingCell.Factory.of(BUTTON_CHANNEL, IconBackgroundColors.ORANGE.top, IconBackgroundColors.ORANGE.bottom, R.drawable.msg_filled_menu_channels, getString(R.string.EditProfileChannelTitle), null, getString(R.string.EditProfileChannelAdd)));
+            items.add(SettingsActivity.SettingCell.Factory.of(BUTTON_CHANNEL, IconBackgroundColors.ORANGE.top, IconBackgroundColors.ORANGE.bottom, R.drawable.solar_msg_channel, getString(R.string.EditProfileChannelTitle), null, getString(R.string.EditProfileChannelAdd)));
         } else {
-            items.add(SettingsActivity.SettingCell.Factory.of(BUTTON_CHANNEL, IconBackgroundColors.ORANGE.top, IconBackgroundColors.ORANGE.bottom, R.drawable.msg_filled_menu_channels, getString(R.string.EditProfileChannelTitle), channel.title));
+            items.add(SettingsActivity.SettingCell.Factory.of(BUTTON_CHANNEL, IconBackgroundColors.ORANGE.top, IconBackgroundColors.ORANGE.bottom, R.drawable.solar_msg_channel, getString(R.string.EditProfileChannelTitle), channel.title));
         }
         if (hadHours) {
-            items.add(SettingsActivity.SettingCell.Factory.of(BUTTON_HOURS, IconBackgroundColors.ORANGE_DEEP.top, IconBackgroundColors.ORANGE_DEEP.bottom, R.drawable.filled_premium_hours, getString(R.string.EditProfileHours)));
+            items.add(SettingsActivity.SettingCell.Factory.of(BUTTON_HOURS, IconBackgroundColors.ORANGE_DEEP.top, IconBackgroundColors.ORANGE_DEEP.bottom, R.drawable.solar_msg_gift_premium, getString(R.string.EditProfileHours)));
         }
         if (hadLocation) {
             items.add(SettingsActivity.SettingCell.Factory.of(BUTTON_LOCATION, IconBackgroundColors.RED.top, IconBackgroundColors.RED.bottom, R.drawable.filled_location, getString(R.string.EditProfileLocation)));
@@ -414,15 +414,15 @@ public class UserInfoActivity extends UniversalFragment implements NotificationC
                     value.append(UserObject.getUserName(botUser));
                 }
             }
-            items.add(SettingsActivity.SettingCell.Factory.of(BUTTON_AI, IconBackgroundColors.PURPLE.top, IconBackgroundColors.PURPLE.bottom, R.drawable.premium_ai_editor, getString(R.string.EditProfileChatAutomation), value));
+            items.add(SettingsActivity.SettingCell.Factory.of(BUTTON_AI, IconBackgroundColors.PURPLE.top, IconBackgroundColors.PURPLE.bottom, R.drawable.solar_msg_info, getString(R.string.EditProfileChatAutomation), value));
         } else {
-            items.add(SettingsActivity.SettingCell.Factory.of(BUTTON_AI, IconBackgroundColors.PURPLE.top, IconBackgroundColors.PURPLE.bottom, R.drawable.premium_ai_editor, applyNewSpan(getString(R.string.EditProfileChatAutomation))));
+            items.add(SettingsActivity.SettingCell.Factory.of(BUTTON_AI, IconBackgroundColors.PURPLE.top, IconBackgroundColors.PURPLE.bottom, R.drawable.solar_msg_info, applyNewSpan(getString(R.string.EditProfileChatAutomation))));
         }
         items.add(UItem.asShadow(-3, getString(R.string.EditProfileChatAutomationInfo)));
         final boolean hasAddAccount = UserConfig.getActivatedAccountsCount() < UserConfig.MAX_ACCOUNT_COUNT;
         if (hasAddAccount) {
             addAccountRow = items.size();
-            items.add(InfoCell.Factory.of(BUTTON_ADD_ACCOUNT, R.drawable.outline_add_account, getString(R.string.AddAccount), null, 0).accent());
+            items.add(InfoCell.Factory.of(BUTTON_ADD_ACCOUNT, R.drawable.solar_msg_contacts, getString(R.string.AddAccount), null, 0).accent());
         }
         if (!accountNumbers.isEmpty()) {
             if (!hasAddAccount) {
@@ -446,7 +446,7 @@ public class UserInfoActivity extends UniversalFragment implements NotificationC
             }
         }
         logoutRow = items.size();
-        items.add(InfoCell.Factory.of(BUTTON_LOGOUT, R.drawable.msg_leave, getString(R.string.LogOut), null, 0).red());
+        items.add(InfoCell.Factory.of(BUTTON_LOGOUT, R.drawable.solar_msg_delete, getString(R.string.LogOut), null, 0).red());
         items.add(UItem.asShadow(-4, null));
     }
 
