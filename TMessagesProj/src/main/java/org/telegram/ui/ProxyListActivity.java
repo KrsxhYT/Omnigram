@@ -171,7 +171,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
             addView(valueTextView, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, (LocaleController.isRTL ? Gravity.RIGHT : Gravity.LEFT) | Gravity.TOP, (LocaleController.isRTL ? 56 : 21), 35, (LocaleController.isRTL ? 21 : 56), 0));
 
             checkImageView = new ImageView(context);
-            checkImageView.setImageResource(R.drawable.msg_info);
+            checkImageView.setImageResource(R.drawable.solar_msg_info);
             ThemeBind.colorFilter(checkImageView, Theme.key_windowBackgroundWhiteGrayText3, PorterDuff.Mode.MULTIPLY);
             checkImageView.setScaleType(ImageView.ScaleType.CENTER);
             checkImageView.setContentDescription(getString(R.string.Edit));
@@ -318,7 +318,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
         public void setChecked(boolean checked) {
             if (checked) {
                 if (checkDrawable == null) {
-                    checkDrawable = getResources().getDrawable(R.drawable.proxy_check).mutate();
+                    checkDrawable = getResources().getDrawable(R.drawable.solar_msg_done).mutate();
                 }
                 if (checkDrawable != null) {
                     checkDrawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.MULTIPLY));
@@ -527,9 +527,9 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
         SimpleActionBarMenu actionMode = simpleActionBar.createActionMode();
 
-        shareMenuItem = actionMode.addItemWithWidth(MENU_SHARE, R.drawable.msg_share, AndroidUtilities.dp(54));
+        shareMenuItem = actionMode.addItemWithWidth(MENU_SHARE, R.drawable.solar_msg_share, AndroidUtilities.dp(54));
         shareMenuItem.setContentDescription(getString(R.string.StickersShare));
-        deleteMenuItem = actionMode.addItemWithWidth(MENU_DELETE, R.drawable.msg_delete, AndroidUtilities.dp(54));
+        deleteMenuItem = actionMode.addItemWithWidth(MENU_DELETE, R.drawable.solar_msg_delete, AndroidUtilities.dp(54));
         deleteMenuItem.setContentDescription(getString(R.string.Delete));
 
         simpleActionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
