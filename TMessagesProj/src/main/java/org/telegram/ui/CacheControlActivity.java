@@ -1238,14 +1238,14 @@ public class CacheControlActivity extends BaseFragment implements NotificationCe
         final SimpleActionBarMenuItem clearItem = actionMode.addItem(delete_id, LocaleController.getString(R.string.CacheClear));
         clearItem.getTextView().setTextColor(Theme.getColor(Theme.key_featuredStickers_addButton));
 
-        ActionBarMenuItem otherItem = simpleActionBar.createMenu().addItem(other_id, R.drawable.ic_ab_other);
-        clearDatabaseItem = otherItem.addSubItem(clear_database_id, R.drawable.msg_delete, LocaleController.getString(R.string.ClearLocalDatabase));
+        ActionBarMenuItem otherItem = simpleActionBar.createMenu().addItem(other_id, R.drawable.solar_msg_settings);
+        clearDatabaseItem = otherItem.addSubItem(clear_database_id, R.drawable.solar_msg_delete, LocaleController.getString(R.string.ClearLocalDatabase));
         clearDatabaseItem.setIconColor(Theme.getColor(Theme.key_text_RedRegular));
         clearDatabaseItem.setTextColor(Theme.getColor(Theme.key_text_RedBold));
         clearDatabaseItem.setSelectorColorKey(Theme.key_text_RedRegular, .12f);
 
         if (BuildVars.DEBUG_PRIVATE_VERSION) {
-            resetDatabaseItem = otherItem.addSubItem(reset_database_id, R.drawable.msg_delete, "Full Reset Database");
+            resetDatabaseItem = otherItem.addSubItem(reset_database_id, R.drawable.solar_msg_delete, "Full Reset Database");
             resetDatabaseItem.setIconColor(Theme.getColor(Theme.key_text_RedRegular));
             resetDatabaseItem.setTextColor(Theme.getColor(Theme.key_text_RedBold));
             resetDatabaseItem.setSelectorColorKey(Theme.key_text_RedRegular, .12f);
@@ -2629,13 +2629,13 @@ public class CacheControlActivity extends BaseFragment implements NotificationCe
                     }
                     String value = CacheByChatsController.getKeepMediaString(cacheByChatsController.getKeepMedia(keepMediaType));
                     if (itemInners.get(position).keepMediaType == KEEP_MEDIA_TYPE_USER) {
-                        textCell2.setTextAndValueAndColorfulIcon(LocaleController.getString(R.string.PrivateChats), value, true, R.drawable.msg_filled_menu_users, 0xFF4F85F6, 0xFF3568E8, true);
+                        textCell2.setTextAndValueAndColorfulIcon(LocaleController.getString(R.string.PrivateChats), value, true, R.drawable.solar_msg_contacts, 0xFF4F85F6, 0xFF3568E8, true);
                     } else if (itemInners.get(position).keepMediaType == KEEP_MEDIA_TYPE_GROUP) {
-                        textCell2.setTextAndValueAndColorfulIcon(LocaleController.getString(R.string.GroupChats), value, true, R.drawable.msg_filled_menu_groups, 0xFF55CA47, 0xFF27B434, true);
+                        textCell2.setTextAndValueAndColorfulIcon(LocaleController.getString(R.string.GroupChats), value, true, R.drawable.solar_msg_groups, 0xFF55CA47, 0xFF27B434, true);
                     } else if (itemInners.get(position).keepMediaType == KEEP_MEDIA_TYPE_CHANNEL) {
-                        textCell2.setTextAndValueAndColorfulIcon(LocaleController.getString(R.string.CacheChannels), value, true, R.drawable.msg_filled_menu_channels, 0xFFF09F1B, 0xFFE18A11, true);
+                        textCell2.setTextAndValueAndColorfulIcon(LocaleController.getString(R.string.CacheChannels), value, true, R.drawable.solar_msg_channel, 0xFFF09F1B, 0xFFE18A11, true);
                     } else if (itemInners.get(position).keepMediaType == KEEP_MEDIA_TYPE_STORIES) {
-                        textCell2.setTextAndValueAndColorfulIcon(LocaleController.getString(R.string.CacheStories), value, false, R.drawable.msg_filled_stories, 0xFFF45255, 0xFFDF3955, false);
+                        textCell2.setTextAndValueAndColorfulIcon(LocaleController.getString(R.string.CacheStories), value, false, R.drawable.solar_msg_camera, 0xFFF45255, 0xFFDF3955, false);
                     }
                     textCell2.setSubtitle(subtitle);
                     break;
