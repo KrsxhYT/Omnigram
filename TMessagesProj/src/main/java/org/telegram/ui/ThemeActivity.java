@@ -1051,7 +1051,7 @@ public class ThemeActivity extends BaseFragment implements NotificationCenter.No
         setHasOwnBackground(true);
         lastIsDarkTheme = !Theme.isCurrentThemeDay();
 
-        simpleActionBar.setBackButtonImage(R.drawable.ic_ab_back);
+        simpleActionBar.setBackButtonImage(R.drawable.solar_msg_back);
         if (currentType == THEME_TYPE_THEMES_BROWSER) {
             simpleActionBar.setTitle(getString("BrowseThemes", R.string.BrowseThemes));
             SimpleActionBarMenu menu = simpleActionBar.createMenu();
@@ -1066,12 +1066,12 @@ public class ThemeActivity extends BaseFragment implements NotificationCenter.No
         } else if (currentType == THEME_TYPE_BASIC) {
             simpleActionBar.setTitle(getString("ChatSettings", R.string.ChatSettings));
             SimpleActionBarMenu menu = simpleActionBar.createMenu();
-            menuItem = menu.addItem(0, R.drawable.ic_ab_other);
+            menuItem = menu.addItem(0, R.drawable.solar_msg_settings);
             menuItem.setContentDescription(getString("AccDescrMoreOptions", R.string.AccDescrMoreOptions));
-            menuItem.addSubItem(share_theme, R.drawable.msg_share, getString("ShareTheme", R.string.ShareTheme));
-            menuItem.addSubItem(edit_theme, R.drawable.msg_edit, getString("EditThemeColors", R.string.EditThemeColors));
-            menuItem.addSubItem(create_theme, R.drawable.msg_palette, getString("CreateNewThemeMenu", R.string.CreateNewThemeMenu));
-            menuItem.addSubItem(reset_settings, R.drawable.msg_reset, getString("ThemeResetToDefaults", R.string.ThemeResetToDefaults));
+            menuItem.addSubItem(share_theme, R.drawable.solar_msg_share, getString("ShareTheme", R.string.ShareTheme));
+            menuItem.addSubItem(edit_theme, R.drawable.solar_msg_edit, getString("EditThemeColors", R.string.EditThemeColors));
+            menuItem.addSubItem(create_theme, R.drawable.solar_msg_theme, getString("CreateNewThemeMenu", R.string.CreateNewThemeMenu));
+            menuItem.addSubItem(reset_settings, R.drawable.solar_msg_settings, getString("ThemeResetToDefaults", R.string.ThemeResetToDefaults));
 
             if (getMessagesController().getContentSettings() == null) {
                 getMessagesController().getContentSettings(settings -> {
@@ -1088,7 +1088,7 @@ public class ThemeActivity extends BaseFragment implements NotificationCenter.No
             simpleActionBar.setTitle(getString(R.string.AutoNightTheme));
         }
         if (parentLayout != null && parentLayout.isRightLayout()) {
-            simpleActionBar.setBackButtonImage(R.drawable.ic_ab_close);
+            simpleActionBar.setBackButtonImage(R.drawable.solar_msg_close);
         }
 
         simpleActionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
@@ -1511,7 +1511,7 @@ public class ThemeActivity extends BaseFragment implements NotificationCenter.No
                         }
                         value = type + " " + value;
                     }
-                    checkCell.setTextAndValueAndIconAndCheck(getString("AutoNightTheme", R.string.AutoNightTheme), value, R.drawable.menu_night_mode_24, enabled, 0, false, true);
+                    checkCell.setTextAndValueAndIconAndCheck(getString("AutoNightTheme", R.string.AutoNightTheme), value, R.drawable.solar_msg_theme, enabled, 0, false, true);
                 } else {
                     presentFragment(new ThemeActivity(THEME_TYPE_NIGHT));
                 }
@@ -2212,7 +2212,7 @@ public class ThemeActivity extends BaseFragment implements NotificationCenter.No
                 };
                 icons = new int[]{
                         0,
-                        R.drawable.msg_shareout
+                        R.drawable.solar_msg_share
                 };
             } else {
                 hasDelete = themeInfo.info == null || !themeInfo.info.isDefault;
@@ -2223,11 +2223,11 @@ public class ThemeActivity extends BaseFragment implements NotificationCenter.No
                         themeInfo.info != null && themeInfo.info.creator ? getString("ThemeSetUrl", R.string.ThemeSetUrl) : null,
                         hasDelete ? getString("Delete", R.string.Delete) : null};
                 icons = new int[]{
-                        R.drawable.msg_share,
-                        R.drawable.msg_shareout,
-                        R.drawable.msg_edit,
-                        R.drawable.msg_link,
-                        R.drawable.msg_delete
+                        R.drawable.solar_msg_share,
+                        R.drawable.solar_msg_share,
+                        R.drawable.solar_msg_edit,
+                        R.drawable.solar_msg_link,
+                        R.drawable.solar_msg_delete
                 };
             }
             builder.setItems(items, icons, (dialog, which) -> {
@@ -2478,10 +2478,10 @@ public class ThemeActivity extends BaseFragment implements NotificationCenter.No
                                     getString("DeleteTheme", R.string.DeleteTheme)
                             };
                             int[] icons = new int[]{
-                                    R.drawable.msg_edit,
-                                    R.drawable.msg_share,
-                                    R.drawable.msg_link,
-                                    R.drawable.msg_delete
+                                    R.drawable.solar_msg_edit,
+                                    R.drawable.solar_msg_share,
+                                    R.drawable.solar_msg_link,
+                                    R.drawable.solar_msg_delete
                             };
                             builder.setItems(items, icons, (dialog, which) -> {
                                 if (getParentActivity() == null) {
@@ -2749,9 +2749,9 @@ public class ThemeActivity extends BaseFragment implements NotificationCenter.No
                             }
                             value = type + " " + value;
                         }
-                        checkCell.setTextAndValueAndIconAndCheck(getString("AutoNightTheme", R.string.AutoNightTheme), value, R.drawable.menu_night_mode_24, enabled, 0, false, true);
+                        checkCell.setTextAndValueAndIconAndCheck(getString("AutoNightTheme", R.string.AutoNightTheme), value, R.drawable.solar_msg_theme, enabled, 0, false, true);
                     } else if (position == browserRow) {
-                        checkCell.setTextAndValueAndIconAndCheck(getString(R.string.InappBrowser), getString(R.string.InappBrowserInfo), R.drawable.msg2_language, getMessagesController().isWebBrowserInAppEnabled(), 0, false, true);
+                        checkCell.setTextAndValueAndIconAndCheck(getString(R.string.InappBrowser), getString(R.string.InappBrowserInfo), R.drawable.solar_msg_language, getMessagesController().isWebBrowserInAppEnabled(), 0, false, true);
                     }
                     break;
                 }
@@ -2781,25 +2781,25 @@ public class ThemeActivity extends BaseFragment implements NotificationCenter.No
                     if (position == backgroundRow) {
                         cell.setSubtitle(null);
                         cell.setColors(Theme.key_windowBackgroundWhiteBlueText4, Theme.key_windowBackgroundWhiteBlueText4);
-                        cell.setTextAndIcon(getString(R.string.ChangeChatBackground), R.drawable.msg_background, changeUserColor >= 0);
+                        cell.setTextAndIcon(getString(R.string.ChangeChatBackground), R.drawable.solar_msg_theme, changeUserColor >= 0);
                     } else if (position == editThemeRow) {
                         cell.setSubtitle(null);
                         cell.setColors(Theme.key_windowBackgroundWhiteBlueText4, Theme.key_windowBackgroundWhiteBlueText4);
-                        cell.setTextAndIcon(getString(R.string.EditCurrentTheme), R.drawable.msg_theme, true);
+                        cell.setTextAndIcon(getString(R.string.EditCurrentTheme), R.drawable.solar_msg_theme, true);
                     } else if (position == createNewThemeRow) {
                         cell.setSubtitle(null);
                         cell.setColors(Theme.key_windowBackgroundWhiteBlueText4, Theme.key_windowBackgroundWhiteBlueText4);
-                        cell.setTextAndIcon(getString(R.string.CreateNewTheme), R.drawable.msg_colors, false);
+                        cell.setTextAndIcon(getString(R.string.CreateNewTheme), R.drawable.solar_msg_theme, false);
                     } else if (position == liteModeRow) {
                         cell.setColors(Theme.key_dialogIcon, Theme.key_windowBackgroundWhiteBlackText);
-                        cell.setTextAndIcon(getString(R.string.LiteMode), R.drawable.msg2_animations, true);
+                        cell.setTextAndIcon(getString(R.string.LiteMode), R.drawable.solar_msg_theme, true);
                         cell.setSubtitle(getString(R.string.LiteModeInfo));
                         cell.heightDp = 60;
                         cell.offsetFromImage = 64;
                         cell.imageLeft = 20;
                     } else if (position == stickersRow) {
                         cell.setColors(Theme.key_dialogIcon, Theme.key_windowBackgroundWhiteBlackText);
-                        cell.setTextAndIcon(getString(R.string.StickersName), R.drawable.msg2_sticker, false);
+                        cell.setTextAndIcon(getString(R.string.StickersName), R.drawable.solar_msg_sticker, false);
                         cell.setSubtitle(getString(R.string.StickersNameInfo2));
                         cell.offsetFromImage = 64;
                         cell.heightDp = 60;
