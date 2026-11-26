@@ -207,7 +207,7 @@ public class TwoStepVerificationActivity extends BaseFragment implements Notific
 
     @Override
     public View createView(Context context) {
-        actionBar.setBackButtonImage(R.drawable.ic_ab_back);
+        actionBar.setBackButtonImage(R.drawable.solar_msg_back);
         actionBar.setAllowOverlayTitle(false);
         if (!passwordEntered || delegate != null) {
             ThemeBind.backgroundColor(actionBar, Theme.key_windowBackgroundWhite);
