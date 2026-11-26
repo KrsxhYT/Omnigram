@@ -1034,7 +1034,7 @@ public class CalendarActivity extends BaseFragment implements NotificationCenter
                         ThemeBind.backgroundColor(previewMenu, Theme.key_actionBarDefaultSubmenuBackground, CalendarActivity.this.getResourceProvider());
 
                         ActionBarMenuSubItem cellJump = new ActionBarMenuSubItem(getParentActivity(), true, false);
-                        cellJump.setTextAndIcon(LocaleController.getString(R.string.JumpToDate), R.drawable.msg_message);
+                        cellJump.setTextAndIcon(LocaleController.getString(R.string.JumpToDate), R.drawable.solar_msg_discuss);
                         cellJump.setMinimumWidth(160);
                         cellJump.setOnClickListener(view -> {
                             if (parentLayout != null && parentLayout.getFragmentStack().size() >= 3) {
@@ -1052,7 +1052,7 @@ public class CalendarActivity extends BaseFragment implements NotificationCenter
 
                         if (canClearHistory) {
                             ActionBarMenuSubItem cellSelect = new ActionBarMenuSubItem(getParentActivity(), false, false);
-                            cellSelect.setTextAndIcon(LocaleController.getString(R.string.SelectThisDay), R.drawable.msg_select);
+                            cellSelect.setTextAndIcon(LocaleController.getString(R.string.SelectThisDay), R.drawable.solar_msg_done);
                             cellSelect.setMinimumWidth(160);
                             cellSelect.setOnClickListener(view -> {
                                 dateSelectedStart = dateSelectedEnd = periodDay.date;
@@ -1064,7 +1064,7 @@ public class CalendarActivity extends BaseFragment implements NotificationCenter
                             previewMenu.addView(cellSelect);
 
                             ActionBarMenuSubItem cellDelete = new ActionBarMenuSubItem(getParentActivity(), false, true);
-                            cellDelete.setTextAndIcon(LocaleController.getString(R.string.ClearHistory), R.drawable.msg_delete);
+                            cellDelete.setTextAndIcon(LocaleController.getString(R.string.ClearHistory), R.drawable.solar_msg_delete);
                             cellDelete.setMinimumWidth(160);
                             cellDelete.setOnClickListener(view -> {
                                 if (parentLayout.getFragmentStack().size() >= 3) {
