@@ -276,7 +276,7 @@ public class ChatEditTypeActivity extends BaseFragment implements NotificationCe
     @Override
     public View createView(Context context) {
         setHasOwnBackground(true);
-        simpleActionBar.setBackButtonImage(R.drawable.ic_ab_back);
+        simpleActionBar.setBackButtonImage(R.drawable.solar_msg_back);
 
         simpleActionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
             @Override
@@ -599,7 +599,7 @@ public class ChatEditTypeActivity extends BaseFragment implements NotificationCe
         usernamesListView.setVisibility(isPrivate || usernames.isEmpty() ? View.GONE : View.VISIBLE);
 
         manageLinksTextView = new TextCell(context);
-        manageLinksTextView.setTextAndIcon(LocaleController.getString(R.string.ManageInviteLinks), R.drawable.msg_link2, false);
+        manageLinksTextView.setTextAndIcon(LocaleController.getString(R.string.ManageInviteLinks), R.drawable.solar_msg_link, false);
         manageLinksTextView.setOnClickListener(v -> {
             ManageLinksActivity fragment = new ManageLinksActivity(chatId, 0, 0);
             fragment.setInfo(info, invite);
