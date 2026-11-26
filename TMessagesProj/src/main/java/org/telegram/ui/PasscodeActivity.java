@@ -212,10 +212,10 @@ public class PasscodeActivity extends BaseFragment implements NotificationCenter
             }
         };
         if (simpleActionBar != null) {
-            simpleActionBar.setBackButtonImage(R.drawable.ic_ab_back);
+            simpleActionBar.setBackButtonImage(R.drawable.solar_msg_back);
             simpleActionBar.setActionBarMenuOnItemClick(onItemClick);
         } else {
-            actionBar.setBackButtonImage(R.drawable.ic_ab_back);
+            actionBar.setBackButtonImage(R.drawable.solar_msg_back);
             actionBar.setAllowOverlayTitle(false);
             actionBar.setActionBarMenuOnItemClick(onItemClick);
         }
@@ -419,7 +419,7 @@ public class PasscodeActivity extends BaseFragment implements NotificationCenter
                 if (actionBar != null) {
                     ThemeBind.backgroundColor(actionBar, Theme.key_windowBackgroundWhite);
 
-                    actionBar.setBackButtonImage(R.drawable.ic_ab_back);
+                    actionBar.setBackButtonImage(R.drawable.solar_msg_back);
                     ThemeBind.actionBarItemsColor(actionBar, Theme.key_windowBackgroundWhiteBlackText, false);
                     ThemeBind.actionBarItemsBackgroundColor(actionBar, Theme.key_actionBarWhiteSelector, false);
                     actionBar.setCastShadows(false);
@@ -427,8 +427,8 @@ public class PasscodeActivity extends BaseFragment implements NotificationCenter
 
                     ActionBarMenuSubItem switchItem;
                     if (type == TYPE_SETUP_CODE) {
-                        otherItem = menu.addItem(0, R.drawable.ic_ab_other);
-                        switchItem = otherItem.addSubItem(ID_SWITCH_TYPE, R.drawable.msg_permissions, LocaleController.getString(R.string.PasscodeSwitchToPassword));
+                        otherItem = menu.addItem(0, R.drawable.solar_msg_settings);
+                        switchItem = otherItem.addSubItem(ID_SWITCH_TYPE, R.drawable.solar_msg_groups, LocaleController.getString(R.string.PasscodeSwitchToPassword));
                     } else switchItem = null;
 
                     actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
@@ -440,7 +440,7 @@ public class PasscodeActivity extends BaseFragment implements NotificationCenter
                                 currentPasswordType = currentPasswordType == SharedConfig.PASSCODE_TYPE_PIN ? SharedConfig.PASSCODE_TYPE_PASSWORD : SharedConfig.PASSCODE_TYPE_PIN;
                                 AndroidUtilities.runOnUIThread(()->{
                                     switchItem.setText(LocaleController.getString(currentPasswordType == SharedConfig.PASSCODE_TYPE_PIN ? R.string.PasscodeSwitchToPassword : R.string.PasscodeSwitchToPIN));
-                                    switchItem.setIcon(currentPasswordType == SharedConfig.PASSCODE_TYPE_PIN ? R.drawable.msg_permissions : R.drawable.msg_pin_code);
+                                    switchItem.setIcon(currentPasswordType == SharedConfig.PASSCODE_TYPE_PIN ? R.drawable.solar_msg_groups : R.drawable.solar_msg_pin);
                                     showKeyboard();
                                     if (isPinCode()) {
                                         passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
@@ -557,7 +557,7 @@ public class PasscodeActivity extends BaseFragment implements NotificationCenter
                 linearLayout.addView(passwordEditText, LayoutHelper.createLinear(0, LayoutHelper.WRAP_CONTENT, 1f));
 
                 passwordButton = new ImageView(context);
-                passwordButton.setImageResource(R.drawable.msg_message);
+                passwordButton.setImageResource(R.drawable.solar_msg_discuss);
                 ThemeBind.colorFilter(passwordButton, Theme.key_windowBackgroundWhiteHintText, PorterDuff.Mode.SRC_ATOP);
                 ThemeBind.selectorBackground(passwordButton, Theme.createSelectorDrawable(getThemedColor(Theme.key_listSelector), 1), null, ThemeBind.of(Theme.key_listSelector), getResourceProvider());
                 AndroidUtilities.updateViewVisibilityAnimated(passwordButton, type == TYPE_SETUP_CODE && passcodeSetStep == 0, 0.1f, false);
