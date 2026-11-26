@@ -289,7 +289,7 @@ public class CameraScanActivity extends BaseFragment {
 
     @Override
     public View createView(Context context) {
-        actionBar.setBackButtonImage(R.drawable.ic_ab_back);
+        actionBar.setBackButtonImage(R.drawable.solar_msg_back);
         if (shownAsBottomSheet) {
             actionBar.setItemsColor(0xffffffff, false);
             actionBar.setItemsBackgroundColor(0xffffffff, false);
@@ -682,7 +682,7 @@ public class CameraScanActivity extends BaseFragment {
             if (needGalleryButton) {
                 galleryButton = new ImageView(context);
                 galleryButton.setScaleType(ImageView.ScaleType.CENTER);
-                galleryButton.setImageResource(R.drawable.qr_gallery);
+                galleryButton.setImageResource(R.drawable.solar_msg_camera);
                 galleryButton.setBackgroundDrawable(Theme.createSelectorDrawableFromDrawables(Theme.createCircleDrawable(dp(60), 0x22ffffff), Theme.createCircleDrawable(dp(60), 0x44ffffff)));
                 viewGroup.addView(galleryButton);
                 galleryButton.setOnClickListener(currentImage -> {
