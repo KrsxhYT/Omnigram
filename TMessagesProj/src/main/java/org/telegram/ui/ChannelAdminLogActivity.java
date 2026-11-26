@@ -940,7 +940,7 @@ public class ChannelAdminLogActivity extends BaseFragment implements Notificatio
         actionBar.addView(avatarContainer, 0, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, LayoutHelper.MATCH_PARENT, Gravity.TOP | Gravity.LEFT, 54, 0, 52, 0));
 
         ActionBarMenu menu = actionBar.createMenu();
-        searchItem = menu.addItem(0, R.drawable.outline_header_search).setIsSearchField(true).setActionBarMenuItemSearchListener(new ActionBarMenuItem.ActionBarMenuItemSearchListener() {
+        searchItem = menu.addItem(0, R.drawable.solar_msg_search).setIsSearchField(true).setActionBarMenuItemSearchListener(new ActionBarMenuItem.ActionBarMenuItemSearchListener() {
 
             @Override
             public void onSearchCollapse() {
@@ -1562,7 +1562,7 @@ public class ChannelAdminLogActivity extends BaseFragment implements Notificatio
 
         searchCalendarButton = new ImageView(context);
         searchCalendarButton.setScaleType(ImageView.ScaleType.CENTER);
-        searchCalendarButton.setImageResource(R.drawable.msg_calendar);
+        searchCalendarButton.setImageResource(R.drawable.solar_msg_calendar);
         ThemeBind.colorFilter(searchCalendarButton, Theme.key_chat_searchPanelIcons, PorterDuff.Mode.MULTIPLY);
         searchContainer.addView(searchCalendarButton, LayoutHelper.createFrame(48, 48, Gravity.RIGHT | Gravity.TOP));
         searchCalendarButton.setOnClickListener(view -> {
@@ -1690,7 +1690,7 @@ public class ChannelAdminLogActivity extends BaseFragment implements Notificatio
                 return true;
             }
             items.add(getString(R.string.ReportFalsePositive));
-            icons.add(R.drawable.msg_notspam);
+            icons.add(R.drawable.solar_msg_info);
             options.add(OPTION_REPORT_FALSE_POSITIVE);
             items.add(null);
             icons.add(null);
@@ -1699,7 +1699,7 @@ public class ChannelAdminLogActivity extends BaseFragment implements Notificatio
 
         if (selectedObject.type == MessageObject.TYPE_TEXT || selectedObject.caption != null) {
             items.add(getString(R.string.Copy));
-            icons.add(R.drawable.msg_copy);
+            icons.add(R.drawable.solar_msg_copy);
             options.add(OPTION_COPY);
         }
 
@@ -1740,70 +1740,70 @@ public class ChannelAdminLogActivity extends BaseFragment implements Notificatio
         } else if (type == 3) {
             if (selectedObject.messageOwner.media instanceof TLRPC.TL_messageMediaWebPage && MessageObject.isNewGifDocument(selectedObject.messageOwner.media.webpage.document)) {
                 items.add(getString(R.string.SaveToGIFs));
-                icons.add(R.drawable.msg_gif);
+                icons.add(R.drawable.solar_msg_sticker);
                 options.add(OPTION_SAVE_TO_GIFS);
             }
         } else if (type == 4) {
             if (selectedObject.isVideo()) {
                 items.add(getString(R.string.SaveToGallery));
-                icons.add(R.drawable.msg_gallery);
+                icons.add(R.drawable.solar_msg_camera);
                 options.add(OPTION_SAVE_TO_GALLERY);
                 items.add(getString(R.string.ShareFile));
-                icons.add(R.drawable.msg_share);
+                icons.add(R.drawable.solar_msg_share);
                 options.add(OPTION_SHARE);
             } else if (selectedObject.isMusic()) {
                 items.add(getString(R.string.SaveToMusic));
-                icons.add(R.drawable.msg_download);
+                icons.add(R.drawable.solar_msg_data);
                 options.add(OPTION_SAVE_TO_DOWNLOADS_OR_MUSIC);
                 items.add(getString(R.string.ShareFile));
-                icons.add(R.drawable.msg_share);
+                icons.add(R.drawable.solar_msg_share);
                 options.add(OPTION_SHARE);
             } else if (selectedObject.getDocument() != null) {
                 if (MessageObject.isNewGifDocument(selectedObject.getDocument())) {
                     items.add(getString(R.string.SaveToGIFs));
-                    icons.add(R.drawable.msg_gif);
+                    icons.add(R.drawable.solar_msg_sticker);
                     options.add(OPTION_SAVE_TO_GIFS);
                 }
                 items.add(getString(R.string.SaveToDownloads));
-                icons.add(R.drawable.msg_download);
+                icons.add(R.drawable.solar_msg_data);
                 options.add(OPTION_SAVE_TO_DOWNLOADS_OR_MUSIC);
                 items.add(getString(R.string.ShareFile));
-                icons.add(R.drawable.msg_share);
+                icons.add(R.drawable.solar_msg_share);
                 options.add(OPTION_SHARE);
             } else {
                 items.add(getString(R.string.SaveToGallery));
-                icons.add(R.drawable.msg_gallery);
+                icons.add(R.drawable.solar_msg_camera);
                 options.add(OPTION_SAVE_TO_GALLERY);
             }
         } else if (type == 5) {
             items.add(getString(R.string.ApplyLocalizationFile));
-            icons.add(R.drawable.msg_language);
+            icons.add(R.drawable.solar_msg_language);
             options.add(OPTION_APPLY_FILE);
             items.add(getString(R.string.SaveToDownloads));
-            icons.add(R.drawable.msg_download);
+            icons.add(R.drawable.solar_msg_data);
             options.add(OPTION_SAVE_TO_DOWNLOADS_OR_MUSIC);
             items.add(getString(R.string.ShareFile));
-            icons.add(R.drawable.msg_share);
+            icons.add(R.drawable.solar_msg_share);
             options.add(OPTION_SHARE);
         } else if (type == 10) {
             items.add(getString(R.string.ApplyThemeFile));
-            icons.add(R.drawable.msg_theme);
+            icons.add(R.drawable.solar_msg_theme);
             options.add(OPTION_APPLY_FILE);
             items.add(getString( R.string.SaveToDownloads));
-            icons.add(R.drawable.msg_download);
+            icons.add(R.drawable.solar_msg_data);
             options.add(OPTION_SAVE_TO_DOWNLOADS_OR_MUSIC);
             items.add(getString(R.string.ShareFile));
-            icons.add(R.drawable.msg_share);
+            icons.add(R.drawable.solar_msg_share);
             options.add(OPTION_SHARE);
         } else if (type == 6) {
             items.add(getString(R.string.SaveToGallery));
-            icons.add(R.drawable.msg_gallery);
+            icons.add(R.drawable.solar_msg_camera);
             options.add(OPTION_SAVE_TO_GALLERY2);
             items.add(getString(R.string.SaveToDownloads));
-            icons.add(R.drawable.msg_download);
+            icons.add(R.drawable.solar_msg_data);
             options.add(OPTION_SAVE_TO_DOWNLOADS_OR_MUSIC);
             items.add(getString(R.string.ShareFile));
-            icons.add(R.drawable.msg_share);
+            icons.add(R.drawable.solar_msg_share);
             options.add(OPTION_SHARE);
         } else if (type == 7) {
             if (selectedObject.isMask()) {
@@ -1811,7 +1811,7 @@ public class ChannelAdminLogActivity extends BaseFragment implements Notificatio
             } else {
                 items.add(getString(R.string.AddToStickers));
             }
-            icons.add(R.drawable.msg_sticker);
+            icons.add(R.drawable.solar_msg_sticker);
             options.add(OPTION_SAVE_STICKER);
         } else if (type == 8) {
             long uid = selectedObject.messageOwner.media.user_id;
@@ -1821,15 +1821,15 @@ public class ChannelAdminLogActivity extends BaseFragment implements Notificatio
             }
             if (user != null && user.id != UserConfig.getInstance(currentAccount).getClientUserId() && ContactsController.getInstance(currentAccount).contactsDict.get(user.id) == null) {
                 items.add(getString(R.string.AddContactTitle));
-                icons.add(R.drawable.msg_addcontact);
+                icons.add(R.drawable.solar_msg_contacts);
                 options.add(OPTION_ADD_CONTACT);
             }
             if (!TextUtils.isEmpty(selectedObject.messageOwner.media.phone_number)) {
                 items.add(getString(R.string.Copy));
-                icons.add(R.drawable.msg_copy);
+                icons.add(R.drawable.solar_msg_copy);
                 options.add(OPTION_COPY_PHONE);
                 items.add(getString(R.string.Call));
-                icons.add(R.drawable.msg_calls);
+                icons.add(R.drawable.solar_msg_call);
                 options.add(OPTION_CALL);
             }
         }
@@ -1994,12 +1994,12 @@ public class ChannelAdminLogActivity extends BaseFragment implements Notificatio
                         if (!isAdmin || currentChat.creator) {
                             if ((ChatObject.canUserDoAction(currentChat, participant, ChatObject.ACTION_SEND) || ChatObject.canUserDoAction(currentChat, participant, ChatObject.ACTION_SEND_MEDIA))) {
                                 items.add(getString(R.string.Restrict));
-                                icons.add(R.drawable.msg_block2);
+                                icons.add(R.drawable.solar_ghost);
                                 options.add(OPTION_RESTRICT);
                             }
 
                             items.add(getString(R.string.Ban));
-                            icons.add(R.drawable.msg_block);
+                            icons.add(R.drawable.solar_ghost);
                             options.add(OPTION_BAN);
                         }
                     }
