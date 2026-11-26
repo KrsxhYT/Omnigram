@@ -926,9 +926,9 @@ public class SessionsActivity extends BaseFragment implements NotificationCenter
                         textCell.setColors(Theme.key_text_RedRegular, Theme.key_text_RedRegular);
                         textCell.setTag(Theme.key_text_RedRegular);
                         if (currentType == 0) {
-                            textCell.setTextAndIcon(getString(R.string.TerminateAllSessions), R.drawable.solar_ghost2, false);
+                            textCell.setTextAndIcon(getString(R.string.TerminateAllSessions), R.drawable.solar_ghost, false);
                         } else {
-                            textCell.setTextAndIcon(getString(R.string.TerminateAllWebSessions), R.drawable.solar_ghost2, false);
+                            textCell.setTextAndIcon(getString(R.string.TerminateAllWebSessions), R.drawable.solar_ghost, false);
                         }
                     } else if (position == qrCodeRow) {
                         textCell.setColors(Theme.key_windowBackgroundWhiteBlueText4, Theme.key_windowBackgroundWhiteBlueText4);
