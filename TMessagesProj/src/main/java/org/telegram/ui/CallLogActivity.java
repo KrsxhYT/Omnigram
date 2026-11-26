@@ -472,7 +472,7 @@ public class CallLogActivity extends BaseFragment implements NotificationCenter.
 		}
 
 		public void set(CallLogRow row, View.OnClickListener imageOnClick) {
-			imageView.setImageResource(row.video ? R.drawable.menu_videocall : R.drawable.menu_call_create_2_24);
+			imageView.setImageResource(row.video ? R.drawable.solar_msg_video : R.drawable.solar_msg_call);
 			TLRPC.Message last = row.calls.get(0);
 			SpannableString subtitle;
 			String ldir = LocaleController.isRTL ? "\u202b" : "";
@@ -538,7 +538,7 @@ public class CallLogActivity extends BaseFragment implements NotificationCenter.
 
 		private ImageSpan iconOut() {
 			if (iconOutDrawable == null) {
-				final Drawable greenDrawable = getContext().getResources().getDrawable(R.drawable.mini_call_out_16).mutate();
+				final Drawable greenDrawable = getContext().getResources().getDrawable(R.drawable.solar_msg_call).mutate();
 				greenDrawable.setBounds(0, 0, greenDrawable.getIntrinsicWidth(), greenDrawable.getIntrinsicHeight());
 				ThemeBind.drawableColorFilter(profileSearchCell, greenDrawable, Theme.key_windowBackgroundWhiteGrayText3, PorterDuff.Mode.MULTIPLY);
 				iconOutDrawable = greenDrawable;
@@ -547,7 +547,7 @@ public class CallLogActivity extends BaseFragment implements NotificationCenter.
 		}
 		private ImageSpan iconIn() {
 			if (iconInDrawable == null) {
-				final Drawable greenDrawable2 = getContext().getResources().getDrawable(R.drawable.mini_call_in_16).mutate();
+				final Drawable greenDrawable2 = getContext().getResources().getDrawable(R.drawable.solar_msg_call).mutate();
 				greenDrawable2.setBounds(0, 0, greenDrawable2.getIntrinsicWidth(), greenDrawable2.getIntrinsicHeight());
 				ThemeBind.drawableColorFilter(profileSearchCell, greenDrawable2, Theme.key_windowBackgroundWhiteGrayText3, PorterDuff.Mode.MULTIPLY);
 				iconInDrawable = greenDrawable2;
@@ -555,13 +555,13 @@ public class CallLogActivity extends BaseFragment implements NotificationCenter.
 			return new ImageSpan(iconInDrawable, ImageSpan.ALIGN_BOTTOM);
 		}
 		private static ImageSpan iconMissedIn(Context context) {
-			final Drawable redDrawable = context.getResources().getDrawable(R.drawable.mini_call_in_16).mutate();
+			final Drawable redDrawable = context.getResources().getDrawable(R.drawable.solar_msg_call).mutate();
 			redDrawable.setBounds(0, 0, redDrawable.getIntrinsicWidth(), redDrawable.getIntrinsicHeight());
 			redDrawable.setColorFilter(new PorterDuffColorFilter(Theme.getColor(Theme.key_fill_RedNormal), PorterDuff.Mode.MULTIPLY));
 			return new ImageSpan(redDrawable, ImageSpan.ALIGN_BOTTOM);
 		}
 		private static ImageSpan iconMissedOut(Context context) {
-			final Drawable redDrawable2 = context.getResources().getDrawable(R.drawable.mini_call_out_16).mutate();
+			final Drawable redDrawable2 = context.getResources().getDrawable(R.drawable.solar_msg_call).mutate();
 			redDrawable2.setBounds(0, 0, redDrawable2.getIntrinsicWidth(), redDrawable2.getIntrinsicHeight());
 			redDrawable2.setColorFilter(new PorterDuffColorFilter(Theme.getColor(Theme.key_fill_RedNormal), PorterDuff.Mode.MULTIPLY));
 			return new ImageSpan(redDrawable2, ImageSpan.ALIGN_BOTTOM);
@@ -748,9 +748,9 @@ public class CallLogActivity extends BaseFragment implements NotificationCenter.
 		});
 
 		SimpleActionBarMenu menu = simpleActionBar.createMenu();
-		otherItem = menu.addItem(10, R.drawable.ic_ab_other);
+		otherItem = menu.addItem(10, R.drawable.solar_msg_settings);
 		otherItem.setContentDescription(getString(R.string.AccDescrMoreOptions));
-		otherItem.addSubItem(delete_all, R.drawable.msg_delete, getString(R.string.DeleteAllCalls))
+		otherItem.addSubItem(delete_all, R.drawable.solar_msg_delete, getString(R.string.DeleteAllCalls))
 			.setColors(getThemedColor(Theme.key_text_RedRegular), getThemedColor(Theme.key_text_RedRegular));
 
 		listView = new UniversalRecyclerView(this, this::fillItems, this::onClick, this::onLongClick);
@@ -822,7 +822,7 @@ public class CallLogActivity extends BaseFragment implements NotificationCenter.
 		}
 
 		floatingButton = new FragmentFloatingButton(context, resourceProvider);
-		floatingButton.imageView.setImageResource(R.drawable.filled_calls_plus);
+		floatingButton.imageView.setImageResource(R.drawable.solar_msg_call);
 		floatingButton.setContentDescription(getString(R.string.Call));
 		floatingButton.setOnClickListener(v -> openCreateCall());
 		contentView.addView(floatingButton, FragmentFloatingButton.createDefaultLayoutParams());
@@ -878,9 +878,9 @@ public class CallLogActivity extends BaseFragment implements NotificationCenter.
 		final boolean hasCalls = !calls.isEmpty();
 
 		if (hasActiveCalls || hasCalls) {
-			items.add(UItem.asButton(ID_CREATE_CALL, R.drawable.menu_call_create, getString(R.string.GroupCallCreate2)).accent());
+			items.add(UItem.asButton(ID_CREATE_CALL, R.drawable.solar_msg_call, getString(R.string.GroupCallCreate2)).accent());
 			if (!getUserConfig().showCallsTab) {
-				items.add(UItem.asButton(ID_SHOW_IN_MAIN_TABS, R.drawable.menu_add_tab_24, getString(R.string.GroupCallShowInMainTabs)).accent());
+				items.add(UItem.asButton(ID_SHOW_IN_MAIN_TABS, R.drawable.solar_msg_add, getString(R.string.GroupCallShowInMainTabs)).accent());
 			}
 			items.add(UItem.asShadow(null));
 		}
@@ -1151,7 +1151,7 @@ public class CallLogActivity extends BaseFragment implements NotificationCenter.
 		final SimpleActionBarMenu actionMode = simpleActionBar.createActionMode();
 
 
-		actionMode.addItemWithWidth(delete, R.drawable.msg_delete, AndroidUtilities.dp(54), getString(R.string.Delete));
+		actionMode.addItemWithWidth(delete, R.drawable.solar_msg_delete, AndroidUtilities.dp(54), getString(R.string.Delete));
 	}
 
 	private boolean addOrRemoveSelectedDialog(ArrayList<TLRPC.Message> messages, CallCell cell) {
@@ -1495,7 +1495,7 @@ public class CallLogActivity extends BaseFragment implements NotificationCenter.
 
 		final ImageView optionsView = new ImageView(context);
 		optionsView.setScaleType(ImageView.ScaleType.CENTER);
-		optionsView.setImageResource(R.drawable.ic_ab_other);
+		optionsView.setImageResource(R.drawable.solar_msg_settings);
 		ThemeBind.colorFilter(optionsView, Theme.key_windowBackgroundWhiteGrayText, resourcesProvider, PorterDuff.Mode.SRC_IN);
 		ThemeBind.selectorBackground(optionsView, Theme.createSelectorDrawable(Theme.getColor(Theme.key_listSelector, resourcesProvider)), null, ThemeBind.of(Theme.key_listSelector), resourcesProvider);
 		if (creator) {
@@ -1527,7 +1527,7 @@ public class CallLogActivity extends BaseFragment implements NotificationCenter.
 		linkContainer.addView(linkText, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT, Gravity.FILL, 0, 0, 30, 0));
 
 		ImageView linkOptionsView = new ImageView(context);
-		linkOptionsView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_ab_other));
+		linkOptionsView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.solar_msg_settings));
 		linkOptionsView.setContentDescription(LocaleController.getString(R.string.AccDescrMoreOptions));
 		linkOptionsView.setScaleType(ImageView.ScaleType.CENTER);
 		ThemeBind.colorFilter(linkOptionsView, Theme.key_dialogTextGray3, resourcesProvider, PorterDuff.Mode.SRC_IN);
@@ -1540,14 +1540,14 @@ public class CallLogActivity extends BaseFragment implements NotificationCenter.
 		ButtonWithCounterView copyButton = new ButtonWithCounterView(context, resourcesProvider);
 		SpannableStringBuilder sb = new SpannableStringBuilder("c ");
 		sb.append(getString(R.string.GroupCallCreatedLinkCopy));
-		sb.setSpan(new ColoredImageSpan(R.drawable.msg_copy_filled), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		sb.setSpan(new ColoredImageSpan(R.drawable.solar_msg_copy), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		copyButton.setText(sb, false);
 		buttonsLayout.addView(copyButton, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 48, 1, Gravity.LEFT | Gravity.TOP, 0, 0, 6, 0));
 
 		ButtonWithCounterView shareButton = new ButtonWithCounterView(context, resourcesProvider);
 		sb = new SpannableStringBuilder("c ");
 		sb.append(getString(R.string.GroupCallCreatedLinkShare));
-		sb.setSpan(new ColoredImageSpan(R.drawable.msg_share_filled), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		sb.setSpan(new ColoredImageSpan(R.drawable.solar_msg_share), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		shareButton.setText(sb, false);
 		buttonsLayout.addView(shareButton, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 48, 1, Gravity.LEFT | Gravity.TOP, 6, 0, 0, 0));
 
@@ -1664,7 +1664,7 @@ public class CallLogActivity extends BaseFragment implements NotificationCenter.
 		};
 		linkOptionsView.setOnClickListener(v ->
 			ItemOptions.makeOptions(sheet.container, resourcesProvider, linkContainer)
-				.add(R.drawable.msg_copy, getString(R.string.Copy), () -> {
+				.add(R.drawable.solar_msg_copy, getString(R.string.Copy), () -> {
 					AndroidUtilities.addToClipboard(currentLink[0]);
 
 					BulletinFactory.of(sheet.topBulletinContainer, resourcesProvider)
@@ -1682,7 +1682,7 @@ public class CallLogActivity extends BaseFragment implements NotificationCenter.
 					qrCodeBottomSheet.setCenterAnimation(R.raw.qr_code_logo);
 					qrCodeBottomSheet.show();
 				})
-				.addIf(creator, R.drawable.msg_delete, getString(R.string.RevokeLink), true, revoke)
+				.addIf(creator, R.drawable.solar_msg_delete, getString(R.string.RevokeLink), true, revoke)
 				.show()
 		);
 		shareButton.setOnClickListener(v -> new ShareAlert(context, null, link, false, currentLink[0], false, resourcesProvider) {
@@ -1707,7 +1707,7 @@ public class CallLogActivity extends BaseFragment implements NotificationCenter.
         }.show());
 		if (creator) {
 			optionsView.setOnClickListener(v -> ItemOptions.makeOptions(sheet.getContainer(), resourcesProvider, optionsView)
-                .add(R.drawable.menu_link_revoke, getString(R.string.GroupCallCreatedLinkRevoke), revoke)
+                .add(R.drawable.solar_msg_link, getString(R.string.GroupCallCreatedLinkRevoke), revoke)
                 .setOnTopOfScrim()
                 .translate(0, -dp(6))
                 .setDimAlpha(0)
@@ -1849,7 +1849,7 @@ public class CallLogActivity extends BaseFragment implements NotificationCenter.
 		// io.setColors(getThemedColor(Theme.key_actionBarDefaultTitle), getThemedColor(Theme.key_actionBarDefaultTitle));
 		io.setDimAlpha(0x08);
 		if (getUserConfig().showCallsTab) {
-			io.add(R.drawable.msg_archive_hide, getString(R.string.HideCallTab), () -> {
+			io.add(R.drawable.solar_msg_archive, getString(R.string.HideCallTab), () -> {
 				setCallsTabVisible(false);
 				final BulletinFactory factory = hasMainTabs ? BulletinFactory.global() : BulletinFactory.of(CallLogActivity.this);
 				factory.createSimpleBulletin(R.raw.contact_check, AndroidUtilities.replaceTags(getString(R.string.GroupCallTabWasHiddenTitle)), getString(R.string.UndoNoCaps), Bulletin.DURATION_PROLONG, true, () -> {
@@ -1857,7 +1857,7 @@ public class CallLogActivity extends BaseFragment implements NotificationCenter.
 				}).setDuration(Bulletin.DURATION_PROLONG).show();
 			});
 		}
-		io.add(R.drawable.msg_delete, getString(R.string.DeleteAllCalls), true, () -> showDeleteAlert(true));
+		io.add(R.drawable.solar_msg_delete, getString(R.string.DeleteAllCalls), true, () -> showDeleteAlert(true));
 
 		io.show();
 		io.setTranslationY(-dp(64));
