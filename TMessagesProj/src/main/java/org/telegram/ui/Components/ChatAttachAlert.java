@@ -2246,7 +2246,7 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
 
         selectedMenuItem = new ActionBarMenuItem(context, null, 0, getThemedColor(Theme.key_dialogTextBlack), false, resourcesProvider);
         selectedMenuItem.setLongClickEnabled(false);
-        selectedMenuItem.setIcon(R.drawable.ic_ab_other);
+        selectedMenuItem.setIcon(R.drawable.solar_msg_settings);
         selectedMenuItem.setContentDescription(getString(R.string.AccDescrMoreOptions));
         selectedMenuItem.setVisibility(View.INVISIBLE);
         selectedMenuItem.setAlpha(0.0f);
@@ -2311,7 +2311,7 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
         if (baseFragment != null) {
             searchItem = new ActionBarMenuItem(context, null, 0, getThemedColor(Theme.key_dialogTextBlack), false, resourcesProvider);
             searchItem.setLongClickEnabled(false);
-            searchItem.setIcon(R.drawable.outline_header_search);
+            searchItem.setIcon(R.drawable.solar_msg_search);
             searchItem.setContentDescription(getString(R.string.Search));
             searchItem.setVisibility(View.INVISIBLE);
             searchItem.setAlpha(0.0f);
@@ -2389,11 +2389,11 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
 
         optionsItem = new ActionBarMenuItem(context, null, 0, getThemedColor(Theme.key_dialogTextBlack), false, resourcesProvider);
         optionsItem.setLongClickEnabled(false);
-        optionsItem.setIcon(R.drawable.ic_ab_other);
+        optionsItem.setIcon(R.drawable.solar_msg_settings);
         optionsItem.setContentDescription(getString(R.string.AccDescrMoreOptions));
         optionsItem.setVisibility(View.GONE);
         ThemeBind.selectorBackground(optionsItem, Theme.createSelectorDrawable(getThemedColor(Theme.key_dialogButtonSelector), Theme.RIPPLE_MASK_CIRCLE_TO_BOUND_EDGE), null, ThemeBind.of(Theme.key_dialogButtonSelector), resourcesProvider);
-        optionsItem.addSubItem(1, R.drawable.msg_addbot, getString(R.string.StickerCreateEmpty)).setOnClickListener(v -> {
+        optionsItem.addSubItem(1, R.drawable.solar_msg_contacts, getString(R.string.StickerCreateEmpty)).setOnClickListener(v -> {
             optionsItem.toggleSubMenu();
             PhotoViewer.getInstance().setParentActivity(baseFragment, resourcesProvider);
             PhotoViewer.getInstance().setParentAlert(this);
@@ -3993,7 +3993,7 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
                 });
             }
             if (editingMessageObject == null && !self) {
-                options.add(R.drawable.input_notify_off, getString(R.string.SendWithoutSound), () -> {
+                options.add(R.drawable.solar_msg_notifications, getString(R.string.SendWithoutSound), () -> {
                     final long effectId = messageSendPreview != null ? messageSendPreview.getSelectedEffect() : 0;
                     writeButton.setEffect(ChatAttachAlert.this.effectId = effectId);
                     boolean shownDialog = false;
@@ -4011,7 +4011,7 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
                 });
             }
             if (editingMessageObject == null && canHaveStars && chatActivity != null && ChatObject.isChannelAndNotMegaGroup(chatActivity.getCurrentChat()) && chatActivity.getCurrentChatInfo() != null && chatActivity.getCurrentChatInfo().paid_media_allowed) {
-                ActionBarMenuSubItem item = options.add(R.drawable.menu_feature_paid, getString(R.string.PaidMediaButton), null).getLast();
+                ActionBarMenuSubItem item = options.add(R.drawable.solar_msg_gift_premium, getString(R.string.PaidMediaButton), null).getLast();
                 item.setOnClickListener(v -> {
                     if (photoLayout == null) return;
                     StarsIntroActivity.showMediaPriceSheet(context, photoLayout.getStarsPrice(), true, (amount, done) -> {
