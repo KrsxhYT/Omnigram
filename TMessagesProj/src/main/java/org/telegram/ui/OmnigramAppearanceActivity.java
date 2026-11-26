@@ -250,9 +250,17 @@ public class OmnigramAppearanceActivity extends OmnigramSettingsBase {
         footnote(context, "The icon next to the time of a deleted message. Pick an icon and a colour, the preview above shows how it will look. Reopen a chat to see the change.");
         refreshDeletedPreview();
 
+        // ---- chat folders
+        section(context, "Chat Folders");
+        LinearLayout folders = card(context);
+        toggle(context, folders, "Notification Counter", null, OmnigramPrefs.FOLDER_COUNTER, true);
+        footnote(context, "Shows the unread counter on each folder tab. Reopen the chat list to see the change.");
+
         // ---- appearance
         section(context, "Appearance");
         LinearLayout look = card(context);
+        toggle(context, look, "Center Title", null, OmnigramPrefs.CENTER_TITLE, false);
+        toggle(context, look, "Disable Dividers", null, OmnigramPrefs.DISABLE_DIVIDERS, false);
         toggle(context, look, "Use System Font", null, OmnigramPrefs.SYSTEM_FONT, false);
         toggle(context, look, "Use System Emoji", null, "omni_system_emoji", SharedConfig.useSystemEmoji, on -> {
             try {
@@ -260,7 +268,7 @@ public class OmnigramAppearanceActivity extends OmnigramSettingsBase {
                 MessagesController.getGlobalMainSettings().edit().putBoolean("useSystemEmoji", on).apply();
             } catch (Throwable ignore) {}
         });
-        footnote(context, "Use System Font uses your phone's font instead of the app's. Use System Emoji shows your phone's emoji instead of the app's emoji set. Restart the app after changing either.");
+        footnote(context, "Disable Dividers hides the lines between list items. Use System Font uses your phone's font instead of the app's. Use System Emoji shows your phone's emoji instead of the app's emoji set. Restart the app after changing either.");
         return root;
     }
 

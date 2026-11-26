@@ -3456,6 +3456,9 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                     case 3: titleName = "Chats"; break;
                     default: break;
                 }
+                if (org.telegram.ui.Components.OmnigramPrefs.centerTitle()) {
+                    actionBar.centerTitle();
+                }
                 actionBar.setTitle(titleName, statusDrawable);
                 updateStatus(UserConfig.getInstance(currentAccount).getCurrentUser(), false);
             }
@@ -13412,19 +13415,19 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             presentFragment(new ChatActivity(args));
         });
         if (org.telegram.ui.Components.OmnigramPrefs.hideArchived()) {
-            io.add(R.drawable.msg_archive, "Archived chats", () -> {
+            io.add(R.drawable.solar_msg_archive, "Archived chats", () -> {
                 Bundle archiveArgs = new Bundle();
                 archiveArgs.putInt("folderId", 1);
                 presentFragment(new DialogsActivity(archiveArgs));
             });
         }
-        io.add(R.drawable.msg_played, "Games", () -> {
+        io.add(R.drawable.solar_msg_played, "Games", () -> {
             try {
                 org.telegram.messenger.browser.Browser.openUrl(getParentActivity(), android.net.Uri.parse("https://funni.games/graph"), true, true, false, null, null, false, true, false);
             } catch (Throwable ignore) {}
         });
-        io.add(R.drawable.msg_secret, "Ghost Mode", () -> presentFragment(new OmnigramGhostActivity()));
-        io.add(R.drawable.msg_search, "ID Finder", () -> presentFragment(new OmnigramIdFinderActivity()));
+        io.add(R.drawable.solar_ghost, "Ghost Mode", () -> presentFragment(new OmnigramGhostActivity()));
+        io.add(R.drawable.solar_msg_search, "ID Finder", () -> presentFragment(new OmnigramIdFinderActivity()));
         if (ApplicationLoader.applicationLoaderInstance != null) {
             ApplicationLoader.applicationLoaderInstance.addItemOptions(io);
         }

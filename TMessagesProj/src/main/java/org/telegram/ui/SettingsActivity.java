@@ -860,9 +860,9 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         items.add(SettingCell.Factory.of(18, IconBackgroundColors.BLUE_LIGHT.top, IconBackgroundColors.BLUE_LIGHT.bottom, R.drawable.settings_faq, getString(R.string.TelegramFAQ)));
         items.add(SettingCell.Factory.of(23, IconBackgroundColors.PURPLE.top, IconBackgroundColors.PURPLE.bottom, R.drawable.settings_features, getString(R.string.TelegramFeatures)));
         items.add(SettingCell.Factory.of(19, IconBackgroundColors.GREEN.top, IconBackgroundColors.GREEN.bottom, R.drawable.settings_policy, getString(R.string.PrivacyPolicy)));
-        items.add(SettingCell.Factory.of(9996, 0xFF4CAF50, 0xFF2E9E4F, R.drawable.settings_features, "Device Info", "Details about this phone"));
-        items.add(SettingCell.Factory.of(9997, 0xFF2AABEE, 0xFF229ED9, R.drawable.settings_features, "Telegraph", "Create Telegraph pages"));
-        items.add(SettingCell.Factory.of(9998, 0xFFB659FF, 0xFF617CFF, R.drawable.settings_features, "Omni Preference", "Omnigram settings"));
+        items.add(SettingCell.Factory.of(9996, 0xFF4CAF50, 0xFF2E9E4F, R.drawable.solar_msg_info, "Device Info", "Details about this phone"));
+        items.add(SettingCell.Factory.of(9997, 0xFF2AABEE, 0xFF229ED9, R.drawable.solar_msg_saved, "Telegraph", "Create Telegraph pages"));
+        items.add(SettingCell.Factory.of(9998, 0xFFB659FF, 0xFF617CFF, R.drawable.solar_msg_settings, "Omni Preference", "Omnigram settings"));
         items.add(SettingCell.Factory.of(9999, 0xFF62B0F0, 0xFF1B242F, R.drawable.msg_info, "Developers", "Omnigram Team"));
 
         if (SharedSettings.experimentalSettingsAllowed.get()) {

@@ -1,6 +1,10 @@
 package org.telegram.ui.Components;
 
+import org.telegram.messenger.AndroidUtilities;
+import org.telegram.messenger.MessagesController;
+import org.telegram.messenger.UserConfig;
 import org.telegram.tgnet.ConnectionsManager;
+import org.telegram.tgnet.RequestDelegate;
 import org.telegram.tgnet.TLObject;
 import org.telegram.tgnet.TLRPC;
 import org.telegram.tgnet.tl.TL_account;
@@ -47,37 +51,108 @@ public final class OmnigramGhost {
         return OmnigramPrefs.get(READ_ON_INTERACT, true);
     }
 
-    /** Returns the request to send (maybe changed) or null when it must not be sent. */
-    public static TLObject filter(TLObject object, int account) {
-        try {
-            if (object == null) return null;
-            if (ALLOWED.remove(object)) return object;
+    /** Result of {@link #process}: drop the request, or send it with this (possibly wrapped) callback. */
+    public static final class Out {
+        public final boolean drop;
+        public final RequestDelegate complete;
 
-            if (object instanceof TLRPC.TL_messages_setTyping) {
-                return on(NO_TYPING) ? null : object;
+        Out(boolean drop, RequestDelegate complete) {
+            this.drop = drop;
+            this.complete = complete;
+        }
+    }
+
+    private static Out sendAsIs(RequestDelegate c) {
+        return new Out(false, c);
+    }
+
+    private static Out dropped() {
+        return new Out(true, null);
+    }
+
+    /** Read receipts are not sent, but the app is told they worked so nothing waits for an answer. */
+    private static Out droppedWithFakeAnswer(RequestDelegate onComplete) {
+        if (onComplete != null) {
+            TLRPC.TL_messages_affectedMessages fake = new TLRPC.TL_messages_affectedMessages();
+            fake.pts = -1;
+            fake.pts_count = 0;
+            onComplete.run(fake, null);
+        }
+        return dropped();
+    }
+
+    private static long dialogIdOf(int account, TLRPC.InputPeer peer) {
+        if (peer instanceof TLRPC.TL_inputPeerUser) return peer.user_id;
+        if (peer instanceof TLRPC.TL_inputPeerChat) return -peer.chat_id;
+        if (peer instanceof TLRPC.TL_inputPeerChannel) return -peer.channel_id;
+        if (peer instanceof TLRPC.TL_inputPeerSelf) return UserConfig.getInstance(account).getClientUserId();
+        return 0;
+    }
+
+    /**
+     * Ghost Mode, called for every request just before it is sent. Typing, read receipts and story views are not sent,
+     * the online status is always sent as offline, and (Read on Interact) a real read receipt goes out after you send a
+     * message or tap a reaction.
+     */
+    public static Out process(TLObject object, RequestDelegate onComplete, final int account) {
+        try {
+            if (object == null) return dropped();
+            if (ALLOWED.remove(object)) return sendAsIs(onComplete);
+
+            if (object instanceof TLRPC.TL_messages_setTyping || object instanceof TLRPC.TL_messages_setEncryptedTyping) {
+                return on(NO_TYPING) ? dropped() : sendAsIs(onComplete);
             }
             if (object instanceof TL_account.updateStatus) {
                 if (on(NO_ONLINE) || on(AUTO_OFFLINE)) {
                     ((TL_account.updateStatus) object).offline = true;
                 }
-                return object;
+                return sendAsIs(onComplete);
             }
-            if (object instanceof TLRPC.TL_messages_readHistory || object instanceof TLRPC.TL_channels_readHistory || object instanceof TLRPC.TL_messages_readDiscussion) {
-                return on(NO_READ) ? null : object;
+            if (object instanceof TLRPC.TL_messages_readHistory
+                    || object instanceof TLRPC.TL_channels_readHistory
+                    || object instanceof TLRPC.TL_messages_readDiscussion
+                    || object instanceof TLRPC.TL_messages_readEncryptedHistory
+                    || object instanceof TLRPC.TL_messages_readMessageContents
+                    || object instanceof TLRPC.TL_channels_readMessageContents) {
+                return on(NO_READ) ? droppedWithFakeAnswer(onComplete) : sendAsIs(onComplete);
             }
             if (object instanceof TL_stories.TL_stories_readStories || object instanceof TL_stories.TL_stories_incrementStoryViews) {
-                return on(NO_STORIES) ? null : object;
+                return on(NO_STORIES) ? dropped() : sendAsIs(onComplete);
             }
             if (on(NO_READ) && readOnInteract()) {
                 if (object instanceof TLRPC.TL_messages_sendReaction) {
                     TLRPC.TL_messages_sendReaction r = (TLRPC.TL_messages_sendReaction) object;
                     markRead(account, r.peer, r.msg_id);
-                } else if (object instanceof TLRPC.TL_messages_sendMessage) {
-                    markRead(account, ((TLRPC.TL_messages_sendMessage) object).peer, 0);
+                    return sendAsIs(onComplete);
+                }
+                TLRPC.InputPeer sendPeer = null;
+                if (object instanceof TLRPC.TL_messages_sendMessage) sendPeer = ((TLRPC.TL_messages_sendMessage) object).peer;
+                else if (object instanceof TLRPC.TL_messages_sendMedia) sendPeer = ((TLRPC.TL_messages_sendMedia) object).peer;
+                else if (object instanceof TLRPC.TL_messages_sendMultiMedia) sendPeer = ((TLRPC.TL_messages_sendMultiMedia) object).peer;
+                if (sendPeer != null) {
+                    final TLRPC.InputPeer peer = sendPeer;
+                    final RequestDelegate original = onComplete;
+                    return sendAsIs((response, error) -> {
+                        if (original != null) original.run(response, error);
+                        if (error == null) {
+                            AndroidUtilities.runOnUIThread(() -> markReadAfterSend(account, peer), 500);
+                        }
+                    });
                 }
             }
         } catch (Throwable ignore) {}
-        return object;
+        return sendAsIs(onComplete);
+    }
+
+    /** After a message was sent: read everything up to the newest message of that chat. */
+    private static void markReadAfterSend(int account, TLRPC.InputPeer peer) {
+        try {
+            long did = dialogIdOf(account, peer);
+            if (did == 0) return;
+            TLRPC.Dialog d = MessagesController.getInstance(account).dialogs_dict.get(did);
+            int maxId = d != null ? d.top_message : 0;
+            if (maxId > 0) markRead(account, peer, maxId);
+        } catch (Throwable ignore) {}
     }
 
     /** Real read receipt, sent when the user interacts (reacts or writes). */

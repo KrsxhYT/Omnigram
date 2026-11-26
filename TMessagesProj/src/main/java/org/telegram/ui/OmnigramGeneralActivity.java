@@ -33,6 +33,22 @@ public class OmnigramGeneralActivity extends OmnigramSettingsBase {
         View root = buildRoot(context, "General");
 
         // ---- General
+        // ---- Camera type
+        section(context, "Camera Type");
+        LinearLayout camera = card(context);
+        final String[] camNames = {"Default", "Camera2", "System"};
+        final TextView[] ticks = new TextView[3];
+        for (int i = 0; i < 3; i++) {
+            final int type = i;
+            ticks[i] = row(context, camera, R.drawable.solar_msg_camera, camNames[i], " ", x -> {
+                setCameraType(type);
+                for (int k = 0; k < 3; k++) ticks[k].setText(k == type ? "\u2713" : " ");
+            });
+        }
+        int cur = currentCameraType();
+        for (int k = 0; k < 3; k++) ticks[k].setText(k == cur ? "\u2713" : " ");
+        footnote(context, "Default uses the in-app camera. Camera2 forces the Camera2 API. System opens your phone's own camera app.");
+
         section(context, "General");
         LinearLayout general = card(context);
         toggle(context, general, "Disable Number Rounding", "1.23K \u2192 1,234", OmnigramPrefs.NO_ROUNDING, false);
@@ -81,8 +97,31 @@ public class OmnigramGeneralActivity extends OmnigramSettingsBase {
         section(context, "Other");
         LinearLayout other = card(context);
         toggle(context, other, "Verified Badge Animation", null, OmnigramPrefs.VERIFIED_ANIM, true);
-        row(context, other, R.drawable.msg_delete, "Delete Deleted Messages History", null, x -> confirmClearHistory());
+        row(context, other, R.drawable.solar_msg_delete, "Delete Deleted Messages History", null, x -> confirmClearHistory());
         return root;
+    }
+
+    private int currentCameraType() {
+        if (!SharedConfig.inappCamera) return 2;
+        if (SharedConfig.useCamera2Force != null && SharedConfig.useCamera2Force) return 1;
+        return 0;
+    }
+
+    private void setCameraType(int type) {
+        try {
+            android.content.SharedPreferences.Editor ed = org.telegram.messenger.MessagesController.getGlobalMainSettings().edit();
+            SharedConfig.inappCamera = type != 2;
+            ed.putBoolean("inappCamera", SharedConfig.inappCamera);
+            ed.apply();
+            android.content.SharedPreferences main = org.telegram.messenger.ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Context.MODE_PRIVATE);
+            if (type == 1) {
+                SharedConfig.useCamera2Force = true;
+                main.edit().putBoolean("useCamera2Force_2", true).apply();
+            } else if (type == 0) {
+                SharedConfig.useCamera2Force = null;
+                main.edit().remove("useCamera2Force_2").apply();
+            }
+        } catch (Throwable ignore) {}
     }
 
     private void chooseIdMode() {

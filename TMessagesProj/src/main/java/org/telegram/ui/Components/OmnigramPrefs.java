@@ -24,6 +24,11 @@ public final class OmnigramPrefs {
     public static final String PREMIUM_EMOJI = "premium_emoji";
     public static final String FORCE_SNOW = "force_snow";
     public static final String SYSTEM_FONT = "system_font";
+    public static final String HIDE_STICKER_TIME = "hide_sticker_time";
+    public static final String UNLIMITED_RECENT_STICKERS = "unlimited_recent_stickers";
+    public static final String FOLDER_COUNTER = "folder_counter";
+    public static final String DISABLE_DIVIDERS = "disable_dividers";
+    public static final String CENTER_TITLE = "center_title";
     public static final int ID_TELEGRAM = 0, ID_BOT_API = 1, ID_HIDE = 2;
 
     private OmnigramPrefs() {}
@@ -63,6 +68,17 @@ public final class OmnigramPrefs {
     public static boolean premiumEmoji() { return get(PREMIUM_EMOJI, false); }
     public static boolean forceSnow() { return get(FORCE_SNOW, false); }
     public static boolean systemFont() { return get(SYSTEM_FONT, false); }
+    public static boolean hideStickerTime() { return get(HIDE_STICKER_TIME, false); }
+    public static boolean unlimitedRecentStickers() { return get(UNLIMITED_RECENT_STICKERS, false); }
+    public static boolean folderCounter() { return get(FOLDER_COUNTER, true); }
+    public static boolean disableDividers() { return get(DISABLE_DIVIDERS, false); }
+    public static boolean centerTitle() { return get(CENTER_TITLE, false); }
+
+    /** Sticker size 5..20 (14 = normal). */
+    public static int stickerSize() { return Math.max(5, Math.min(20, getInt("sticker_size", 14))); }
+    public static float stickerScale() { return stickerSize() / 14f; }
+    /** 0 default, 1 rounded, 2 message shape. */
+    public static int stickerShape() { return getInt("sticker_shape", 0); }
 
     public static int getInt(String key, int def) {
         try { return sp().getInt(key, def); } catch (Throwable t) { return def; }

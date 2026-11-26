@@ -8969,9 +8969,9 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                     float maxHeight;
                     int maxWidth;
                     if (AndroidUtilities.isTablet()) {
-                        maxHeight = maxWidth = (int) (AndroidUtilities.getMinTabletSide() * 0.4f);
+                        maxHeight = maxWidth = (int) Math.min(AndroidUtilities.getMinTabletSide() * 0.4f * org.telegram.ui.Components.OmnigramPrefs.stickerScale(), getParentWidth() * 0.92f);
                     } else {
-                        maxHeight = maxWidth = (int) (Math.min(getParentWidth(), AndroidUtilities.displaySize.y) * 0.5f);
+                        maxHeight = maxWidth = (int) Math.min(Math.min(getParentWidth(), AndroidUtilities.displaySize.y) * 0.5f * org.telegram.ui.Components.OmnigramPrefs.stickerScale(), getParentWidth() * 0.92f);
                     }
                     String filter;
                     if (messageObject.isAnimatedEmoji() || messageObject.isDice()) {
@@ -9054,7 +9054,21 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                     availableTimeWidth = photoWidth - dp(14);
                     backgroundWidth = photoWidth + dp(12);
 
-                    photoImage.setRoundRadius(0);
+                    switch (org.telegram.ui.Components.OmnigramPrefs.stickerShape()) {
+                        case 1:
+                            photoImage.setRoundRadius(dp(16));
+                            break;
+                        case 2:
+                            if (messageObject.isOutOwner()) {
+                                photoImage.setRoundRadius(dp(18), dp(18), dp(4), dp(18));
+                            } else {
+                                photoImage.setRoundRadius(dp(18), dp(18), dp(18), dp(4));
+                            }
+                            break;
+                        default:
+                            photoImage.setRoundRadius(0);
+                            break;
+                    }
                     canChangeRadius = false;
                     if (!messageObject.isOutOwner() && MessageObject.isPremiumSticker(messageObject.getDocument())) {
                         flipImage = true;
@@ -21284,6 +21298,9 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
     }
 
     public void drawTime(Canvas canvas, float alpha, boolean fromParent) {
+        if (org.telegram.ui.Components.OmnigramPrefs.hideStickerTime() && documentAttachType == DOCUMENT_ATTACH_TYPE_STICKER) {
+            return;
+        }
         if (!drawFromPinchToZoom && delegate != null && delegate.getPinchToZoomHelper() != null && delegate.getPinchToZoomHelper().isInOverlayModeFor(this) && shouldDrawTimeOnMedia()) {
             return;
         }

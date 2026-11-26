@@ -419,12 +419,14 @@ public class ConnectionsManager extends BaseController {
         return requestToken;
     }
 
-    private void sendRequestInternal(TLObject objectIn, RequestDelegate onComplete, RequestDelegateTimestamp onCompleteTimestamp, QuickAckDelegate onQuickAck, WriteToSocketDelegate onWriteToSocket, int flags, int datacenterId, int connectionType, boolean immediate, int requestToken) {
+    private void sendRequestInternal(TLObject objectIn, RequestDelegate onCompleteIn, RequestDelegateTimestamp onCompleteTimestamp, QuickAckDelegate onQuickAck, WriteToSocketDelegate onWriteToSocket, int flags, int datacenterId, int connectionType, boolean immediate, int requestToken) {
         // Omnigram Ghost Mode: may drop (typing, read receipts, story views) or change (online) a request
-        final TLObject object = org.telegram.ui.Components.OmnigramGhost.filter(objectIn, currentAccount);
-        if (object == null) {
+        final org.telegram.ui.Components.OmnigramGhost.Out ghost = org.telegram.ui.Components.OmnigramGhost.process(objectIn, onCompleteIn, currentAccount);
+        if (ghost.drop) {
             return;
         }
+        final TLObject object = objectIn;
+        final RequestDelegate onComplete = ghost.complete;
         if (BuildVars.LOGS_ENABLED) {
             FileLog.d("send request " + object + " with token = " + requestToken);
         }

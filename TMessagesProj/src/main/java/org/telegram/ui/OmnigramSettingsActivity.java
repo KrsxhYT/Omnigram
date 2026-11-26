@@ -59,19 +59,19 @@ public class OmnigramSettingsActivity extends OmnigramSettingsBase {
 
         section(context, "Categories");
         LinearLayout cats = card(context);
-        row(context, cats, R.drawable.settings_features, "General", null, x -> presentFragment(new OmnigramGeneralActivity()));
-        row(context, cats, R.drawable.msg_secret, "Ghost Mode", null, x -> presentFragment(new OmnigramGhostActivity()));
-        row(context, cats, R.drawable.msg_theme, "Appearance", null, x -> presentFragment(new OmnigramAppearanceActivity()));
-        row(context, cats, R.drawable.msg_discuss, "Chat", null, x -> presentFragment(new OmnigramChatActivity()));
+        row(context, cats, R.drawable.solar_msg_settings, "General", null, x -> presentFragment(new OmnigramGeneralActivity()));
+        row(context, cats, R.drawable.solar_ghost, "Ghost Mode", null, x -> presentFragment(new OmnigramGhostActivity()));
+        row(context, cats, R.drawable.solar_msg_theme, "Appearance", null, x -> presentFragment(new OmnigramAppearanceActivity()));
+        row(context, cats, R.drawable.solar_msg_discuss, "Chat", null, x -> presentFragment(new OmnigramChatActivity()));
 
         section(context, "Support");
         LinearLayout sup = card(context);
-        row(context, sup, R.drawable.msg_gift_premium, "Support Omnigram", null, x -> presentFragment(new OmnigramSupportActivity()));
+        row(context, sup, R.drawable.solar_msg_gift_premium, "Support Omnigram", null, x -> presentFragment(new OmnigramSupportActivity()));
 
         section(context, "Links");
         LinearLayout links = card(context);
-        row(context, links, R.drawable.msg_channel, "Channel", "@OfficalOmnigram", x -> open("https://t.me/OfficalOmnigram"));
-        row(context, links, R.drawable.msg_groups, "Chats", "@OmnigramChat", x -> open("https://t.me/OmnigramChat"));
+        row(context, links, R.drawable.solar_msg_channel, "Channel", "@OfficalOmnigram", x -> open("https://t.me/OfficalOmnigram"));
+        row(context, links, R.drawable.solar_msg_groups, "Chats", "@OmnigramChat", x -> open("https://t.me/OmnigramChat"));
         return root;
     }
 }
