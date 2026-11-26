@@ -306,7 +306,7 @@ public class GroupCreateActivity extends BaseFragment implements NotificationCen
         }
 
         actionBar.setBackgroundColor(0);
-        actionBar.setBackButtonImage(R.drawable.ic_ab_back);
+        actionBar.setBackButtonImage(R.drawable.solar_msg_back);
         actionBar.setAllowOverlayTitle(true);
         if (!TextUtils.isEmpty(customTitle)) {
             actionBar.setTitle(customTitle);
@@ -665,7 +665,7 @@ public class GroupCreateActivity extends BaseFragment implements NotificationCen
 
         floatingButton = new FragmentFloatingButton(context, resourceProvider);
         if (isNeverShare || isAlwaysShare || addToGroup) {
-            floatingButton.imageView.setImageResource(R.drawable.floating_check);
+            floatingButton.imageView.setImageResource(R.drawable.solar_msg_done);
         } else {
             BackDrawable backDrawable = new BackDrawable(false);
             backDrawable.setArrowRotation(180);
@@ -708,7 +708,7 @@ public class GroupCreateActivity extends BaseFragment implements NotificationCen
             voiceButton.setRound();
             SpannableStringBuilder sb = new SpannableStringBuilder();
             sb.append("x  ");
-            sb.setSpan(new ColoredImageSpan(R.drawable.profile_phone), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            sb.setSpan(new ColoredImageSpan(R.drawable.solar_msg_call), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             sb.append(getString(R.string.GroupCallCreateVoice));
             voiceButton.setText(sb, false);
             buttonsLayout.addView(voiceButton, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 48, 1, Gravity.FILL, 0, 0, 6, 0));
@@ -718,7 +718,7 @@ public class GroupCreateActivity extends BaseFragment implements NotificationCen
             videoButton.setRound();
             sb = new SpannableStringBuilder();
             sb.append("x  ");
-            sb.setSpan(new ColoredImageSpan(R.drawable.profile_video), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            sb.setSpan(new ColoredImageSpan(R.drawable.solar_msg_video), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             sb.append(getString(R.string.GroupCallCreateVideo));
             videoButton.setText(sb, false);
             buttonsLayout.addView(videoButton, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 48, 1, Gravity.FILL, 6, 0, 0, 0));
@@ -1513,13 +1513,13 @@ public class GroupCreateActivity extends BaseFragment implements NotificationCen
                 case 2: {
                     TextCell textCell = (TextCell) holder.itemView;
                     if (position == createCallLinkRow) {
-                        textCell.setTextAndIcon(getString(R.string.GroupCallCreateLink), R.drawable.menu_link_create2, false);
+                        textCell.setTextAndIcon(getString(R.string.GroupCallCreateLink), R.drawable.solar_msg_link, false);
                         textCell.setColors(Theme.key_windowBackgroundWhiteBlueIcon, Theme.key_windowBackgroundWhiteBlueButton);
                     } else if (inviteViaLink == 2) {
-                        textCell.setTextAndIcon(getString(R.string.ChannelInviteViaLink), R.drawable.msg_link2, false);
+                        textCell.setTextAndIcon(getString(R.string.ChannelInviteViaLink), R.drawable.solar_msg_link, false);
                         textCell.setColors(Theme.key_windowBackgroundWhiteGrayIcon, Theme.key_windowBackgroundWhiteBlackText);
                     } else {
-                        textCell.setTextAndIcon(getString(R.string.InviteToGroupByLink), R.drawable.msg_link2, false);
+                        textCell.setTextAndIcon(getString(R.string.InviteToGroupByLink), R.drawable.solar_msg_link, false);
                         textCell.setColors(Theme.key_windowBackgroundWhiteGrayIcon, Theme.key_windowBackgroundWhiteBlackText);
                     }
                     break;
