@@ -3143,7 +3143,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
 
         ActionBarMenu menu = actionBar.createMenu();
         menu.setTranslationX(-dp(5));
-        searchItem = menu.addItem(0, R.drawable.outline_header_search).setIsSearchField(true, false);
+        searchItem = menu.addItem(0, R.drawable.solar_msg_search).setIsSearchField(true, false);
         searchItem.setOnClickListener(v -> {
             showSearch(true, false, true);
             fragmentSearchFieldWatcher.toggleSearch(true);
@@ -5164,13 +5164,13 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                     }
                     final boolean fromTopPeer = user != null && !user.contact && MediaDataController.getInstance(currentAccount).containsTopPeer(dialogId);
                     filterOptions
-                            .addIf(dialogId > 0, R.drawable.msg_discussion, LocaleController.getString(R.string.SendMessage), () -> {
+                            .addIf(dialogId > 0, R.drawable.solar_msg_discuss, LocaleController.getString(R.string.SendMessage), () -> {
                                 presentFragment(ChatActivity.of(dialogId));
                             })
                             .addIf(dialogId > 0, R.drawable.msg_openprofile, LocaleController.getString(R.string.OpenProfile), () -> {
                                 presentFragment(ProfileActivity.of(dialogId));
                             })
-                            .addIf(dialogId < 0, R.drawable.msg_channel, LocaleController.getString(ChatObject.isChannelAndNotMegaGroup(chat) ? R.string.OpenChannel2 : R.string.OpenGroup2), () -> {
+                            .addIf(dialogId < 0, R.drawable.solar_msg_channel, LocaleController.getString(ChatObject.isChannelAndNotMegaGroup(chat) ? R.string.OpenChannel2 : R.string.OpenGroup2), () -> {
                                 presentFragment(ChatActivity.of(dialogId));
                             }).addIf(!muted && dialogId > 0, R.drawable.msg_mute, LocaleController.getString(R.string.NotificationsStoryMute2), () -> {
                                 MessagesController.getNotificationsSettings(currentAccount).edit().putBoolean("stories_" + key, false).apply();
@@ -5219,9 +5219,9 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                                     }
                                 });
                                 showDialog(stealthModeAlert);
-                            }).makeMultiline(false).addIf(!fromTopPeer && !isArchive(), R.drawable.msg_archive, LocaleController.getString(R.string.ArchivePeerStories), () -> {
+                            }).makeMultiline(false).addIf(!fromTopPeer && !isArchive(), R.drawable.solar_msg_archive, LocaleController.getString(R.string.ArchivePeerStories), () -> {
                                 toggleArciveForStory(dialogId);
-                            }).makeMultiline(false).addIf(!fromTopPeer && isArchive(), R.drawable.msg_unarchive, LocaleController.getString(R.string.UnarchiveStories), () -> {
+                            }).makeMultiline(false).addIf(!fromTopPeer && isArchive(), R.drawable.solar_msg_archive, LocaleController.getString(R.string.UnarchiveStories), () -> {
                                 toggleArciveForStory(dialogId);
                             }).makeMultiline(false).addIf(fromTopPeer, R.drawable.msg_delete, getString(R.string.StoriesRemoveFromRecent), () -> {
                                 MediaDataController.getInstance(currentAccount).removePeer(dialogId);
@@ -6678,12 +6678,12 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
 
         pinItem = actionMode.addItemWithWidth(pin, R.drawable.msg_pin, dp(48));
         muteItem = actionMode.addItemWithWidth(mute, R.drawable.msg_mute, dp(48));
-        archive2Item = actionMode.addItemWithWidth(archive2, R.drawable.msg_archive, dp(48));
+        archive2Item = actionMode.addItemWithWidth(archive2, R.drawable.solar_msg_archive, dp(48));
         deleteItem = actionMode.addItemWithWidth(delete, R.drawable.msg_delete, dp(48), LocaleController.getString(R.string.Delete));
 
         ActionBarMenuItem otherItem = actionMode.addItemWithWidth(0, R.drawable.ic_ab_other, dp(48), LocaleController.getString(R.string.AccDescrMoreOptions));
         actionMode.addView(new View(getContext()), LayoutHelper.createLinear(5, LayoutHelper.MATCH_PARENT));
-        archiveItem = otherItem.addSubItem(archive, R.drawable.msg_archive, LocaleController.getString(R.string.Archive));
+        archiveItem = otherItem.addSubItem(archive, R.drawable.solar_msg_archive, LocaleController.getString(R.string.Archive));
         pin2Item = otherItem.addSubItem(pin2, R.drawable.msg_pin, LocaleController.getString(R.string.DialogPin));
         addToFolderItem = otherItem.addSubItem(add_to_folder, R.drawable.msg_addfolder, LocaleController.getString(R.string.FilterAddTo));
         removeFromFolderItem = otherItem.addSubItem(remove_from_folder, R.drawable.msg_removefolder, LocaleController.getString(R.string.FilterRemoveFrom));
@@ -8506,7 +8506,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 title = Emoji.replaceEmoji(title, folderItem.getTextView().getPaint().getFontMetricsInt(), false);
                 title = MessageObject.replaceAnimatedEmoji(title, folder.entities, folderItem.getTextView().getPaint().getFontMetricsInt());
                 folderItem.setEmojiCacheType(folder.title_noanimate ? AnimatedEmojiDrawable.CACHE_TYPE_NOANIMATE_FOLDER : AnimatedEmojiDrawable.CACHE_TYPE_MESSAGES);
-                folderItem.setTextAndIcon(title, 0, new FolderDrawable(getContext(), R.drawable.msg_folders, folder.color));
+                folderItem.setTextAndIcon(title, 0, new FolderDrawable(getContext(), R.drawable.solar_msg_folder, folder.color));
                 folderItem.getTextView().setEmojiColor(getThemedColor(Theme.key_featuredStickers_addButton));
                 folderItem.setMinimumWidth(160);
                 folderItem.setOnClickListener(e -> {
@@ -9835,8 +9835,8 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         if (archiveItem != null && archive2Item != null) {
             if (canUnarchiveCount != 0 && communitiesCount == 0 && communityId == 0) {
                 final String contentDescription = LocaleController.getString(R.string.Unarchive);
-                archiveItem.setTextAndIcon(contentDescription, R.drawable.msg_unarchive);
-                archive2Item.setIcon(R.drawable.msg_unarchive);
+                archiveItem.setTextAndIcon(contentDescription, R.drawable.solar_msg_archive);
+                archive2Item.setIcon(R.drawable.solar_msg_archive);
                 archive2Item.setContentDescription(contentDescription);
                 if (filterTabsView != null && filterTabsView.getVisibility() == View.VISIBLE) {
                     archive2Item.setVisibility(View.VISIBLE);
@@ -9847,8 +9847,8 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 }
             } else if (canArchiveCount != 0 && communitiesCount == 0 && communityId == 0) {
                 final String contentDescription = LocaleController.getString(R.string.Archive);
-                archiveItem.setTextAndIcon(contentDescription, R.drawable.msg_archive);
-                archive2Item.setIcon(R.drawable.msg_archive);
+                archiveItem.setTextAndIcon(contentDescription, R.drawable.solar_msg_archive);
+                archive2Item.setIcon(R.drawable.solar_msg_archive);
                 archive2Item.setContentDescription(contentDescription);
                 if (filterTabsView != null && filterTabsView.getVisibility() == View.VISIBLE) {
                     archive2Item.setVisibility(View.VISIBLE);
@@ -13326,7 +13326,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
 
         if (communityId != 0) {
             if (ChatObject.hasAdminRights(community)) {
-                io.add(R.drawable.msg_customize, getString(R.string.CommunityMenuSettings), () -> {
+                io.add(R.drawable.solar_msg_theme, getString(R.string.CommunityMenuSettings), () -> {
                     Bundle bundle = new Bundle();
                     bundle.putLong("community_id", communityId);
                     presentFragment(new CommunityEditActivity(bundle));
@@ -13356,8 +13356,8 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         }
 
         if (isArchive()) {
-            io.add(R.drawable.msg_customize, getString(R.string.ArchiveSettings), () -> presentFragment(new ArchiveSettingsActivity()));
-            io.add(R.drawable.msg_help, getString(R.string.HowDoesItWork), this::showArchiveHelp);
+            io.add(R.drawable.solar_msg_theme, getString(R.string.ArchiveSettings), () -> presentFragment(new ArchiveSettingsActivity()));
+            io.add(R.drawable.solar_msg_info, getString(R.string.HowDoesItWork), this::showArchiveHelp);
             io.show();
             io.setTranslationY(-dp(64));
             return;
@@ -13369,7 +13369,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         } else {
             isCurrentThemeDark = Theme.isCurrentThemeDark();
         }
-        io.add(isCurrentThemeDark ? R.drawable.menu_day_mode_24 : R.drawable.menu_night_mode_24,
+        io.add(isCurrentThemeDark ? R.drawable.solar_msg_theme : R.drawable.solar_msg_theme,
                 getString(isCurrentThemeDark ? R.string.SwitchThemeToDay : R.string.SwitchThemeToNight), () -> {
             if (switchingTheme) {
                 return;
@@ -13405,11 +13405,11 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             });
         });
         io.addGap();
-        io.add(R.drawable.outline_groups_24, getString(R.string.NewGroup), () -> {
+        io.add(R.drawable.solar_msg_groups, getString(R.string.NewGroup), () -> {
             Bundle args = new Bundle();
             presentFragment(new GroupCreateActivity(args));
         });
-        io.add(R.drawable.outline_saved_24, getString(R.string.SavedMessages), () -> {
+        io.add(R.drawable.solar_msg_saved, getString(R.string.SavedMessages), () -> {
             Bundle args = new Bundle();
             args.putLong("user_id", UserConfig.getInstance(currentAccount).getClientUserId());
             presentFragment(new ChatActivity(args));
@@ -13462,7 +13462,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             }
         }
         if (getUserConfig().showCallsTab) {
-            io.add(R.drawable.msg_settings_old, getString(R.string.Settings), () -> {
+            io.add(R.drawable.solar_msg_settings, getString(R.string.Settings), () -> {
                 presentFragment(new SettingsActivity());
             });
         }
