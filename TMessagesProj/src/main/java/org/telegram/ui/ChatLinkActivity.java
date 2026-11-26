@@ -313,7 +313,7 @@ public class ChatLinkActivity extends BaseFragment implements NotificationCenter
         searching = false;
         searchWas = false;
 
-        simpleActionBar.setBackButtonImage(R.drawable.ic_ab_back);
+        simpleActionBar.setBackButtonImage(R.drawable.solar_msg_back);
         simpleActionBar.setTitle(getString(R.string.Discussion));
         simpleActionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
             @Override
@@ -325,7 +325,7 @@ public class ChatLinkActivity extends BaseFragment implements NotificationCenter
         });
 
         SimpleActionBarMenu menu = simpleActionBar.createMenu();
-        searchItem = menu.addItem(search_button, R.drawable.outline_header_search).setIsSearchField(true).setActionBarMenuItemSearchListener(new ActionBarMenuItem.ActionBarMenuItemSearchListener() {
+        searchItem = menu.addItem(search_button, R.drawable.solar_msg_search).setIsSearchField(true).setActionBarMenuItemSearchListener(new ActionBarMenuItem.ActionBarMenuItemSearchListener() {
             @Override
             public void onSearchExpand() {
                 searching = true;
@@ -1030,14 +1030,14 @@ public class ChatLinkActivity extends BaseFragment implements NotificationCenter
                     if (isChannel) {
                         if (info.linked_chat_id != 0) {
                             actionCell.setColors(Theme.key_text_RedRegular, Theme.key_text_RedRegular);
-                            actionCell.setText(getString(R.string.DiscussionUnlinkGroup), null, R.drawable.msg_remove, false);
+                            actionCell.setText(getString(R.string.DiscussionUnlinkGroup), null, R.drawable.solar_msg_delete, false);
                         } else {
                             actionCell.setColors(Theme.key_windowBackgroundWhiteBlueIcon, Theme.key_windowBackgroundWhiteBlueButton);
-                            actionCell.setText(getString(R.string.DiscussionCreateGroup), null, R.drawable.msg_groups, true);
+                            actionCell.setText(getString(R.string.DiscussionCreateGroup), null, R.drawable.solar_msg_groups, true);
                         }
                     } else {
                         actionCell.setColors(Theme.key_text_RedRegular, Theme.key_text_RedRegular);
-                        actionCell.setText(getString(R.string.DiscussionUnlinkChannel), null, R.drawable.msg_remove, false);
+                        actionCell.setText(getString(R.string.DiscussionUnlinkChannel), null, R.drawable.solar_msg_delete, false);
                     }
                     break;
             }
