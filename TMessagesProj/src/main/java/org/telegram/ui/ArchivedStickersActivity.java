@@ -101,7 +101,7 @@ public class ArchivedStickersActivity extends BaseFragment implements Notificati
     public View createView(Context context) {
         setHasOwnBackground(true);
 
-        simpleActionBar.setBackButtonImage(R.drawable.ic_ab_back);
+        simpleActionBar.setBackButtonImage(R.drawable.solar_msg_back);
         if (currentType == MediaDataController.TYPE_IMAGE) {
             simpleActionBar.setTitle(LocaleController.getString(R.string.ArchivedStickers));
         } else if (currentType == MediaDataController.TYPE_EMOJIPACKS) {
