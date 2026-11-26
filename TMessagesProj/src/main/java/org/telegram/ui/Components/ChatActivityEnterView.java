@@ -1272,8 +1272,8 @@ public class ChatActivityEnterView extends FrameLayout implements
             radiiRight[0] = radiiRight[1] = radiiRight[6] = radiiRight[7] = 0;
             radiiRight[2] = radiiRight[3] = radiiRight[4] = radiiRight[5] = dp(3);
 
-            micDrawable = getResources().getDrawable(R.drawable.input_mic).mutate();
-            vidDrawable = getResources().getDrawable(R.drawable.input_video).mutate();
+            micDrawable = getResources().getDrawable(R.drawable.solar_msg_microphone).mutate();
+            vidDrawable = getResources().getDrawable(R.drawable.solar_msg_camera).mutate();
 
             setWillNotDraw(false);
             updateColors();
@@ -2078,19 +2078,19 @@ public class ChatActivityEnterView extends FrameLayout implements
             if (micDrawable != null) {
                 return;
             }
-            micDrawable = getResources().getDrawable(R.drawable.input_mic_pressed).mutate();
+            micDrawable = getResources().getDrawable(R.drawable.solar_msg_microphone_pressed).mutate();
             ThemeBind.drawableColorFilter(this, micDrawable, Theme.key_chat_messagePanelVoicePressed, ChatActivityEnterView.this.resourcesProvider, PorterDuff.Mode.MULTIPLY);
 
-            cameraDrawable = getResources().getDrawable(R.drawable.input_video_pressed).mutate();
+            cameraDrawable = getResources().getDrawable(R.drawable.solar_msg_camera_pressed).mutate();
             ThemeBind.drawableColorFilter(this, cameraDrawable, Theme.key_chat_messagePanelVoicePressed, ChatActivityEnterView.this.resourcesProvider, PorterDuff.Mode.MULTIPLY);
 
             sendDrawable = getResources().getDrawable(R.drawable.attach_send).mutate();
             ThemeBind.drawableColorFilter(this, sendDrawable, Theme.key_chat_messagePanelVoicePressed, ChatActivityEnterView.this.resourcesProvider, PorterDuff.Mode.MULTIPLY);
 
-            micOutline = getResources().getDrawable(R.drawable.input_mic).mutate();
+            micOutline = getResources().getDrawable(R.drawable.solar_msg_microphone).mutate();
             ThemeBind.drawableColorFilter(this, micOutline, Theme.key_glass_defaultIcon, ChatActivityEnterView.this.resourcesProvider, PorterDuff.Mode.MULTIPLY);
 
-            cameraOutline = getResources().getDrawable(R.drawable.input_video).mutate();
+            cameraOutline = getResources().getDrawable(R.drawable.solar_msg_camera).mutate();
             ThemeBind.drawableColorFilter(this, cameraOutline, Theme.key_glass_defaultIcon, ChatActivityEnterView.this.resourcesProvider, PorterDuff.Mode.MULTIPLY);
         }
 
@@ -2791,7 +2791,7 @@ public class ChatActivityEnterView extends FrameLayout implements
 
         deleteRichDraftButton = new ImageView(context);
         deleteRichDraftButton.setScaleType(ImageView.ScaleType.CENTER);
-        deleteRichDraftButton.setImageResource(R.drawable.menu_delete_old);
+        deleteRichDraftButton.setImageResource(R.drawable.solar_msg_delete);
         ThemeBind.colorFilter(deleteRichDraftButton, Theme.key_glass_defaultIcon, resourcesProvider, PorterDuff.Mode.SRC_IN);
         deleteRichDraftButton.setBackground(Theme.createInsetRoundRectDrawable(getThemedColor(Theme.key_listSelector), dp(19), dp(1), dp(3)));
         deleteRichDraftButton.setVisibility(View.GONE);
@@ -2829,7 +2829,7 @@ public class ChatActivityEnterView extends FrameLayout implements
 
             if (chatMode != ChatActivity.MODE_WELCOME_MESSAGES) {
                 notifyButton = new ImageView(context);
-                notifySilentDrawable = new CrossOutDrawable(context, R.drawable.input_notify_on, Theme.key_glass_defaultIcon);
+                notifySilentDrawable = new CrossOutDrawable(context, R.drawable.solar_msg_notifications, Theme.key_glass_defaultIcon);
                 notifyButton.setImageDrawable(notifySilentDrawable);
                 notifySilentDrawable.setCrossOut(silent, false);
                 notifyButton.setContentDescription(silent ? getString("AccDescrChanSilentOn", R.string.AccDescrChanSilentOn) : getString("AccDescrChanSilentOff", R.string.AccDescrChanSilentOff));
@@ -2844,7 +2844,7 @@ public class ChatActivityEnterView extends FrameLayout implements
                         if (fragment == null) return;
                         silent = !silent;
                         if (notifySilentDrawable == null) {
-                            notifySilentDrawable = new CrossOutDrawable(context, R.drawable.input_notify_on, Theme.key_glass_defaultIcon);
+                            notifySilentDrawable = new CrossOutDrawable(context, R.drawable.solar_msg_notifications, Theme.key_glass_defaultIcon);
                         }
                         notifySilentDrawable.setCrossOut(silent, true);
                         notifyButton.setImageDrawable(notifySilentDrawable);
@@ -2869,7 +2869,7 @@ public class ChatActivityEnterView extends FrameLayout implements
             };
             attachButton.setScaleType(ImageView.ScaleType.CENTER);
             ThemeBind.colorFilter(attachButton, Theme.key_glass_defaultIcon, resourcesProvider, PorterDuff.Mode.MULTIPLY);
-            attachButton.setImageResource(R.drawable.msg_input_attach2);
+            attachButton.setImageResource(R.drawable.solar_msg_camera);
             ThemeBind.selectorBackground(attachButton, Theme.createSelectorDrawable(getThemedColor(Theme.key_listSelector)), null, ThemeBind.of(Theme.key_listSelector), resourcesProvider);
             messageEditTextContainer.addView(attachButton, LayoutHelper.createFrame(DEFAULT_HEIGHT, DEFAULT_HEIGHT, Gravity.BOTTOM | Gravity.RIGHT));
             attachButton.setOnClickListener(v -> {
@@ -3482,10 +3482,10 @@ public class ChatActivityEnterView extends FrameLayout implements
 //            return true;
 //        });
 
-        micOutline = getResources().getDrawable(R.drawable.input_mic).mutate();
+        micOutline = getResources().getDrawable(R.drawable.solar_msg_microphone).mutate();
         ThemeBind.drawableColorFilter(this, micOutline, Theme.key_glass_defaultIcon, resourcesProvider, PorterDuff.Mode.MULTIPLY);
 
-        cameraOutline = getResources().getDrawable(R.drawable.input_video).mutate();
+        cameraOutline = getResources().getDrawable(R.drawable.solar_msg_camera).mutate();
         ThemeBind.drawableColorFilter(this, cameraOutline, Theme.key_glass_defaultIcon, resourcesProvider, PorterDuff.Mode.MULTIPLY);
 
         audioVideoSendButton = new ChatActivityEnterViewAnimatedIconView(context, 24) {
@@ -3804,7 +3804,7 @@ public class ChatActivityEnterView extends FrameLayout implements
                 }
             }
         };
-        giftButton.setImageResource(R.drawable.msg_input_gift);
+        giftButton.setImageResource(R.drawable.solar_msg_gift_premium);
         ThemeBind.colorFilter(giftButton, Theme.key_glass_defaultIcon, resourcesProvider, PorterDuff.Mode.MULTIPLY);
         giftButton.setVisibility(GONE);
         giftButton.setContentDescription(getString(R.string.GiftPremium));
@@ -3856,7 +3856,7 @@ public class ChatActivityEnterView extends FrameLayout implements
         suggestButton = new ImageView(getContext());
         suggestButton.setScaleType(ImageView.ScaleType.CENTER);
         ThemeBind.colorFilter(suggestButton, Theme.key_glass_defaultIcon, resourcesProvider, PorterDuff.Mode.MULTIPLY);
-        suggestButton.setImageResource(R.drawable.input_suggest_paid_24);
+        suggestButton.setImageResource(R.drawable.solar_msg_gift_premium);
         ThemeBind.selectorBackground(suggestButton, Theme.createSelectorDrawable(getThemedColor(Theme.key_listSelector)), null, ThemeBind.of(Theme.key_listSelector), resourcesProvider);
         if (isLiveComment) {
             suggestButton.setTranslationX(dp(42));
@@ -3948,7 +3948,7 @@ public class ChatActivityEnterView extends FrameLayout implements
         };
         botButton.setImageDrawable(botButtonDrawable = new ReplaceableIconDrawable(getContext()));
         ThemeBind.drawableColorFilter(this, botButtonDrawable, Theme.key_glass_defaultIcon, resourcesProvider, PorterDuff.Mode.MULTIPLY);
-        botButtonDrawable.setIcon(R.drawable.input_bot2, false);
+        botButtonDrawable.setIcon(R.drawable.solar_msg_contacts, false);
         botButton.setScaleType(ImageView.ScaleType.CENTER);
         ThemeBind.selectorBackground(botButton, Theme.createSelectorDrawable(getThemedColor(Theme.key_listSelector)), null, ThemeBind.of(Theme.key_listSelector), resourcesProvider);
         botButton.setVisibility(GONE);
@@ -3990,7 +3990,7 @@ public class ChatActivityEnterView extends FrameLayout implements
             return;
         }
 
-        doneButton = new SendButton(getContext(), R.drawable.input_done, resourcesProvider, true) {
+        doneButton = new SendButton(getContext(), R.drawable.solar_msg_edit, resourcesProvider, true) {
             @Override
             public boolean isOpen() {
                 return true;
@@ -4907,7 +4907,7 @@ public class ChatActivityEnterView extends FrameLayout implements
                 }
                 if (sendWithoutSoundButtonValue) {
                     ActionBarMenuSubItem sendWithoutSoundButton = new ActionBarMenuSubItem(getContext(), !scheduleButtonValue, true, resourcesProvider);
-                    sendWithoutSoundButton.setTextAndIcon(LocaleController.getString(R.string.SendWithoutSound), R.drawable.input_notify_off);
+                    sendWithoutSoundButton.setTextAndIcon(LocaleController.getString(R.string.SendWithoutSound), R.drawable.solar_msg_notifications);
                     sendWithoutSoundButton.setMinimumWidth(dp(196));
                     sendWithoutSoundButton.setOnClickListener(v -> {
                         if (sendPopupWindow != null && sendPopupWindow.isShowing()) {
@@ -5151,7 +5151,7 @@ public class ChatActivityEnterView extends FrameLayout implements
         }
 
         if (parentFragment != null && delegate != null && ChatObject.isMonoForum(parentFragment.getCurrentChat())) {
-            options.add(R.drawable.input_suggest_paid_24, getString(R.string.PostSuggestionsSendWithOffer), () -> {
+            options.add(R.drawable.solar_msg_gift_premium, getString(R.string.PostSuggestionsSendWithOffer), () -> {
                 if (messageSendPreview != null) {
                     messageSendPreview.dismiss(false);
                     messageSendPreview = null;
@@ -5163,7 +5163,7 @@ public class ChatActivityEnterView extends FrameLayout implements
                 }, 600);
             });
             /*
-            options.add(R.drawable.input_suggest_paid_24, getString(R.string.PostSuggestionsSendWithOffer), () -> {
+            options.add(R.drawable.solar_msg_gift_premium, getString(R.string.PostSuggestionsSendWithOffer), () -> {
                 new StarsSuggestionSheet(getContext(), currentAccount, parentFragment.getDialogId(),
                         parentFragment.messageSuggestionParams != null ? parentFragment.messageSuggestionParams: MessageSuggestionParams.empty(),
                         parentFragment, resourcesProvider, StarsSuggestionSheet.MODE_INPUT, (params) -> {
@@ -5181,7 +5181,7 @@ public class ChatActivityEnterView extends FrameLayout implements
         }
 
         if (sendWithoutSoundButtonValue) {
-            options.add(R.drawable.input_notify_off, getString(R.string.SendWithoutSound), () -> {
+            options.add(R.drawable.solar_msg_notifications, getString(R.string.SendWithoutSound), () -> {
                 sentFromPreview = System.currentTimeMillis();
                 final boolean shownDialog = sendMessageInternal(false, 0, 0, 0, true);
                 if (!containsSendMessage && messageSendPreview != null) {
@@ -7003,7 +7003,7 @@ public class ChatActivityEnterView extends FrameLayout implements
         }
         if (!sendPlainEnabled && !isEditingMessage()) {
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(" d " + getString("PlainTextRestrictedHint", R.string.PlainTextRestrictedHint));
-            spannableStringBuilder.setSpan(new ColoredImageSpan(R.drawable.msg_mini_lock3), 1, 2, 0);
+            spannableStringBuilder.setSpan(new ColoredImageSpan(R.drawable.solar_ghost), 1, 2, 0);
             messageEditText.setHintText(spannableStringBuilder, animated);
             messageEditText.setText(null);
             messageEditText.setEnabled(false);
@@ -11334,7 +11334,7 @@ public class ChatActivityEnterView extends FrameLayout implements
             if (notifyButton != null) {
                 notifyVisible = canWriteToChannel;
                 if (notifySilentDrawable == null) {
-                    notifySilentDrawable = new CrossOutDrawable(getContext(), R.drawable.input_notify_on, Theme.key_glass_defaultIcon);
+                    notifySilentDrawable = new CrossOutDrawable(getContext(), R.drawable.solar_msg_notifications, Theme.key_glass_defaultIcon);
                 }
                 notifySilentDrawable.setCrossOut(silent, false);
                 notifyButton.setImageDrawable(notifySilentDrawable);
@@ -11601,13 +11601,13 @@ public class ChatActivityEnterView extends FrameLayout implements
                         botButton.setVisibility(VISIBLE);
                     }
 
-                    botButtonDrawable.setIcon(R.drawable.input_bot2, true);
+                    botButtonDrawable.setIcon(R.drawable.solar_msg_contacts, true);
                     botButton.setContentDescription(getString("AccDescrBotKeyboard", R.string.AccDescrBotKeyboard));
                 }
             } else {
                 if (!canShowBotsMenu) {
                     createBotButton();
-                    botButtonDrawable.setIcon(R.drawable.input_bot1, true);
+                    botButtonDrawable.setIcon(R.drawable.solar_msg_contacts, true);
                     botButton.setContentDescription(getString("AccDescrBotCommands", R.string.AccDescrBotCommands));
                     botButton.setVisibility(VISIBLE);
                 } else if (botButton != null) {
@@ -15698,7 +15698,7 @@ public class ChatActivityEnterView extends FrameLayout implements
             canvas.drawCircle(_cx, _cy, sz / 2f + dp(2), Theme.PAINT_CLEAR);
             canvas.drawCircle(_cx, _cy, sz / 2f, backgroundPaint);
             if (lockIcon == null) {
-                lockIcon = getContext().getResources().getDrawable(R.drawable.mini_switch_lock).mutate();
+                lockIcon = getContext().getResources().getDrawable(R.drawable.solar_ghost).mutate();
                 lockIcon.setColorFilter(new PorterDuffColorFilter(lockIconColor = drawableColor, PorterDuff.Mode.SRC_IN));
             }
             if (lockIconColor != drawableColor) {
