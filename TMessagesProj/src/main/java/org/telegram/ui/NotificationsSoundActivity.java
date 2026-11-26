@@ -386,8 +386,8 @@ public class NotificationsSoundActivity extends BaseFragment implements ChatAtta
         final SimpleActionBarMenu actionMode = simpleActionBar.createActionMode();
 
 
-        actionMode.addItemWithWidth(shareId, R.drawable.msg_forward, AndroidUtilities.dp(54), LocaleController.getString(R.string.ShareFile));
-        actionMode.addItemWithWidth(deleteId, R.drawable.msg_delete, AndroidUtilities.dp(54), LocaleController.getString(R.string.Delete));
+        actionMode.addItemWithWidth(shareId, R.drawable.solar_msg_share, AndroidUtilities.dp(54), LocaleController.getString(R.string.ShareFile));
+        actionMode.addItemWithWidth(deleteId, R.drawable.solar_msg_delete, AndroidUtilities.dp(54), LocaleController.getString(R.string.Delete));
 
         fragmentView = containerView = new FrameLayout(context);
         FrameLayout frameLayout = containerView;
@@ -739,8 +739,8 @@ public class NotificationsSoundActivity extends BaseFragment implements ChatAtta
                     break;
                 case 2:
                     CreationTextCell textCell = (CreationTextCell) holder.itemView;
-                    Drawable drawable1 = textCell.getContext().getResources().getDrawable(R.drawable.poll_add_circle);
-                    Drawable drawable2 = textCell.getContext().getResources().getDrawable(R.drawable.poll_add_plus);
+                    Drawable drawable1 = textCell.getContext().getResources().getDrawable(R.drawable.solar_msg_add);
+                    Drawable drawable2 = textCell.getContext().getResources().getDrawable(R.drawable.solar_msg_add);
                     ThemeBind.drawableColorFilter(textCell, drawable1, Theme.key_switchTrackChecked, resourcesProvider, PorterDuff.Mode.MULTIPLY);
                     ThemeBind.drawableColorFilter(textCell, drawable2, Theme.key_checkboxCheck, resourcesProvider, PorterDuff.Mode.MULTIPLY);
                     CombinedDrawable combinedDrawable = new CombinedDrawable(drawable1, drawable2);
