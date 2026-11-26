@@ -3971,7 +3971,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             }
         }
         if (imageUpdater != null && !myProfile) {
-            searchItem = menu.addItem(search_button, R.drawable.outline_header_search).setIsSearchField(true).setActionBarMenuItemSearchListener(new ActionBarMenuItem.ActionBarMenuItemSearchListener() {
+            searchItem = menu.addItem(search_button, R.drawable.solar_msg_search).setIsSearchField(true).setActionBarMenuItemSearchListener(new ActionBarMenuItem.ActionBarMenuItemSearchListener() {
 
                 @Override
                 public Animator getCustomToggleTransition() {
@@ -12294,7 +12294,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                             otherItem.addSubItem(share, R.drawable.msg_share, LocaleController.getString(R.string.BotShare));
                             shareAction = true;
                         } else {
-                            otherItem.addSubItem(add_contact, R.drawable.msg_addcontact, LocaleController.getString(R.string.AddContact));
+                            otherItem.addSubItem(add_contact, R.drawable.solar_msg_contacts, LocaleController.getString(R.string.AddContact));
                         }
                         if (!TextUtils.isEmpty(user.phone)) {
                             otherItem.addSubItem(share_contact, R.drawable.msg_share, LocaleController.getString(R.string.ShareContact));
@@ -12336,7 +12336,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     if (getMessagesController().config.walletAvailable.get() && !MessagesController.isSupportUser(user) && !UserObject.isService(user.id)) {
                         otherItem.addSubItem(send_money, R.drawable.ic_gram, LocaleController.getString(R.string.WalletSendMoney));
                     }
-                    otherItem.addSubItem(start_secret_chat, R.drawable.msg_secret, LocaleController.getString(R.string.StartEncryptedChat));
+                    otherItem.addSubItem(start_secret_chat, R.drawable.solar_msg_secret, LocaleController.getString(R.string.StartEncryptedChat));
                     otherItem.setSubItemShown(start_secret_chat, DialogObject.isEmpty(getMessagesController().isUserContactBlocked(userId)));
 
                     if (userInfo != null) {
@@ -12387,15 +12387,15 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     voiceChatAction = call != null || voiceChatAction;
                 }
                 if (getMessagesController().getStoriesController().canPostStories(chat)) {
-                    otherItem.addSubItem(channel_stories, R.drawable.msg_archive, LocaleController.getString(R.string.OpenChannelArchiveStories));
+                    otherItem.addSubItem(channel_stories, R.drawable.solar_msg_archive, LocaleController.getString(R.string.OpenChannelArchiveStories));
                     addStoryAction = true;
                 } else if (getMessagesController().getStoriesController().canEditStories(chat)) {
-                    otherItem.addSubItem(channel_stories, R.drawable.msg_archive, LocaleController.getString(R.string.OpenChannelArchiveStories));
+                    otherItem.addSubItem(channel_stories, R.drawable.solar_msg_archive, LocaleController.getString(R.string.OpenChannelArchiveStories));
                 }
                 if (chat.megagroup) {
                     if (chatInfo == null || !chatInfo.participants_hidden || ChatObject.hasAdminRights(chat)) {
                         canSearchMembers = true;
-                        otherItem.addSubItem(search_members, R.drawable.msg_search, LocaleController.getString(R.string.SearchMembers));
+                        otherItem.addSubItem(search_members, R.drawable.solar_msg_search, LocaleController.getString(R.string.SearchMembers));
                     }
                     if (isTopic && ChatObject.canDeleteTopic(currentAccount, chat, topicId)) {
                         otherItem.addSubItem(delete_topic, R.drawable.msg_delete, LocaleController.getPluralString("DeleteTopics", 1));
@@ -12463,7 +12463,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 if (!ChatObject.isKickedFromChat(chat) && !ChatObject.isLeftFromChat(chat)) {
                     if (chatInfo == null || !chatInfo.participants_hidden || ChatObject.hasAdminRights(chat)) {
                         canSearchMembers = true;
-                        otherItem.addSubItem(search_members, R.drawable.msg_search, LocaleController.getString(R.string.SearchMembers));
+                        otherItem.addSubItem(search_members, R.drawable.solar_msg_search, LocaleController.getString(R.string.SearchMembers));
                     }
                 }
                 if (topicId == 0) {
@@ -13861,15 +13861,15 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     } else if (position == subscribersRow) {
                         if (chatInfo != null) {
                             if (ChatObject.isChannel(currentChat) && !currentChat.megagroup) {
-                                textCell.setTextAndValueAndIcon(LocaleController.getString(R.string.ChannelSubscribers), LocaleController.formatNumber(chatInfo.participants_count, ','), R.drawable.msg_groups, position != membersSectionRow - 1);
+                                textCell.setTextAndValueAndIcon(LocaleController.getString(R.string.ChannelSubscribers), LocaleController.formatNumber(chatInfo.participants_count, ','), R.drawable.solar_msg_groups, position != membersSectionRow - 1);
                             } else {
-                                textCell.setTextAndValueAndIcon(LocaleController.getString(R.string.ChannelMembers), LocaleController.formatNumber(chatInfo.participants_count, ','), R.drawable.msg_groups, position != membersSectionRow - 1);
+                                textCell.setTextAndValueAndIcon(LocaleController.getString(R.string.ChannelMembers), LocaleController.formatNumber(chatInfo.participants_count, ','), R.drawable.solar_msg_groups, position != membersSectionRow - 1);
                             }
                         } else {
                             if (ChatObject.isChannel(currentChat) && !currentChat.megagroup) {
-                                textCell.setTextAndIcon(LocaleController.getString(R.string.ChannelSubscribers), R.drawable.msg_groups, position != membersSectionRow - 1);
+                                textCell.setTextAndIcon(LocaleController.getString(R.string.ChannelSubscribers), R.drawable.solar_msg_groups, position != membersSectionRow - 1);
                             } else {
-                                textCell.setTextAndIcon(LocaleController.getString(R.string.ChannelMembers), R.drawable.msg_groups, position != membersSectionRow - 1);
+                                textCell.setTextAndIcon(LocaleController.getString(R.string.ChannelMembers), R.drawable.solar_msg_groups, position != membersSectionRow - 1);
                             }
                         }
                     } else if (position == subscribersRequestsRow) {
@@ -13883,7 +13883,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                             textCell.setTextAndIcon(LocaleController.getString(R.string.ChannelAdministrators), R.drawable.msg_admins, position != membersSectionRow - 1);
                         }
                     } else if (position == settingsRow) {
-                        textCell.setTextAndIcon(LocaleController.getString(R.string.ChannelAdminSettings), R.drawable.msg_customize, position != membersSectionRow - 1);
+                        textCell.setTextAndIcon(LocaleController.getString(R.string.ChannelAdminSettings), R.drawable.solar_msg_theme, position != membersSectionRow - 1);
                     } else if (position == channelBalanceRow) {
                         final TL_stars.StarsAmount stars_balance = BotStarsController.getInstance(currentAccount).getBotStarsBalance(-chatId);
                         final long ton_balance = BotStarsController.getInstance(currentAccount).getTONBalance(-chatId);
@@ -13939,11 +13939,11 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     } else if (position == addMemberRow) {
                         textCell.setColors(Theme.key_windowBackgroundWhiteGrayIcon, Theme.key_windowBackgroundWhiteBlackText);
                         boolean isNextPositionMember = position + 1 >= membersStartRow && position + 1 < membersEndRow;
-                        textCell.setTextAndIcon(LocaleController.getString(R.string.AddMember), R.drawable.msg_contact_add, membersSectionRow == -1 || isNextPositionMember);
+                        textCell.setTextAndIcon(LocaleController.getString(R.string.AddMember), R.drawable.solar_msg_contacts, membersSectionRow == -1 || isNextPositionMember);
                     } else if (position == sendMessageRow) {
                         textCell.setText(LocaleController.getString(R.string.SendMessageLocation), true);
                     } else if (position == addToContactsRow) {
-                        textCell.setTextAndIcon(LocaleController.getString(R.string.AddToContacts), R.drawable.msg_contact_add, false);
+                        textCell.setTextAndIcon(LocaleController.getString(R.string.AddToContacts), R.drawable.solar_msg_contacts, false);
                         textCell.setColors(Theme.key_windowBackgroundWhiteGrayIcon, Theme.key_windowBackgroundWhiteBlackText);
                     } else if (position == deleteReactionRow) {
                         textCell.setTextAndIcon(LocaleController.getString(R.string.DeleteReactionMenu), R.drawable.menu_reaction_delete_24, false);
@@ -13962,28 +13962,28 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         textCell.setColors(-1, Theme.key_text_RedRegular);
                         textCell.setColors(-1, Theme.key_text_RedRegular);
                     } else if (position == languageRow) {
-                        textCell.setTextAndValueAndIcon(LocaleController.getString(R.string.Language), LocaleController.getCurrentLanguageName(), false, R.drawable.msg2_language, false);
+                        textCell.setTextAndValueAndIcon(LocaleController.getString(R.string.Language), LocaleController.getCurrentLanguageName(), false, R.drawable.solar_msg_language, false);
                         textCell.setImageLeft(23);
                     } else if (position == notificationRow) {
-                        textCell.setTextAndIcon(LocaleController.getString(R.string.NotificationsAndSounds), R.drawable.msg2_notifications, true);
+                        textCell.setTextAndIcon(LocaleController.getString(R.string.NotificationsAndSounds), R.drawable.solar_msg_notifications, true);
                     } else if (position == privacyRow) {
-                        textCell.setTextAndIcon(LocaleController.getString(R.string.PrivacySettings), R.drawable.msg2_secret, true);
+                        textCell.setTextAndIcon(LocaleController.getString(R.string.PrivacySettings), R.drawable.solar_msg_secret, true);
                     } else if (position == dataRow) {
-                        textCell.setTextAndIcon(LocaleController.getString(R.string.DataSettings), R.drawable.msg2_data, true);
+                        textCell.setTextAndIcon(LocaleController.getString(R.string.DataSettings), R.drawable.solar_msg_data, true);
                     } else if (position == chatRow) {
-                        textCell.setTextAndIcon(LocaleController.getString(R.string.ChatSettings), R.drawable.msg2_discussion, true);
+                        textCell.setTextAndIcon(LocaleController.getString(R.string.ChatSettings), R.drawable.solar_msg_discuss, true);
                     } else if (position == filtersRow) {
-                        textCell.setTextAndIcon(LocaleController.getString(R.string.Filters), R.drawable.msg2_folder, true);
+                        textCell.setTextAndIcon(LocaleController.getString(R.string.Filters), R.drawable.solar_msg_folder, true);
                     } else if (position == stickersRow) {
-                        textCell.setTextAndIcon(LocaleController.getString(R.string.StickersName), R.drawable.msg2_sticker, true);
+                        textCell.setTextAndIcon(LocaleController.getString(R.string.StickersName), R.drawable.solar_msg_sticker, true);
                     } else if (position == liteModeRow) {
                         textCell.setTextAndIcon(LocaleController.getString(R.string.PowerUsage), R.drawable.msg2_battery, true);
                     } else if (position == questionRow) {
-                        textCell.setTextAndIcon(LocaleController.getString(R.string.AskAQuestion), R.drawable.msg2_ask_question, true);
+                        textCell.setTextAndIcon(LocaleController.getString(R.string.AskAQuestion), R.drawable.solar_msg_info, true);
                     } else if (position == faqRow) {
-                        textCell.setTextAndIcon(LocaleController.getString(R.string.TelegramFAQ), R.drawable.msg2_help, true);
+                        textCell.setTextAndIcon(LocaleController.getString(R.string.TelegramFAQ), R.drawable.solar_msg_info, true);
                     } else if (position == policyRow) {
-                        textCell.setTextAndIcon(LocaleController.getString(R.string.PrivacyPolicy), R.drawable.msg2_policy, false);
+                        textCell.setTextAndIcon(LocaleController.getString(R.string.PrivacyPolicy), R.drawable.solar_msg_info, false);
                     } else if (position == sendLogsRow) {
                         textCell.setText(LocaleController.getString(R.string.DebugSendLogs), true);
                     } else if (position == sendLastLogsRow) {
@@ -13993,7 +13993,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     } else if (position == switchBackendRow) {
                         textCell.setText("Switch Backend", false);
                     } else if (position == devicesRow) {
-                        textCell.setTextAndIcon(LocaleController.getString(R.string.Devices), R.drawable.msg2_devices, true);
+                        textCell.setTextAndIcon(LocaleController.getString(R.string.Devices), R.drawable.solar_msg_groups, true);
                     } else if (position == setAvatarRow) {
                         cellCameraDrawable.setCustomEndFrame(86);
                         cellCameraDrawable.setCurrentFrame(85, false);
@@ -14003,7 +14003,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         textCell.setImageLeft(12);
                         setAvatarCell = textCell;
                     } else if (position == addToGroupButtonRow) {
-                        textCell.setTextAndIcon(LocaleController.getString(R.string.AddToGroupOrChannel), R.drawable.msg_groups_create, false);
+                        textCell.setTextAndIcon(LocaleController.getString(R.string.AddToGroupOrChannel), R.drawable.solar_msg_groups_create, false);
                     } else if (position == premiumRow) {
                         textCell.setTextAndIcon(LocaleController.getString(R.string.TelegramPremium), new AnimatedEmojiDrawable.WrapSizeDrawable(PremiumGradient.getInstance().premiumStarMenuDrawable, dp(24), dp(24)), true);
                         textCell.setImageLeft(23);
@@ -14694,112 +14694,112 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
 //                    }),
 //                    new SearchResult(504, getString(R.string.AddPhoto), 0, f::onWriteButtonClick),
 
-                    new SearchResult(1, getString(R.string.NotificationsAndSounds), R.drawable.msg_notifications, () -> f.presentFragment(new NotificationsSettingsActivity())).withLink("tg://settings/notifications"),
-                    new SearchResult(2, getString(R.string.NotificationsPrivateChats), getString(R.string.NotificationsAndSounds), R.drawable.msg_notifications, () -> f.presentFragment(new NotificationsCustomSettingsActivity(NotificationsController.TYPE_PRIVATE, new ArrayList<>(), null, true))).withLink("tg://settings/notifications/private-chats"),
-                    new SearchResult(3, getString(R.string.NotificationsGroups), getString(R.string.NotificationsAndSounds), R.drawable.msg_notifications, () -> f.presentFragment(new NotificationsCustomSettingsActivity(NotificationsController.TYPE_GROUP, new ArrayList<>(), null, true))).withLink("tg://settings/notifications/groups"),
-                    new SearchResult(4, getString(R.string.NotificationsChannels), getString(R.string.NotificationsAndSounds), R.drawable.msg_notifications, () -> f.presentFragment(new NotificationsCustomSettingsActivity(NotificationsController.TYPE_CHANNEL, new ArrayList<>(), null, true))).withLink("tg://settings/notifications/channels"),
-                    new SearchResult(5, getString(R.string.VoipNotificationSettings), "callsSectionRow", getString(R.string.NotificationsAndSounds), R.drawable.msg_notifications, () -> f.presentFragment(new NotificationsSettingsActivity())),
-                    new SearchResult(6, getString(R.string.BadgeNumber), "badgeNumberSection", getString(R.string.NotificationsAndSounds), R.drawable.msg_notifications, () -> f.presentFragment(new NotificationsSettingsActivity())),
-                    new SearchResult(7, getString(R.string.InAppNotifications), "inappSectionRow", getString(R.string.NotificationsAndSounds), R.drawable.msg_notifications, () -> f.presentFragment(new NotificationsSettingsActivity())),
-                    new SearchResult(8, getString(R.string.ContactJoined), "contactJoinedRow", getString(R.string.NotificationsAndSounds), R.drawable.msg_notifications, () -> f.presentFragment(new NotificationsSettingsActivity())).withLink("tg://settings/notifications/new-contacts"),
-                    new SearchResult(9, getString(R.string.PinnedMessages), "pinnedMessageRow", getString(R.string.NotificationsAndSounds), R.drawable.msg_notifications, () -> f.presentFragment(new NotificationsSettingsActivity())).withLink("tg://settings/notifications/pinned-messages"),
-                    new SearchResult(10, getString(R.string.ResetAllNotifications), "resetNotificationsRow", getString(R.string.NotificationsAndSounds), R.drawable.msg_notifications, () -> f.presentFragment(new NotificationsSettingsActivity())).withLink("tg://settings/notifications/reset"),
-                    new SearchResult(11, getString(R.string.NotificationsService), "notificationsServiceRow", getString(R.string.NotificationsAndSounds), R.drawable.msg_notifications, () -> f.presentFragment(new NotificationsSettingsActivity())),
-                    new SearchResult(12, getString(R.string.NotificationsServiceConnection), "notificationsServiceConnectionRow", getString(R.string.NotificationsAndSounds), R.drawable.msg_notifications, () -> f.presentFragment(new NotificationsSettingsActivity())),
-                    new SearchResult(13, getString(R.string.RepeatNotifications), "repeatRow", getString(R.string.NotificationsAndSounds), R.drawable.msg_notifications, () -> f.presentFragment(new NotificationsSettingsActivity())),
+                    new SearchResult(1, getString(R.string.NotificationsAndSounds), R.drawable.solar_msg_notifications, () -> f.presentFragment(new NotificationsSettingsActivity())).withLink("tg://settings/notifications"),
+                    new SearchResult(2, getString(R.string.NotificationsPrivateChats), getString(R.string.NotificationsAndSounds), R.drawable.solar_msg_notifications, () -> f.presentFragment(new NotificationsCustomSettingsActivity(NotificationsController.TYPE_PRIVATE, new ArrayList<>(), null, true))).withLink("tg://settings/notifications/private-chats"),
+                    new SearchResult(3, getString(R.string.NotificationsGroups), getString(R.string.NotificationsAndSounds), R.drawable.solar_msg_notifications, () -> f.presentFragment(new NotificationsCustomSettingsActivity(NotificationsController.TYPE_GROUP, new ArrayList<>(), null, true))).withLink("tg://settings/notifications/groups"),
+                    new SearchResult(4, getString(R.string.NotificationsChannels), getString(R.string.NotificationsAndSounds), R.drawable.solar_msg_notifications, () -> f.presentFragment(new NotificationsCustomSettingsActivity(NotificationsController.TYPE_CHANNEL, new ArrayList<>(), null, true))).withLink("tg://settings/notifications/channels"),
+                    new SearchResult(5, getString(R.string.VoipNotificationSettings), "callsSectionRow", getString(R.string.NotificationsAndSounds), R.drawable.solar_msg_notifications, () -> f.presentFragment(new NotificationsSettingsActivity())),
+                    new SearchResult(6, getString(R.string.BadgeNumber), "badgeNumberSection", getString(R.string.NotificationsAndSounds), R.drawable.solar_msg_notifications, () -> f.presentFragment(new NotificationsSettingsActivity())),
+                    new SearchResult(7, getString(R.string.InAppNotifications), "inappSectionRow", getString(R.string.NotificationsAndSounds), R.drawable.solar_msg_notifications, () -> f.presentFragment(new NotificationsSettingsActivity())),
+                    new SearchResult(8, getString(R.string.ContactJoined), "contactJoinedRow", getString(R.string.NotificationsAndSounds), R.drawable.solar_msg_notifications, () -> f.presentFragment(new NotificationsSettingsActivity())).withLink("tg://settings/notifications/new-contacts"),
+                    new SearchResult(9, getString(R.string.PinnedMessages), "pinnedMessageRow", getString(R.string.NotificationsAndSounds), R.drawable.solar_msg_notifications, () -> f.presentFragment(new NotificationsSettingsActivity())).withLink("tg://settings/notifications/pinned-messages"),
+                    new SearchResult(10, getString(R.string.ResetAllNotifications), "resetNotificationsRow", getString(R.string.NotificationsAndSounds), R.drawable.solar_msg_notifications, () -> f.presentFragment(new NotificationsSettingsActivity())).withLink("tg://settings/notifications/reset"),
+                    new SearchResult(11, getString(R.string.NotificationsService), "notificationsServiceRow", getString(R.string.NotificationsAndSounds), R.drawable.solar_msg_notifications, () -> f.presentFragment(new NotificationsSettingsActivity())),
+                    new SearchResult(12, getString(R.string.NotificationsServiceConnection), "notificationsServiceConnectionRow", getString(R.string.NotificationsAndSounds), R.drawable.solar_msg_notifications, () -> f.presentFragment(new NotificationsSettingsActivity())),
+                    new SearchResult(13, getString(R.string.RepeatNotifications), "repeatRow", getString(R.string.NotificationsAndSounds), R.drawable.solar_msg_notifications, () -> f.presentFragment(new NotificationsSettingsActivity())),
 
-                    new SearchResult(100, getString(R.string.PrivacySettings), R.drawable.msg_secret, () -> f.presentFragment(new PrivacySettingsActivity())).withLink("tg://settings/privacy"),
-                    new SearchResult(109, getString(R.string.TwoStepVerification), getString(R.string.PrivacySettings), R.drawable.msg2_secret, () -> f.presentFragment(new TwoStepVerificationActivity())).withLink("tg://settings/privacy/2sv"),
-                    new SearchResult(124, getString(R.string.AutoDeleteMessages), getString(R.string.PrivacySettings), R.drawable.msg2_secret, () -> {
+                    new SearchResult(100, getString(R.string.PrivacySettings), R.drawable.solar_msg_secret, () -> f.presentFragment(new PrivacySettingsActivity())).withLink("tg://settings/privacy"),
+                    new SearchResult(109, getString(R.string.TwoStepVerification), getString(R.string.PrivacySettings), R.drawable.solar_msg_secret, () -> f.presentFragment(new TwoStepVerificationActivity())).withLink("tg://settings/privacy/2sv"),
+                    new SearchResult(124, getString(R.string.AutoDeleteMessages), getString(R.string.PrivacySettings), R.drawable.solar_msg_secret, () -> {
                         if (UserConfig.getInstance(currentAccount).getGlobalTTl() >= 0) {
                             f.presentFragment(new AutoDeleteMessagesActivity());
                         }
                     }).withLink("tg://settings/privacy/auto-delete"),
-                    new SearchResult(108, getString(R.string.Passcode), getString(R.string.PrivacySettings), R.drawable.msg2_secret, () -> f.presentFragment(PasscodeActivity.determineOpenFragment())).withLink("tg://settings/privacy/passcode"),
-                    SharedConfig.hasEmailLogin ? new SearchResult(125, getString(R.string.EmailLogin), "emailLoginRow", getString(R.string.PrivacySettings), R.drawable.msg2_secret, () -> f.presentFragment(new PrivacySettingsActivity())).withLink("tg://settings/privacy/login-email") : null,
-                    new SearchResult(101, getString(R.string.BlockedUsers), getString(R.string.PrivacySettings), R.drawable.msg_secret, () -> f.presentFragment(new PrivacyUsersActivity().loadBlocked())).withLink("tg://settings/privacy/blocked"),
-                    new SearchResult(110, getString(R.string.SessionsTitle), R.drawable.msg2_secret, () -> f.presentFragment(new SessionsActivity(0))).withLink("tg://settings/devices"),
-                    new SearchResult(105, getString(R.string.PrivacyPhone), getString(R.string.PrivacySettings), R.drawable.msg_secret, () -> f.presentFragment(new PrivacyControlActivity(ContactsController.PRIVACY_RULES_TYPE_PHONE, true))).withLink("tg://settings/privacy/phone-number/"),
-                    new SearchResult(102, getString(R.string.PrivacyLastSeen), getString(R.string.PrivacySettings), R.drawable.msg_secret, () -> f.presentFragment(new PrivacyControlActivity(ContactsController.PRIVACY_RULES_TYPE_LASTSEEN, true))).withLink("tg://settings/privacy/last-seen"),
-                    new SearchResult(103, getString(R.string.PrivacyProfilePhoto), getString(R.string.PrivacySettings), R.drawable.msg_secret, () -> f.presentFragment(new PrivacyControlActivity(ContactsController.PRIVACY_RULES_TYPE_PHOTO, true))).withLink("tg://settings/privacy/profile-photos"),
-                    new SearchResult(104, getString(R.string.PrivacyForwards), getString(R.string.PrivacySettings), R.drawable.msg_secret, () -> f.presentFragment(new PrivacyControlActivity(ContactsController.PRIVACY_RULES_TYPE_FORWARDS, true))).withLink("tg://settings/privacy/forwards"),
-                    new SearchResult(122, getString(R.string.PrivacyP2P), getString(R.string.PrivacySettings), R.drawable.msg_secret, () -> f.presentFragment(new PrivacyControlActivity(ContactsController.PRIVACY_RULES_TYPE_P2P, true))).withLink("tg://settings/privacy/calls/p2p"),
-                    new SearchResult(106, getString(R.string.Calls), getString(R.string.PrivacySettings), R.drawable.msg_secret, () -> f.presentFragment(new PrivacyControlActivity(ContactsController.PRIVACY_RULES_TYPE_CALLS, true))).withLink("tg://settings/privacy/calls"),
-                    new SearchResult(107, getString(R.string.PrivacyInvites), getString(R.string.PrivacySettings), R.drawable.msg_secret, () -> f.presentFragment(new PrivacyControlActivity(ContactsController.PRIVACY_RULES_TYPE_INVITE, true))).withLink("tg://settings/privacy/invites"),
-                    new SearchResult(123, getString(R.string.PrivacyVoiceMessages), getString(R.string.PrivacySettings), R.drawable.msg_secret, () -> {
+                    new SearchResult(108, getString(R.string.Passcode), getString(R.string.PrivacySettings), R.drawable.solar_msg_secret, () -> f.presentFragment(PasscodeActivity.determineOpenFragment())).withLink("tg://settings/privacy/passcode"),
+                    SharedConfig.hasEmailLogin ? new SearchResult(125, getString(R.string.EmailLogin), "emailLoginRow", getString(R.string.PrivacySettings), R.drawable.solar_msg_secret, () -> f.presentFragment(new PrivacySettingsActivity())).withLink("tg://settings/privacy/login-email") : null,
+                    new SearchResult(101, getString(R.string.BlockedUsers), getString(R.string.PrivacySettings), R.drawable.solar_msg_secret, () -> f.presentFragment(new PrivacyUsersActivity().loadBlocked())).withLink("tg://settings/privacy/blocked"),
+                    new SearchResult(110, getString(R.string.SessionsTitle), R.drawable.solar_msg_secret, () -> f.presentFragment(new SessionsActivity(0))).withLink("tg://settings/devices"),
+                    new SearchResult(105, getString(R.string.PrivacyPhone), getString(R.string.PrivacySettings), R.drawable.solar_msg_secret, () -> f.presentFragment(new PrivacyControlActivity(ContactsController.PRIVACY_RULES_TYPE_PHONE, true))).withLink("tg://settings/privacy/phone-number/"),
+                    new SearchResult(102, getString(R.string.PrivacyLastSeen), getString(R.string.PrivacySettings), R.drawable.solar_msg_secret, () -> f.presentFragment(new PrivacyControlActivity(ContactsController.PRIVACY_RULES_TYPE_LASTSEEN, true))).withLink("tg://settings/privacy/last-seen"),
+                    new SearchResult(103, getString(R.string.PrivacyProfilePhoto), getString(R.string.PrivacySettings), R.drawable.solar_msg_secret, () -> f.presentFragment(new PrivacyControlActivity(ContactsController.PRIVACY_RULES_TYPE_PHOTO, true))).withLink("tg://settings/privacy/profile-photos"),
+                    new SearchResult(104, getString(R.string.PrivacyForwards), getString(R.string.PrivacySettings), R.drawable.solar_msg_secret, () -> f.presentFragment(new PrivacyControlActivity(ContactsController.PRIVACY_RULES_TYPE_FORWARDS, true))).withLink("tg://settings/privacy/forwards"),
+                    new SearchResult(122, getString(R.string.PrivacyP2P), getString(R.string.PrivacySettings), R.drawable.solar_msg_secret, () -> f.presentFragment(new PrivacyControlActivity(ContactsController.PRIVACY_RULES_TYPE_P2P, true))).withLink("tg://settings/privacy/calls/p2p"),
+                    new SearchResult(106, getString(R.string.Calls), getString(R.string.PrivacySettings), R.drawable.solar_msg_secret, () -> f.presentFragment(new PrivacyControlActivity(ContactsController.PRIVACY_RULES_TYPE_CALLS, true))).withLink("tg://settings/privacy/calls"),
+                    new SearchResult(107, getString(R.string.PrivacyInvites), getString(R.string.PrivacySettings), R.drawable.solar_msg_secret, () -> f.presentFragment(new PrivacyControlActivity(ContactsController.PRIVACY_RULES_TYPE_INVITE, true))).withLink("tg://settings/privacy/invites"),
+                    new SearchResult(123, getString(R.string.PrivacyVoiceMessages), getString(R.string.PrivacySettings), R.drawable.solar_msg_secret, () -> {
                         if (!UserConfig.getInstance(currentAccount).isPremium()) {
                             BulletinFactory.of(f).createRestrictVoiceMessagesPremiumBulletin().show();
                             return;
                         }
                         f.presentFragment(new PrivacyControlActivity(ContactsController.PRIVACY_RULES_TYPE_VOICE_MESSAGES, true));
                     }).withLink("tg://settings/privacy/voice"),
-                    MessagesController.getInstance(currentAccount).autoarchiveAvailable ? new SearchResult(121, getString(R.string.ArchiveAndMute), "newChatsRow", getString(R.string.PrivacySettings), R.drawable.msg2_secret, () -> f.presentFragment(new PrivacySettingsActivity())).withLink("tg://settings/privacy/archive-and-mute") : null,
-                    new SearchResult(112, getString(R.string.DeleteAccountIfAwayFor2), "deleteAccountRow", getString(R.string.PrivacySettings), R.drawable.msg2_secret, () -> f.presentFragment(new PrivacySettingsActivity())).withLink("tg://settings/privacy/self-destruct"),
-                    new SearchResult(113, getString(R.string.PrivacyPaymentsClear), "paymentsClearRow", getString(R.string.PrivacySettings), R.drawable.msg2_secret, () -> f.presentFragment(new PrivacySettingsActivity())).withLink("tg://settings/privacy/data-settings/clear-payment-info"),
-                    new SearchResult(114, getString(R.string.WebSessionsTitle), getString(R.string.PrivacySettings), R.drawable.msg2_secret, () -> f.presentFragment(new SessionsActivity(1))).withLink("tg://settings/privacy/active-websites"),
-                    new SearchResult(115, getString(R.string.SyncContactsDelete), "contactsDeleteRow", getString(R.string.PrivacySettings), R.drawable.msg2_secret, () -> f.presentFragment(new PrivacySettingsActivity())).withLink("tg://settings/privacy/data-settings/delete-synced"),
-                    new SearchResult(116, getString(R.string.SyncContacts), "contactsSyncRow", getString(R.string.PrivacySettings), R.drawable.msg2_secret, () -> f.presentFragment(new PrivacySettingsActivity())).withLink("tg://settings/privacy/data-settings/sync-contacts"),
-                    new SearchResult(117, getString(R.string.SuggestContacts), "contactsSuggestRow", getString(R.string.PrivacySettings), R.drawable.msg2_secret, () -> f.presentFragment(new PrivacySettingsActivity())).withLink("tg://settings/privacy/data-settings/suggest-contacts"),
-                    new SearchResult(118, getString(R.string.MapPreviewProvider), "secretMapRow", getString(R.string.PrivacySettings), R.drawable.msg2_secret, () -> f.presentFragment(new PrivacySettingsActivity())).withLink("tg://settings/privacy/data-settings/map-provider"),
-                    new SearchResult(119, getString(R.string.SecretWebPage), "secretWebpageRow", getString(R.string.PrivacySettings), R.drawable.msg2_secret, () -> f.presentFragment(new PrivacySettingsActivity())).withLink("tg://settings/privacy/data-settings/link-previews"),
+                    MessagesController.getInstance(currentAccount).autoarchiveAvailable ? new SearchResult(121, getString(R.string.ArchiveAndMute), "newChatsRow", getString(R.string.PrivacySettings), R.drawable.solar_msg_secret, () -> f.presentFragment(new PrivacySettingsActivity())).withLink("tg://settings/privacy/archive-and-mute") : null,
+                    new SearchResult(112, getString(R.string.DeleteAccountIfAwayFor2), "deleteAccountRow", getString(R.string.PrivacySettings), R.drawable.solar_msg_secret, () -> f.presentFragment(new PrivacySettingsActivity())).withLink("tg://settings/privacy/self-destruct"),
+                    new SearchResult(113, getString(R.string.PrivacyPaymentsClear), "paymentsClearRow", getString(R.string.PrivacySettings), R.drawable.solar_msg_secret, () -> f.presentFragment(new PrivacySettingsActivity())).withLink("tg://settings/privacy/data-settings/clear-payment-info"),
+                    new SearchResult(114, getString(R.string.WebSessionsTitle), getString(R.string.PrivacySettings), R.drawable.solar_msg_secret, () -> f.presentFragment(new SessionsActivity(1))).withLink("tg://settings/privacy/active-websites"),
+                    new SearchResult(115, getString(R.string.SyncContactsDelete), "contactsDeleteRow", getString(R.string.PrivacySettings), R.drawable.solar_msg_secret, () -> f.presentFragment(new PrivacySettingsActivity())).withLink("tg://settings/privacy/data-settings/delete-synced"),
+                    new SearchResult(116, getString(R.string.SyncContacts), "contactsSyncRow", getString(R.string.PrivacySettings), R.drawable.solar_msg_secret, () -> f.presentFragment(new PrivacySettingsActivity())).withLink("tg://settings/privacy/data-settings/sync-contacts"),
+                    new SearchResult(117, getString(R.string.SuggestContacts), "contactsSuggestRow", getString(R.string.PrivacySettings), R.drawable.solar_msg_secret, () -> f.presentFragment(new PrivacySettingsActivity())).withLink("tg://settings/privacy/data-settings/suggest-contacts"),
+                    new SearchResult(118, getString(R.string.MapPreviewProvider), "secretMapRow", getString(R.string.PrivacySettings), R.drawable.solar_msg_secret, () -> f.presentFragment(new PrivacySettingsActivity())).withLink("tg://settings/privacy/data-settings/map-provider"),
+                    new SearchResult(119, getString(R.string.SecretWebPage), "secretWebpageRow", getString(R.string.PrivacySettings), R.drawable.solar_msg_secret, () -> f.presentFragment(new PrivacySettingsActivity())).withLink("tg://settings/privacy/data-settings/link-previews"),
 
-                    new SearchResult(120, getString(R.string.Devices), R.drawable.msg2_devices, () -> f.presentFragment(new SessionsActivity(0))).withLink("tg://settings/devices"),
-                    new SearchResult(121, getString(R.string.TerminateAllSessions), "terminateAllSessionsRow", getString(R.string.Devices), R.drawable.msg2_devices, () -> f.presentFragment(new SessionsActivity(0))).withLink("tg://settings/devices/terminate-sessions"),
-                    new SearchResult(122, getString(R.string.LinkDesktopDevice), getString(R.string.Devices), R.drawable.msg2_devices, () -> f.presentFragment(new SessionsActivity(0).setHighlightLinkDesktopDevice())).withLink("tg://settings/devices/link-desktop"),
+                    new SearchResult(120, getString(R.string.Devices), R.drawable.solar_msg_groups, () -> f.presentFragment(new SessionsActivity(0))).withLink("tg://settings/devices"),
+                    new SearchResult(121, getString(R.string.TerminateAllSessions), "terminateAllSessionsRow", getString(R.string.Devices), R.drawable.solar_msg_groups, () -> f.presentFragment(new SessionsActivity(0))).withLink("tg://settings/devices/terminate-sessions"),
+                    new SearchResult(122, getString(R.string.LinkDesktopDevice), getString(R.string.Devices), R.drawable.solar_msg_groups, () -> f.presentFragment(new SessionsActivity(0).setHighlightLinkDesktopDevice())).withLink("tg://settings/devices/link-desktop"),
 
-                    new SearchResult(200, getString(R.string.DataSettings), R.drawable.msg2_data, () -> f.presentFragment(new DataSettingsActivity())).withLink("tg://settings/privacy/data-settings"),
-                    new SearchResult(201, getString(R.string.DataUsage), "usageSectionRow", getString(R.string.DataSettings), R.drawable.msg2_data, () -> f.presentFragment(new DataSettingsActivity())),
-                    new SearchResult(202, getString(R.string.StorageUsage), getString(R.string.DataSettings), R.drawable.msg2_data, () -> f.presentFragment(new CacheControlActivity())).withLink("tg://settings/data/storage"),
-                    new SearchResult(203, getString(R.string.KeepMedia), "keepMediaRow", getString(R.string.DataSettings), getString(R.string.StorageUsage), R.drawable.msg2_data, () -> f.presentFragment(new CacheControlActivity())),
-                    new SearchResult(204, getString(R.string.ClearMediaCache), "cacheRow", getString(R.string.DataSettings), getString(R.string.StorageUsage), R.drawable.msg2_data, () -> f.presentFragment(new CacheControlActivity())),
-                    new SearchResult(205, getString(R.string.LocalDatabase), "databaseRow", getString(R.string.DataSettings), getString(R.string.StorageUsage), R.drawable.msg2_data, () -> f.presentFragment(new CacheControlActivity())),
-                    new SearchResult(206, getString(R.string.NetworkUsage), getString(R.string.DataSettings), R.drawable.msg2_data, () -> f.presentFragment(new DataUsage2Activity())).withLink("tg://settings/data/usage"),
-                    new SearchResult(207, getString(R.string.AutomaticMediaDownload), "mediaDownloadSectionRow", getString(R.string.DataSettings), R.drawable.msg2_data, () -> f.presentFragment(new DataSettingsActivity())),
-                    new SearchResult(208, getString(R.string.WhenUsingMobileData), getString(R.string.DataSettings), R.drawable.msg2_data, () -> f.presentFragment(new DataAutoDownloadActivity(0))),
-                    new SearchResult(209, getString(R.string.WhenConnectedOnWiFi), getString(R.string.DataSettings), R.drawable.msg2_data, () -> f.presentFragment(new DataAutoDownloadActivity(1))),
-                    new SearchResult(210, getString(R.string.WhenRoaming), getString(R.string.DataSettings), R.drawable.msg2_data, () -> f.presentFragment(new DataAutoDownloadActivity(2))),
-                    new SearchResult(211, getString(R.string.ResetAutomaticMediaDownload), "resetDownloadRow", getString(R.string.DataSettings), R.drawable.msg2_data, () -> f.presentFragment(new DataSettingsActivity())).withLink("tg://settings/data/auto-download/reset"),
-                    new SearchResult(215, getString(R.string.Streaming), "streamSectionRow", getString(R.string.DataSettings), R.drawable.msg2_data, () -> f.presentFragment(new DataSettingsActivity())),
-                    new SearchResult(216, getString(R.string.EnableStreaming), "enableStreamRow", getString(R.string.DataSettings), R.drawable.msg2_data, () -> f.presentFragment(new DataSettingsActivity())),
-                    new SearchResult(217, getString(R.string.Calls), "callsSectionRow", getString(R.string.DataSettings), R.drawable.msg2_data, () -> f.presentFragment(new DataSettingsActivity())),
-                    new SearchResult(218, getString(R.string.VoipUseLessData), "useLessDataForCallsRow", getString(R.string.DataSettings), R.drawable.msg2_data, () -> f.presentFragment(new DataSettingsActivity())).withLink("tg://settings/data/use-less-data"),
-                    new SearchResult(219, getString(R.string.VoipQuickReplies), "quickRepliesRow", getString(R.string.DataSettings), R.drawable.msg2_data, () -> f.presentFragment(new DataSettingsActivity())),
-                    new SearchResult(220, getString(R.string.ProxySettings), getString(R.string.DataSettings), R.drawable.msg2_data, () -> f.presentFragment(new ProxyListActivity())).withLink("tg://settings/data/proxy"),
-                    new SearchResult(111, getString(R.string.PrivacyDeleteCloudDrafts), "clearDraftsRow", getString(R.string.DataSettings), R.drawable.msg2_data, () -> f.presentFragment(new DataSettingsActivity())).withLink("tg://settings/privacy/data-settings/delete-cloud-drafts"),
-                    new SearchResult(222, getString(R.string.SaveToGallery), "saveToGallerySectionRow", getString(R.string.DataSettings), R.drawable.msg2_data, () -> f.presentFragment(new DataSettingsActivity())),
-                    new SearchResult(223, getString(R.string.SaveToGalleryPrivate), "saveToGalleryPeerRow", getString(R.string.DataSettings), getString(R.string.SaveToGallery), R.drawable.msg2_data, () -> f.presentFragment(new DataSettingsActivity())).withLink("tg://settings/data/save-to-photos/chats"),
-                    new SearchResult(224, getString(R.string.SaveToGalleryGroups), "saveToGalleryGroupsRow", getString(R.string.DataSettings), getString(R.string.SaveToGallery), R.drawable.msg2_data, () -> f.presentFragment(new DataSettingsActivity())).withLink("tg://settings/data/save-to-photos/groups"),
-                    new SearchResult(225, getString(R.string.SaveToGalleryChannels), "saveToGalleryChannelsRow", getString(R.string.DataSettings), getString(R.string.SaveToGallery), R.drawable.msg2_data, () -> f.presentFragment(new DataSettingsActivity())).withLink("tg://settings/data/save-to-photos/channels"),
+                    new SearchResult(200, getString(R.string.DataSettings), R.drawable.solar_msg_data, () -> f.presentFragment(new DataSettingsActivity())).withLink("tg://settings/privacy/data-settings"),
+                    new SearchResult(201, getString(R.string.DataUsage), "usageSectionRow", getString(R.string.DataSettings), R.drawable.solar_msg_data, () -> f.presentFragment(new DataSettingsActivity())),
+                    new SearchResult(202, getString(R.string.StorageUsage), getString(R.string.DataSettings), R.drawable.solar_msg_data, () -> f.presentFragment(new CacheControlActivity())).withLink("tg://settings/data/storage"),
+                    new SearchResult(203, getString(R.string.KeepMedia), "keepMediaRow", getString(R.string.DataSettings), getString(R.string.StorageUsage), R.drawable.solar_msg_data, () -> f.presentFragment(new CacheControlActivity())),
+                    new SearchResult(204, getString(R.string.ClearMediaCache), "cacheRow", getString(R.string.DataSettings), getString(R.string.StorageUsage), R.drawable.solar_msg_data, () -> f.presentFragment(new CacheControlActivity())),
+                    new SearchResult(205, getString(R.string.LocalDatabase), "databaseRow", getString(R.string.DataSettings), getString(R.string.StorageUsage), R.drawable.solar_msg_data, () -> f.presentFragment(new CacheControlActivity())),
+                    new SearchResult(206, getString(R.string.NetworkUsage), getString(R.string.DataSettings), R.drawable.solar_msg_data, () -> f.presentFragment(new DataUsage2Activity())).withLink("tg://settings/data/usage"),
+                    new SearchResult(207, getString(R.string.AutomaticMediaDownload), "mediaDownloadSectionRow", getString(R.string.DataSettings), R.drawable.solar_msg_data, () -> f.presentFragment(new DataSettingsActivity())),
+                    new SearchResult(208, getString(R.string.WhenUsingMobileData), getString(R.string.DataSettings), R.drawable.solar_msg_data, () -> f.presentFragment(new DataAutoDownloadActivity(0))),
+                    new SearchResult(209, getString(R.string.WhenConnectedOnWiFi), getString(R.string.DataSettings), R.drawable.solar_msg_data, () -> f.presentFragment(new DataAutoDownloadActivity(1))),
+                    new SearchResult(210, getString(R.string.WhenRoaming), getString(R.string.DataSettings), R.drawable.solar_msg_data, () -> f.presentFragment(new DataAutoDownloadActivity(2))),
+                    new SearchResult(211, getString(R.string.ResetAutomaticMediaDownload), "resetDownloadRow", getString(R.string.DataSettings), R.drawable.solar_msg_data, () -> f.presentFragment(new DataSettingsActivity())).withLink("tg://settings/data/auto-download/reset"),
+                    new SearchResult(215, getString(R.string.Streaming), "streamSectionRow", getString(R.string.DataSettings), R.drawable.solar_msg_data, () -> f.presentFragment(new DataSettingsActivity())),
+                    new SearchResult(216, getString(R.string.EnableStreaming), "enableStreamRow", getString(R.string.DataSettings), R.drawable.solar_msg_data, () -> f.presentFragment(new DataSettingsActivity())),
+                    new SearchResult(217, getString(R.string.Calls), "callsSectionRow", getString(R.string.DataSettings), R.drawable.solar_msg_data, () -> f.presentFragment(new DataSettingsActivity())),
+                    new SearchResult(218, getString(R.string.VoipUseLessData), "useLessDataForCallsRow", getString(R.string.DataSettings), R.drawable.solar_msg_data, () -> f.presentFragment(new DataSettingsActivity())).withLink("tg://settings/data/use-less-data"),
+                    new SearchResult(219, getString(R.string.VoipQuickReplies), "quickRepliesRow", getString(R.string.DataSettings), R.drawable.solar_msg_data, () -> f.presentFragment(new DataSettingsActivity())),
+                    new SearchResult(220, getString(R.string.ProxySettings), getString(R.string.DataSettings), R.drawable.solar_msg_data, () -> f.presentFragment(new ProxyListActivity())).withLink("tg://settings/data/proxy"),
+                    new SearchResult(111, getString(R.string.PrivacyDeleteCloudDrafts), "clearDraftsRow", getString(R.string.DataSettings), R.drawable.solar_msg_data, () -> f.presentFragment(new DataSettingsActivity())).withLink("tg://settings/privacy/data-settings/delete-cloud-drafts"),
+                    new SearchResult(222, getString(R.string.SaveToGallery), "saveToGallerySectionRow", getString(R.string.DataSettings), R.drawable.solar_msg_data, () -> f.presentFragment(new DataSettingsActivity())),
+                    new SearchResult(223, getString(R.string.SaveToGalleryPrivate), "saveToGalleryPeerRow", getString(R.string.DataSettings), getString(R.string.SaveToGallery), R.drawable.solar_msg_data, () -> f.presentFragment(new DataSettingsActivity())).withLink("tg://settings/data/save-to-photos/chats"),
+                    new SearchResult(224, getString(R.string.SaveToGalleryGroups), "saveToGalleryGroupsRow", getString(R.string.DataSettings), getString(R.string.SaveToGallery), R.drawable.solar_msg_data, () -> f.presentFragment(new DataSettingsActivity())).withLink("tg://settings/data/save-to-photos/groups"),
+                    new SearchResult(225, getString(R.string.SaveToGalleryChannels), "saveToGalleryChannelsRow", getString(R.string.DataSettings), getString(R.string.SaveToGallery), R.drawable.solar_msg_data, () -> f.presentFragment(new DataSettingsActivity())).withLink("tg://settings/data/save-to-photos/channels"),
 
-                    new SearchResult(300, getString(R.string.ChatSettings), R.drawable.msg2_discussion, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))).withLink("tg://settings/appearance/themes"),
-                    new SearchResult(301, getString(R.string.TextSizeHeader), "textSizeHeaderRow", getString(R.string.ChatSettings), R.drawable.msg2_discussion, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))).withLink("tg://settings/appearance/text-size"),
-                    new SearchResult(302, getString(R.string.ChangeChatBackground), getString(R.string.ChatSettings), R.drawable.msg2_discussion, () -> f.presentFragment(new WallpapersListActivity(WallpapersListActivity.TYPE_ALL))).withLink("tg://settings/appearance/wallpapers"),
-                    new SearchResult(303, getString(R.string.SetColor), null, getString(R.string.ChatSettings), getString(R.string.ChatBackground), R.drawable.msg2_discussion, () -> f.presentFragment(new WallpapersListActivity(WallpapersListActivity.TYPE_COLOR))),
-                    new SearchResult(304, getString(R.string.ResetChatBackgrounds), "resetRow", getString(R.string.ChatSettings), getString(R.string.ChatBackground), R.drawable.msg2_discussion, () -> f.presentFragment(new WallpapersListActivity(WallpapersListActivity.TYPE_ALL))),
-                    new SearchResult(306, getString(R.string.ColorTheme), "themeHeaderRow", getString(R.string.ChatSettings), R.drawable.msg2_discussion, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))),
-                    new SearchResult(319, getString(R.string.BrowseThemes), null, getString(R.string.ChatSettings), R.drawable.msg2_discussion, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_THEMES_BROWSER))),
-                    new SearchResult(320, getString(R.string.CreateNewTheme), "createNewThemeRow", getString(R.string.ChatSettings), getString(R.string.BrowseThemes), R.drawable.msg2_discussion, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_THEMES_BROWSER))).withLink("tg://settings/appearance/themes/create"),
-                    new SearchResult(321, getString(R.string.BubbleRadius), "bubbleRadiusHeaderRow", getString(R.string.ChatSettings), R.drawable.msg2_discussion, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))).withLink("tg://settings/appearance/message-corners"),
-                    new SearchResult(322, getString(R.string.ChatList), "chatListHeaderRow", getString(R.string.ChatSettings), R.drawable.msg2_discussion, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))),
-                    new SearchResult(323, getString(R.string.ChatListSwipeGesture), "swipeGestureHeaderRow", getString(R.string.ChatSettings), R.drawable.msg2_discussion, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))),
-                    new SearchResult(324, getString(R.string.AppIcon), "appIconHeaderRow", getString(R.string.ChatSettings), R.drawable.msg2_discussion, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))).withLink("tg://settings/appearance/app-icon"),
-                    new SearchResult(305, getString(R.string.AutoNightTheme), getString(R.string.ChatSettings), R.drawable.msg2_discussion, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_NIGHT))),
-                    new SearchResult(328, getString(R.string.NextMediaTap), "nextMediaTapRow", getString(R.string.ChatSettings), R.drawable.msg2_discussion, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))).withLink("tg://settings/appearance/tap-for-next-media"),
-                    new SearchResult(327, getString(R.string.RaiseToListen), "raiseToListenRow", getString(R.string.ChatSettings), R.drawable.msg2_discussion, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))).withLink("tg://settings/data/raise-to-listen"),
-                    new SearchResult(310, getString(R.string.RaiseToSpeak), "raiseToSpeakRow", getString(R.string.ChatSettings), R.drawable.msg2_discussion, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))).withLink("tg://settings/data/raise-to-speak"),
-                    new SearchResult(326, getString(R.string.PauseMusicOnMedia), "pauseOnMediaRow", getString(R.string.ChatSettings), R.drawable.msg2_discussion, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))).withLink("tg://settings/data/pause-music"),
-                    new SearchResult(325, getString(R.string.MicrophoneForVoiceMessages), "bluetoothScoRow", getString(R.string.ChatSettings), R.drawable.msg2_discussion, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))),
-                    new SearchResult(308, getString(R.string.DirectShare), "directShareRow", getString(R.string.ChatSettings), R.drawable.msg2_discussion, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))),
-                    new SearchResult(311, getString(R.string.SendByEnter), "sendByEnterRow", getString(R.string.ChatSettings), R.drawable.msg2_discussion, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))),
-                    new SearchResult(318, getString(R.string.DistanceUnits), "distanceRow", getString(R.string.ChatSettings), R.drawable.msg2_discussion, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))),
+                    new SearchResult(300, getString(R.string.ChatSettings), R.drawable.solar_msg_discuss, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))).withLink("tg://settings/appearance/themes"),
+                    new SearchResult(301, getString(R.string.TextSizeHeader), "textSizeHeaderRow", getString(R.string.ChatSettings), R.drawable.solar_msg_discuss, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))).withLink("tg://settings/appearance/text-size"),
+                    new SearchResult(302, getString(R.string.ChangeChatBackground), getString(R.string.ChatSettings), R.drawable.solar_msg_discuss, () -> f.presentFragment(new WallpapersListActivity(WallpapersListActivity.TYPE_ALL))).withLink("tg://settings/appearance/wallpapers"),
+                    new SearchResult(303, getString(R.string.SetColor), null, getString(R.string.ChatSettings), getString(R.string.ChatBackground), R.drawable.solar_msg_discuss, () -> f.presentFragment(new WallpapersListActivity(WallpapersListActivity.TYPE_COLOR))),
+                    new SearchResult(304, getString(R.string.ResetChatBackgrounds), "resetRow", getString(R.string.ChatSettings), getString(R.string.ChatBackground), R.drawable.solar_msg_discuss, () -> f.presentFragment(new WallpapersListActivity(WallpapersListActivity.TYPE_ALL))),
+                    new SearchResult(306, getString(R.string.ColorTheme), "themeHeaderRow", getString(R.string.ChatSettings), R.drawable.solar_msg_discuss, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))),
+                    new SearchResult(319, getString(R.string.BrowseThemes), null, getString(R.string.ChatSettings), R.drawable.solar_msg_discuss, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_THEMES_BROWSER))),
+                    new SearchResult(320, getString(R.string.CreateNewTheme), "createNewThemeRow", getString(R.string.ChatSettings), getString(R.string.BrowseThemes), R.drawable.solar_msg_discuss, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_THEMES_BROWSER))).withLink("tg://settings/appearance/themes/create"),
+                    new SearchResult(321, getString(R.string.BubbleRadius), "bubbleRadiusHeaderRow", getString(R.string.ChatSettings), R.drawable.solar_msg_discuss, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))).withLink("tg://settings/appearance/message-corners"),
+                    new SearchResult(322, getString(R.string.ChatList), "chatListHeaderRow", getString(R.string.ChatSettings), R.drawable.solar_msg_discuss, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))),
+                    new SearchResult(323, getString(R.string.ChatListSwipeGesture), "swipeGestureHeaderRow", getString(R.string.ChatSettings), R.drawable.solar_msg_discuss, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))),
+                    new SearchResult(324, getString(R.string.AppIcon), "appIconHeaderRow", getString(R.string.ChatSettings), R.drawable.solar_msg_discuss, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))).withLink("tg://settings/appearance/app-icon"),
+                    new SearchResult(305, getString(R.string.AutoNightTheme), getString(R.string.ChatSettings), R.drawable.solar_msg_discuss, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_NIGHT))),
+                    new SearchResult(328, getString(R.string.NextMediaTap), "nextMediaTapRow", getString(R.string.ChatSettings), R.drawable.solar_msg_discuss, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))).withLink("tg://settings/appearance/tap-for-next-media"),
+                    new SearchResult(327, getString(R.string.RaiseToListen), "raiseToListenRow", getString(R.string.ChatSettings), R.drawable.solar_msg_discuss, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))).withLink("tg://settings/data/raise-to-listen"),
+                    new SearchResult(310, getString(R.string.RaiseToSpeak), "raiseToSpeakRow", getString(R.string.ChatSettings), R.drawable.solar_msg_discuss, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))).withLink("tg://settings/data/raise-to-speak"),
+                    new SearchResult(326, getString(R.string.PauseMusicOnMedia), "pauseOnMediaRow", getString(R.string.ChatSettings), R.drawable.solar_msg_discuss, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))).withLink("tg://settings/data/pause-music"),
+                    new SearchResult(325, getString(R.string.MicrophoneForVoiceMessages), "bluetoothScoRow", getString(R.string.ChatSettings), R.drawable.solar_msg_discuss, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))),
+                    new SearchResult(308, getString(R.string.DirectShare), "directShareRow", getString(R.string.ChatSettings), R.drawable.solar_msg_discuss, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))),
+                    new SearchResult(311, getString(R.string.SendByEnter), "sendByEnterRow", getString(R.string.ChatSettings), R.drawable.solar_msg_discuss, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))),
+                    new SearchResult(318, getString(R.string.DistanceUnits), "distanceRow", getString(R.string.ChatSettings), R.drawable.solar_msg_discuss, () -> f.presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC))),
 
-                    new SearchResult(600, getString(R.string.StickersName), R.drawable.msg2_sticker, () -> f.presentFragment(new StickersActivity(MediaDataController.TYPE_IMAGE, null))).withLink("tg://settings/appearance/stickers-and-emoji"),
-                    new SearchResult(601, getString(R.string.SuggestStickers), "suggestRow", getString(R.string.StickersName), R.drawable.msg2_sticker, () -> f.presentFragment(new StickersActivity(MediaDataController.TYPE_IMAGE, null))),
-                    new SearchResult(602, getString(R.string.FeaturedStickers), "featuredStickersHeaderRow", getString(R.string.StickersName), R.drawable.msg2_sticker, () -> f.presentFragment(new StickersActivity(MediaDataController.TYPE_IMAGE, null))),
-                    new SearchResult(603, getString(R.string.Masks), null, getString(R.string.StickersName), R.drawable.msg2_sticker, () -> f.presentFragment(new StickersActivity(MediaDataController.TYPE_MASK, null))),
-                    new SearchResult(604, getString(R.string.ArchivedStickers), null, getString(R.string.StickersName), R.drawable.msg2_sticker, () -> f.presentFragment(new ArchivedStickersActivity(MediaDataController.TYPE_IMAGE))).withLink("tg://settings/appearance/stickers-and-emoji/archived"),
-                    new SearchResult(605, getString(R.string.ArchivedMasks), null, getString(R.string.StickersName), R.drawable.msg2_sticker, () -> f.presentFragment(new ArchivedStickersActivity(MediaDataController.TYPE_MASK))),
-                    new SearchResult(606, getString(R.string.LargeEmoji), "largeEmojiRow", getString(R.string.StickersName), R.drawable.msg2_sticker, () -> f.presentFragment(new StickersActivity(MediaDataController.TYPE_IMAGE, null))).withLink("tg://settings/appearance/stickers-and-emoji/emoji/large"),
+                    new SearchResult(600, getString(R.string.StickersName), R.drawable.solar_msg_sticker, () -> f.presentFragment(new StickersActivity(MediaDataController.TYPE_IMAGE, null))).withLink("tg://settings/appearance/stickers-and-emoji"),
+                    new SearchResult(601, getString(R.string.SuggestStickers), "suggestRow", getString(R.string.StickersName), R.drawable.solar_msg_sticker, () -> f.presentFragment(new StickersActivity(MediaDataController.TYPE_IMAGE, null))),
+                    new SearchResult(602, getString(R.string.FeaturedStickers), "featuredStickersHeaderRow", getString(R.string.StickersName), R.drawable.solar_msg_sticker, () -> f.presentFragment(new StickersActivity(MediaDataController.TYPE_IMAGE, null))),
+                    new SearchResult(603, getString(R.string.Masks), null, getString(R.string.StickersName), R.drawable.solar_msg_sticker, () -> f.presentFragment(new StickersActivity(MediaDataController.TYPE_MASK, null))),
+                    new SearchResult(604, getString(R.string.ArchivedStickers), null, getString(R.string.StickersName), R.drawable.solar_msg_sticker, () -> f.presentFragment(new ArchivedStickersActivity(MediaDataController.TYPE_IMAGE))).withLink("tg://settings/appearance/stickers-and-emoji/archived"),
+                    new SearchResult(605, getString(R.string.ArchivedMasks), null, getString(R.string.StickersName), R.drawable.solar_msg_sticker, () -> f.presentFragment(new ArchivedStickersActivity(MediaDataController.TYPE_MASK))),
+                    new SearchResult(606, getString(R.string.LargeEmoji), "largeEmojiRow", getString(R.string.StickersName), R.drawable.solar_msg_sticker, () -> f.presentFragment(new StickersActivity(MediaDataController.TYPE_IMAGE, null))).withLink("tg://settings/appearance/stickers-and-emoji/emoji/large"),
                     new SearchResult(607, getString(R.string.LoopAnimatedStickers), null, getString(R.string.PowerUsage), getString(R.string.LiteOptionsStickers), R.drawable.msg2_battery, () -> {
                         LiteModeSettingsActivity set = new LiteModeSettingsActivity();
                         f.presentFragment(set);
@@ -14809,10 +14809,10 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     new SearchResult(608, getString(R.string.Emoji), null, getString(R.string.StickersName), R.drawable.input_smile, () -> f.presentFragment(new StickersActivity(MediaDataController.TYPE_EMOJIPACKS, null))).withLink("tg://settings/appearance/stickers-and-emoji/emoji"),
                     new SearchResult(609, getString(R.string.SuggestAnimatedEmoji), "suggestAnimatedEmojiRow", getString(R.string.StickersName), getString(R.string.Emoji), R.drawable.input_smile, () -> f.presentFragment(new StickersActivity(MediaDataController.TYPE_EMOJIPACKS, null))).withLink("tg://settings/appearance/stickers-and-emoji/emoji/suggest"),
                     new SearchResult(610, getString(R.string.FeaturedEmojiPacks), "featuredStickersHeaderRow", getString(R.string.StickersName), getString(R.string.Emoji), R.drawable.input_smile, () -> f.presentFragment(new StickersActivity(MediaDataController.TYPE_EMOJIPACKS, null))),
-                    new SearchResult(611, getString(R.string.DoubleTapSetting), null, getString(R.string.StickersName), R.drawable.msg2_sticker, () -> f.presentFragment(new ReactionsDoubleTapManageActivity())).withLink("tg://settings/appearance/stickers-and-emoji/emoji/quick-reaction"),
+                    new SearchResult(611, getString(R.string.DoubleTapSetting), null, getString(R.string.StickersName), R.drawable.solar_msg_sticker, () -> f.presentFragment(new ReactionsDoubleTapManageActivity())).withLink("tg://settings/appearance/stickers-and-emoji/emoji/quick-reaction"),
 
-                    new SearchResult(700, getString(R.string.Filters), null, R.drawable.msg2_folder, () -> f.presentFragment(new FiltersSetupActivity())).withLink("tg://settings/folders"),
-                    new SearchResult(701, getString(R.string.CreateNewFilter), "createFilterRow", getString(R.string.Filters), R.drawable.msg2_folder, () -> f.presentFragment(new FiltersSetupActivity())).withLink("tg://settings/folders/create"),
+                    new SearchResult(700, getString(R.string.Filters), null, R.drawable.solar_msg_folder, () -> f.presentFragment(new FiltersSetupActivity())).withLink("tg://settings/folders"),
+                    new SearchResult(701, getString(R.string.CreateNewFilter), "createFilterRow", getString(R.string.Filters), R.drawable.solar_msg_folder, () -> f.presentFragment(new FiltersSetupActivity())).withLink("tg://settings/folders/create"),
 
                     isPremiumFeatureAvailable(currentAccount, -1) ? new SearchResult(800, getString(R.string.TelegramPremium), R.drawable.msg_settings_premium, () -> f.presentFragment(new PremiumPreviewFragment("settings"))) : null,
                     isPremiumFeatureAvailable(currentAccount, PremiumPreviewFragment.PREMIUM_FEATURE_LIMITS) ? new SearchResult(801, getString(R.string.PremiumPreviewLimits), getString(R.string.TelegramPremium), R.drawable.msg_settings_premium, () -> f.showDialog(new PremiumFeatureBottomSheet(f, PremiumPreviewFragment.PREMIUM_FEATURE_LIMITS, false).setForceAbout())) : null,
@@ -14926,13 +14926,13 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         set.scrollToType(LiteModeSettingsActivity.SWITCH_TYPE_SMOOTH_TRANSITIONS);
                     }).withLink("tg://settings/power-saving/transitions"),
 
-                    new SearchResult(400, getString(R.string.Language), R.drawable.msg2_language, () -> f.presentFragment(new LanguageSelectActivity())).withLink("tg://settings/language"),
-                    new SearchResult(405, getString(R.string.ShowTranslateButton), getString(R.string.Language), R.drawable.msg2_language, () -> f.presentFragment(new LanguageSelectActivity())).withLink("tg://settings/language/show-button"),
-                    MessagesController.getInstance(currentAccount).getTranslateController().isContextTranslateEnabled() ? new SearchResult(406, getString(R.string.DoNotTranslate), getString(R.string.Language), R.drawable.msg2_language, () -> f.presentFragment(new LanguageSelectActivity())).withLink("tg://settings/language/do-not-translate") : null,
+                    new SearchResult(400, getString(R.string.Language), R.drawable.solar_msg_language, () -> f.presentFragment(new LanguageSelectActivity())).withLink("tg://settings/language"),
+                    new SearchResult(405, getString(R.string.ShowTranslateButton), getString(R.string.Language), R.drawable.solar_msg_language, () -> f.presentFragment(new LanguageSelectActivity())).withLink("tg://settings/language/show-button"),
+                    MessagesController.getInstance(currentAccount).getTranslateController().isContextTranslateEnabled() ? new SearchResult(406, getString(R.string.DoNotTranslate), getString(R.string.Language), R.drawable.solar_msg_language, () -> f.presentFragment(new LanguageSelectActivity())).withLink("tg://settings/language/do-not-translate") : null,
 
-                    new SearchResult(402, getString(R.string.AskAQuestion), getString(R.string.SettingsHelp), R.drawable.msg2_help, () -> f.showDialog(AlertsCreator.createSupportAlert(f, null))).withLink("tg://settings/ask-question"),
-                    new SearchResult(403, getString(R.string.TelegramFAQ), getString(R.string.SettingsHelp), R.drawable.msg2_help, () -> Browser.openUrl(f.getParentActivity(), getString(R.string.TelegramFaqUrl))).withLink("tg://settings/faq"),
-                    new SearchResult(404, getString(R.string.PrivacyPolicy), getString(R.string.SettingsHelp), R.drawable.msg2_help, () -> Browser.openUrl(f.getParentActivity(), getString(R.string.PrivacyPolicyUrl))).withLink("tg://settings/privacy-policy"),
+                    new SearchResult(402, getString(R.string.AskAQuestion), getString(R.string.SettingsHelp), R.drawable.solar_msg_info, () -> f.showDialog(AlertsCreator.createSupportAlert(f, null))).withLink("tg://settings/ask-question"),
+                    new SearchResult(403, getString(R.string.TelegramFAQ), getString(R.string.SettingsHelp), R.drawable.solar_msg_info, () -> Browser.openUrl(f.getParentActivity(), getString(R.string.TelegramFaqUrl))).withLink("tg://settings/faq"),
+                    new SearchResult(404, getString(R.string.PrivacyPolicy), getString(R.string.SettingsHelp), R.drawable.solar_msg_info, () -> Browser.openUrl(f.getParentActivity(), getString(R.string.PrivacyPolicyUrl))).withLink("tg://settings/privacy-policy"),
             };
         }
 
