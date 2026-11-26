@@ -266,7 +266,7 @@ public class ContactsActivity extends BaseFragment implements FactorAnimator.Tar
         }
 
         final SimpleActionBarMenu actionMode = simpleActionBar.createActionMode();
-        actionMode.addItemWithWidth(delete, R.drawable.msg_delete, dp(54), getString(R.string.Delete));
+        actionMode.addItemWithWidth(delete, R.drawable.solar_msg_delete, dp(54), getString(R.string.Delete));
         simpleActionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
             @Override
             public void onItemClick(int id) {
@@ -285,7 +285,7 @@ public class ContactsActivity extends BaseFragment implements FactorAnimator.Tar
         });
 
         final SimpleActionBarMenu menu = simpleActionBar.createMenu();
-        searchItem = menu.addItem(search_button, R.drawable.outline_header_search);
+        searchItem = menu.addItem(search_button, R.drawable.solar_msg_search);
         searchItem.setContentDescription(getString(R.string.SearchContacts));
         searchItem.setIsSearchField(true).setActionBarMenuItemSearchListener(new ActionBarMenuItem.ActionBarMenuItemSearchListener() {
             @Override
@@ -658,9 +658,9 @@ public class ContactsActivity extends BaseFragment implements FactorAnimator.Tar
 //                    ItemOptions filterOptions = ItemOptions.makeOptions(ContactsActivity.this, view)
 //                            //.setViewAdditionalOffsets(0, dp(8), 0, 0)
 //                            .setScrimViewBackground(Theme.createRoundRectDrawable(0, 0, getThemedColor(Theme.key_windowBackgroundWhite)))
-//                            .add(R.drawable.msg_discussion, getString(R.string.SendMessage), () -> presentFragment(ChatActivity.of(dialogId)))
-//                            .add(R.drawable.msg_openprofile, getString(R.string.OpenProfile), () -> presentFragment(ProfileActivity.of(dialogId)))
-//                            .addIf(!muted, R.drawable.msg_mute, getString(R.string.NotificationsStoryMute), () -> {
+//                            .add(R.drawable.solar_msg_discuss, getString(R.string.SendMessage), () -> presentFragment(ChatActivity.of(dialogId)))
+//                            .add(R.drawable.solar_msg_contacts, getString(R.string.OpenProfile), () -> presentFragment(ProfileActivity.of(dialogId)))
+//                            .addIf(!muted, R.drawable.solar_msg_notifications, getString(R.string.NotificationsStoryMute), () -> {
 //                                MessagesController.getNotificationsSettings(currentAccount).edit().putBoolean("stories_" + key, false).apply();
 //                                getNotificationsController().updateServerNotificationsSettings(dialogId, 0);
 //                                String name = user == null ? "" : user.first_name.trim();
@@ -670,7 +670,7 @@ public class ContactsActivity extends BaseFragment implements FactorAnimator.Tar
 //                               }
 //                                BulletinFactory.of(ContactsActivity.this).createUsersBulletin(Arrays.asList(user), AndroidUtilities.replaceTags(LocaleController.formatString("NotificationsStoryMutedHint", R.string.NotificationsStoryMutedHint, name))).show();
 //                            })
-//                            .addIf(muted, R.drawable.msg_unmute, getString(R.string.NotificationsStoryUnmute), () -> {
+//                            .addIf(muted, R.drawable.solar_msg_notifications, getString(R.string.NotificationsStoryUnmute), () -> {
 //                                MessagesController.getNotificationsSettings(currentAccount).edit().putBoolean("stories_" + key, true).apply();
 //                                getNotificationsController().updateServerNotificationsSettings(dialogId, 0);
 //                                String name = user == null ? "" : user.first_name.trim();
@@ -696,7 +696,7 @@ public class ContactsActivity extends BaseFragment implements FactorAnimator.Tar
 //
 //                    });
 //                    } else {
-//                        filterOptions.add(R.drawable.msg_cancel, LocaleController.getString(R.string.Hide), () -> {
+//                        filterOptions.add(R.drawable.solar_msg_close, LocaleController.getString(R.string.Hide), () -> {
 //                            BulletinFactory.global().createUndoBulletin(
 //                                    AndroidUtilities.replaceTags(LocaleController.formatString("StoriesMovedToContacts", R.string.StoriesMovedToContacts, user.first_name)),
 //                                    () -> {
