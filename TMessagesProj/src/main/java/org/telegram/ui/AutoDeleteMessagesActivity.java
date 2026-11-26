@@ -81,7 +81,7 @@ public class AutoDeleteMessagesActivity extends BaseFragment implements Notifica
     @Override
     public View createView(Context context) {
         setHasOwnBackground(true);
-        simpleActionBar.setBackButtonImage(R.drawable.ic_ab_back);
+        simpleActionBar.setBackButtonImage(R.drawable.solar_msg_back);
         simpleActionBar.setTitle(LocaleController.getString(R.string.AutoDeleteMessages));
         simpleActionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
             @Override
