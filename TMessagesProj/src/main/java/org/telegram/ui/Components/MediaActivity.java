@@ -239,7 +239,7 @@ public class MediaActivity extends BaseFragment implements SharedMediaLayout.Sha
 
     /** The options of the stories in the glass pill of the header; the selection uses the actions of the layout. */
     private void createStoriesOptions(Context context) {
-        optionsItem = simpleActionBar.createMenu().addItem(0, R.drawable.ic_ab_other);
+        optionsItem = simpleActionBar.createMenu().addItem(0, R.drawable.solar_msg_settings);
         optionsItem.setContentDescription(LocaleController.getString(R.string.AccDescrMoreOptions));
         optionsItem.setShown(false, false);
         zoomInItem = optionsItem.addSubItem(8, R.drawable.msg_zoomin, LocaleController.getString(R.string.MediaZoomIn));
