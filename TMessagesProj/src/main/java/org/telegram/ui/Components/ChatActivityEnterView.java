@@ -2078,10 +2078,10 @@ public class ChatActivityEnterView extends FrameLayout implements
             if (micDrawable != null) {
                 return;
             }
-            micDrawable = getResources().getDrawable(R.drawable.solar_msg_microphone_pressed).mutate();
+            micDrawable = getResources().getDrawable(R.drawable.solar_msg_microphone).mutate();
             ThemeBind.drawableColorFilter(this, micDrawable, Theme.key_chat_messagePanelVoicePressed, ChatActivityEnterView.this.resourcesProvider, PorterDuff.Mode.MULTIPLY);
 
-            cameraDrawable = getResources().getDrawable(R.drawable.solar_msg_camera_pressed).mutate();
+            cameraDrawable = getResources().getDrawable(R.drawable.solar_msg_camera).mutate();
             ThemeBind.drawableColorFilter(this, cameraDrawable, Theme.key_chat_messagePanelVoicePressed, ChatActivityEnterView.this.resourcesProvider, PorterDuff.Mode.MULTIPLY);
 
             sendDrawable = getResources().getDrawable(R.drawable.attach_send).mutate();
