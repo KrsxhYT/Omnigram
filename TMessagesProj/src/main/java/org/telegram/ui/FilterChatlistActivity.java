@@ -147,7 +147,7 @@ public class FilterChatlistActivity extends BaseFragment {
     @Override
     public View createView(Context context) {
         setHasOwnBackground(true);
-        simpleActionBar.setBackButtonImage(R.drawable.ic_ab_back);
+        simpleActionBar.setBackButtonImage(R.drawable.solar_msg_back);
         updateActionBarTitle(false);
         simpleActionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
             @Override
@@ -968,7 +968,7 @@ frameLayout.addView(listView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT
             linkBox.addView(textView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.CENTER_VERTICAL | Gravity.FILL_HORIZONTAL, 20, 0, 40, 0));
 
             optionsIcon = new ImageView(context);
-            optionsIcon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_ab_other));
+            optionsIcon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.solar_msg_settings));
             optionsIcon.setScaleType(ImageView.ScaleType.CENTER);
             ThemeBind.colorFilter(optionsIcon, Theme.key_dialogTextGray3, PorterDuff.Mode.SRC_IN);
             optionsIcon.setAlpha(0f);
@@ -1001,7 +1001,7 @@ frameLayout.addView(listView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT
             copyButton.setTypeface(AndroidUtilities.bold());
             copyButton.setTextSize(14);
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-            spannableStringBuilder.append("..").setSpan(new ColoredImageSpan(ContextCompat.getDrawable(context, R.drawable.msg_copy_filled)), 0, 1, 0);
+            spannableStringBuilder.append("..").setSpan(new ColoredImageSpan(ContextCompat.getDrawable(context, R.drawable.solar_msg_copy)), 0, 1, 0);
             spannableStringBuilder.setSpan(new DialogCell.FixedWidthSpan(AndroidUtilities.dp(8)), 1, 2, 0);
             spannableStringBuilder.append(LocaleController.getString(R.string.LinkActionCopy));
             spannableStringBuilder.append(".").setSpan(new DialogCell.FixedWidthSpan(AndroidUtilities.dp(5)), spannableStringBuilder.length() - 1, spannableStringBuilder.length(), 0);
@@ -1026,7 +1026,7 @@ frameLayout.addView(listView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT
             shareButton.setTypeface(AndroidUtilities.bold());
             shareButton.setTextSize(14);
             spannableStringBuilder = new SpannableStringBuilder();
-            spannableStringBuilder.append("..").setSpan(new ColoredImageSpan(ContextCompat.getDrawable(context, R.drawable.msg_share_filled)), 0, 1, 0);
+            spannableStringBuilder.append("..").setSpan(new ColoredImageSpan(ContextCompat.getDrawable(context, R.drawable.solar_msg_share)), 0, 1, 0);
             spannableStringBuilder.setSpan(new DialogCell.FixedWidthSpan(AndroidUtilities.dp(8)), 1, 2, 0);
             spannableStringBuilder.append(LocaleController.getString(R.string.LinkActionShare));
             spannableStringBuilder.append(".").setSpan(new DialogCell.FixedWidthSpan(AndroidUtilities.dp(5)), spannableStringBuilder.length() - 1, spannableStringBuilder.length(), 0);
@@ -1158,7 +1158,7 @@ frameLayout.addView(listView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT
             ActionBarMenuSubItem subItem;
 
             subItem = new ActionBarMenuSubItem(getContext(), true, false);
-            subItem.setTextAndIcon(LocaleController.getString(R.string.EditName), R.drawable.msg_edit);
+            subItem.setTextAndIcon(LocaleController.getString(R.string.EditName), R.drawable.solar_msg_edit);
             layout.addView(subItem, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 48));
             subItem.setOnClickListener(view12 -> {
                 if (actionBarPopupWindow != null) {
@@ -1179,7 +1179,7 @@ frameLayout.addView(listView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT
 
             subItem = new ActionBarMenuSubItem(getContext(), false, true);
 //            if (!isRevoked()) {
-//                subItem.setTextAndIcon(LocaleController.getString(R.string.RevokeLink), R.drawable.msg_delete);
+//                subItem.setTextAndIcon(LocaleController.getString(R.string.RevokeLink), R.drawable.solar_msg_delete);
 //                subItem.setColors(Theme.getColor(Theme.key_text_RedRegular), Theme.getColor(Theme.key_text_RedRegular));
 //                subItem.setSelectorColorKey(Theme.key_text_RedRegular, .12f);
 //                subItem.setOnClickListener(view1 -> {
@@ -1198,7 +1198,7 @@ frameLayout.addView(listView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT
 //                    revoke(false);
 //                });
 //            }
-            subItem.setTextAndIcon(LocaleController.getString(R.string.DeleteLink), R.drawable.msg_delete);
+            subItem.setTextAndIcon(LocaleController.getString(R.string.DeleteLink), R.drawable.solar_msg_delete);
             subItem.setColorKeys(Theme.key_text_RedRegular, Theme.key_text_RedRegular);
             subItem.setSelectorColorKey(Theme.key_text_RedRegular, .12f);
             subItem.setOnClickListener(view1 -> {
