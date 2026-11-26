@@ -290,7 +290,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
     public View createView(Context context) {
         setHasOwnBackground(true);
 
-        simpleActionBar.setBackButtonImage(R.drawable.ic_ab_back);
+        simpleActionBar.setBackButtonImage(R.drawable.solar_msg_back);
         simpleActionBar.setTitle(getString(R.string.PrivacySettings));
         simpleActionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
             @Override
@@ -301,7 +301,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
             }
         });
         if (parentLayout != null && parentLayout.isRightLayout()) {
-            simpleActionBar.setBackButtonImage(R.drawable.ic_ab_close);
+            simpleActionBar.setBackButtonImage(R.drawable.solar_msg_close);
         }
 
         listAdapter = new ListAdapter(context);
