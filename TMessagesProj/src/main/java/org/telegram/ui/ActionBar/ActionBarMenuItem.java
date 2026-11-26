@@ -2525,7 +2525,7 @@ public class ActionBarMenuItem extends FrameLayout {
                 if (data.chat instanceof TLRPC.User) {
                     TLRPC.User user = (TLRPC.User) data.chat;
                     if (UserConfig.getInstance(UserConfig.selectedAccount).getCurrentUser().id == user.id) {
-                        CombinedDrawable combinedDrawable = Theme.createCircleDrawableWithIcon(AndroidUtilities.dp(32), R.drawable.chats_saved);
+                        CombinedDrawable combinedDrawable = Theme.createCircleDrawableWithIcon(AndroidUtilities.dp(32), R.drawable.solar_msg_saved);
                         combinedDrawable.setIconSize(AndroidUtilities.dp(16), AndroidUtilities.dp(16));
                         Theme.setCombinedDrawableColor(combinedDrawable, getThemedColor(Theme.key_featuredStickers_addButton), false);
                         Theme.setCombinedDrawableColor(combinedDrawable, getThemedColor(Theme.key_featuredStickers_buttonText), true);
@@ -2541,7 +2541,7 @@ public class ActionBarMenuItem extends FrameLayout {
                     avatarImageView.getImageReceiver().setForUserOrChat(chat, thumbDrawable);
                 }
             } else if (data.filterType == FiltersView.FILTER_TYPE_ARCHIVE) {
-                CombinedDrawable combinedDrawable = Theme.createCircleDrawableWithIcon(AndroidUtilities.dp(32), R.drawable.chats_archive);
+                CombinedDrawable combinedDrawable = Theme.createCircleDrawableWithIcon(AndroidUtilities.dp(32), R.drawable.solar_msg_archive);
                 combinedDrawable.setIconSize(AndroidUtilities.dp(16), AndroidUtilities.dp(16));
                 Theme.setCombinedDrawableColor(combinedDrawable, getThemedColor(Theme.key_featuredStickers_addButton), false);
                 Theme.setCombinedDrawableColor(combinedDrawable, getThemedColor(Theme.key_featuredStickers_buttonText), true);
