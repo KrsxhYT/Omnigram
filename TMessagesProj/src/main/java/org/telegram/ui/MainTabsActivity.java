@@ -432,10 +432,10 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
     public boolean openContactsSelector(View anchor) {
         if (getContext() == null || getParentActivity() == null) return false;
         final ItemOptions o = ItemOptions.makeOptions(this, anchor);
-        o.add(R.drawable.msg_contact_add, getString(R.string.NewContact), () -> {
+        o.add(R.drawable.solar_msg_contacts, getString(R.string.NewContact), () -> {
             new NewContactBottomSheet(this, getContext()).show();
         });
-        o.add(R.drawable.msg_calls, getString(R.string.VoipChatRecentCalls), () -> {
+        o.add(R.drawable.solar_msg_contacts, getString(R.string.VoipChatRecentCalls), () -> {
             Bundle args = new Bundle();
             args.putBoolean("needFinishFragment", false);
             presentFragment(new CallLogActivity(args));
@@ -453,15 +453,15 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
     public boolean openCallsSelector(View anchor) {
         if (getContext() == null || getParentActivity() == null) return false;
         final ItemOptions o = ItemOptions.makeOptions(this, anchor);
-        o.add(R.drawable.menu_call_create, getString(R.string.GroupCallCreate2), () -> CallLogActivity.openCreateCall(this));
+        o.add(R.drawable.solar_msg_contacts, getString(R.string.GroupCallCreate2), () -> CallLogActivity.openCreateCall(this));
         if (getUserConfig().showCallsTab) {
-            o.add(R.drawable.msg_archive_hide, getString(R.string.HideCallTab), () -> {
+            o.add(R.drawable.solar_msg_archive, getString(R.string.HideCallTab), () -> {
                 getUserConfig().setShowCallsTab(false);
                 checkUi_callTabVisible(false, true);
                 NotificationCenter.getInstance(currentAccount).postNotificationName(NotificationCenter.callTabsVisibleToggled);
             });
         } else {
-            o.add(R.drawable.menu_add_tab_24, getString(R.string.GroupCallShowInMainTabs), () -> {
+            o.add(R.drawable.solar_msg_folder, getString(R.string.GroupCallShowInMainTabs), () -> {
                 getUserConfig().setShowCallsTab(true);
                 checkUi_callTabVisible(true, true);
                 NotificationCenter.getInstance(currentAccount).postNotificationName(NotificationCenter.callTabsVisibleToggled);
@@ -517,7 +517,7 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
             }
             folderItem.setEmojiCacheType(folder.title_noanimate ? AnimatedEmojiDrawable.CACHE_TYPE_NOANIMATE_FOLDER : AnimatedEmojiDrawable.CACHE_TYPE_MESSAGES);
             final int color = getMessagesController().folderTags ? folder.color : -1;
-            folderItem.setTextAndIcon(title, 0, new FolderDrawable(getContext(), R.drawable.msg_folders, color));
+            folderItem.setTextAndIcon(title, 0, new FolderDrawable(getContext(), R.drawable.solar_msg_folder, color));
             folderItem.getTextView().setEmojiColor(getThemedColor(Theme.key_featuredStickers_addButton));
             folderItem.setMinimumWidth(160);
             folderItem.setOnClickListener(e -> {
@@ -641,7 +641,7 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
 
         ItemOptions o = ItemOptions.makeOptions(this, button);
         if (UserConfig.getActivatedAccountsCount() < UserConfig.MAX_ACCOUNT_COUNT) {
-            o.add(R.drawable.msg_addbot, getString(R.string.AddAccount), () -> {
+            o.add(R.drawable.solar_msg_contacts, getString(R.string.AddAccount), () -> {
                 int freeAccounts = 0;
                 Integer availableAccount = null;
                 for (int a = UserConfig.MAX_ACCOUNT_COUNT - 1; a >= 0; a--) {
@@ -664,7 +664,7 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
         }
 
         if (BuildConfig.DEBUG_PRIVATE_VERSION) {
-            o.add(R.drawable.menu_download_round, "Dump Canvas", () -> AndroidUtilities.runOnUIThread(this::dumpCanvas, 1000));
+            o.add(R.drawable.solar_msg_data, "Dump Canvas", () -> AndroidUtilities.runOnUIThread(this::dumpCanvas, 1000));
         }
 
         if (accountNumbers.size() > 0) {
