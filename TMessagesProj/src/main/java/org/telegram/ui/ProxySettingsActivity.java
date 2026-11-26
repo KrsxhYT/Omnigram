@@ -144,7 +144,7 @@ public class ProxySettingsActivity extends BaseFragment {
 
             checkImage = new ImageView(context);
             ThemeBind.colorFilter(checkImage, Theme.key_featuredStickers_addedIcon, PorterDuff.Mode.MULTIPLY);
-            checkImage.setImageResource(R.drawable.sticker_added);
+            checkImage.setImageResource(R.drawable.solar_msg_sticker);
             addView(checkImage, LayoutHelper.createFrame(19, 14, (LocaleController.isRTL ? Gravity.LEFT : Gravity.RIGHT) | Gravity.CENTER_VERTICAL, 21, 0, 21, 0));
         }
 
@@ -207,7 +207,7 @@ public class ProxySettingsActivity extends BaseFragment {
     public View createView(Context context) {
         setHasOwnBackground(true);
         simpleActionBar.setTitle(LocaleController.getString(R.string.ProxyDetails));
-        simpleActionBar.setBackButtonImage(R.drawable.ic_ab_back);
+        simpleActionBar.setBackButtonImage(R.drawable.solar_msg_back);
         if (parentLayout != null && parentLayout.isLayersLayout()) {
             simpleActionBar.setOccupyStatusBar(false);
         }
