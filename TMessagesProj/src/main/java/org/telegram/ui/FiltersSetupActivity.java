@@ -343,7 +343,7 @@ public class FiltersSetupActivity extends BaseFragment implements NotificationCe
             moveImageView = new ImageView(context);
             moveImageView.setFocusable(false);
             moveImageView.setScaleType(ImageView.ScaleType.CENTER);
-            moveImageView.setImageResource(R.drawable.list_reorder);
+            moveImageView.setImageResource(R.drawable.solar_msg_settings);
             ThemeBind.colorFilter(moveImageView, Theme.key_stickers_menu, PorterDuff.Mode.MULTIPLY);
             moveImageView.setContentDescription(LocaleController.getString(R.string.FilterReorder));
             moveImageView.setClickable(true);
@@ -358,7 +358,7 @@ public class FiltersSetupActivity extends BaseFragment implements NotificationCe
             textView.setTextSize(16);
             textView.setMaxLines(1);
             textView.setGravity((LocaleController.isRTL ? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
-            Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.other_lockedfolders2);
+            Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.solar_ghost);
             ThemeBind.drawableColorFilter(this, drawable, Theme.key_stickers_menu, PorterDuff.Mode.MULTIPLY);
             textView.setRightDrawable(drawable);
             textView.setEmojiColor(Theme.getColor(Theme.key_featuredStickers_addButton, resourceProvider));
@@ -411,7 +411,7 @@ public class FiltersSetupActivity extends BaseFragment implements NotificationCe
             ThemeBind.colorFilter(shareImageView, Theme.key_stickers_menu, PorterDuff.Mode.MULTIPLY);
             shareImageView.setContentDescription(LocaleController.getString(R.string.FilterShare));
             shareImageView.setVisibility(View.GONE);
-            shareImageView.setImageResource(R.drawable.msg_link_folder);
+            shareImageView.setImageResource(R.drawable.solar_msg_link);
             ThemeBind.colorFilter(shareImageView, Theme.key_stickers_menu, PorterDuff.Mode.MULTIPLY);
             addView(shareImageView, LayoutHelper.createFrame(40, 40, (LocaleController.isRTL ? Gravity.LEFT : Gravity.RIGHT) | Gravity.CENTER_VERTICAL, LocaleController.isRTL ? 52 : 6, 0, LocaleController.isRTL ? 6 : 52, 0));
             shareImageView.setOnClickListener(e -> {
@@ -434,7 +434,7 @@ public class FiltersSetupActivity extends BaseFragment implements NotificationCe
             optionsImageView.setScaleType(ImageView.ScaleType.CENTER);
             ThemeBind.selectorBackground(optionsImageView, Theme.createSelectorDrawable(Theme.getColor(Theme.key_listSelector)), null, ThemeBind.of(Theme.key_listSelector));
             ThemeBind.colorFilter(optionsImageView, Theme.key_stickers_menu, PorterDuff.Mode.MULTIPLY);
-            optionsImageView.setImageResource(R.drawable.msg_actions);
+            optionsImageView.setImageResource(R.drawable.solar_msg_settings);
             optionsImageView.setContentDescription(LocaleController.getString(R.string.AccDescrMoreOptions));
             addView(optionsImageView, LayoutHelper.createFrame(40, 40, (LocaleController.isRTL ? Gravity.LEFT : Gravity.RIGHT) | Gravity.CENTER_VERTICAL, 6, 0, 6, 0));
         }
@@ -739,7 +739,7 @@ public class FiltersSetupActivity extends BaseFragment implements NotificationCe
     @Override
     public View createView(Context context) {
         setHasOwnBackground(true);
-        simpleActionBar.setBackButtonImage(R.drawable.ic_ab_back);
+        simpleActionBar.setBackButtonImage(R.drawable.solar_msg_back);
         simpleActionBar.setTitle(LocaleController.getString(R.string.Filters));
         simpleActionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
             @Override
@@ -750,7 +750,7 @@ public class FiltersSetupActivity extends BaseFragment implements NotificationCe
             }
         });
         if (parentLayout != null && parentLayout.isRightLayout()) {
-            simpleActionBar.setBackButtonImage(R.drawable.ic_ab_close);
+            simpleActionBar.setBackButtonImage(R.drawable.solar_msg_close);
         }
 
         fragmentView = new FrameLayout(context);
@@ -1024,14 +1024,14 @@ public class FiltersSetupActivity extends BaseFragment implements NotificationCe
                         FilterCell cell = (FilterCell) v.getParent();
                         MessagesController.DialogFilter filter = cell.getCurrentFilter();
                         ItemOptions options = ItemOptions.makeOptions(FiltersSetupActivity.this, cell);
-                        options.add(R.drawable.msg_edit, LocaleController.getString(R.string.FilterEditItem), () -> {
+                        options.add(R.drawable.solar_msg_edit, LocaleController.getString(R.string.FilterEditItem), () -> {
                             if (filter.locked) {
                                 showDialog(new LimitReachedBottomSheet(FiltersSetupActivity.this, mContext, LimitReachedBottomSheet.TYPE_FOLDERS, currentAccount, null));
                             } else {
                                 presentFragment(new FilterCreateActivity(filter));
                             }
                         });
-                        options.add(R.drawable.msg_delete, LocaleController.getString(R.string.FilterDeleteItem), true, () -> {
+                        options.add(R.drawable.solar_msg_delete, LocaleController.getString(R.string.FilterDeleteItem), true, () -> {
                             if (filter.isChatlist()) {
                                 FolderBottomSheet.showForDeletion(FiltersSetupActivity.this, filter.id, success -> {
                                     updateRows(true);
