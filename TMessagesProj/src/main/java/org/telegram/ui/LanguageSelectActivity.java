@@ -129,10 +129,10 @@ public class LanguageSelectActivity extends BaseFragment implements Notification
         searching = false;
         searchWas = false;
 
-        simpleActionBar.setBackButtonImage(R.drawable.ic_ab_back);
+        simpleActionBar.setBackButtonImage(R.drawable.solar_msg_back);
         simpleActionBar.setTitle(LocaleController.getString(R.string.Language));
         if (parentLayout != null && parentLayout.isRightLayout()) {
-            simpleActionBar.setBackButtonImage(R.drawable.ic_ab_close);
+            simpleActionBar.setBackButtonImage(R.drawable.solar_msg_close);
         }
 
         simpleActionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
@@ -145,7 +145,7 @@ public class LanguageSelectActivity extends BaseFragment implements Notification
         });
 
         SimpleActionBarMenu menu = simpleActionBar.createMenu();
-        searchItem = menu.addItem(0, R.drawable.outline_header_search).setIsSearchField(true).setActionBarMenuItemSearchListener(new ActionBarMenuItem.ActionBarMenuItemSearchListener() {
+        searchItem = menu.addItem(0, R.drawable.solar_msg_search).setIsSearchField(true).setActionBarMenuItemSearchListener(new ActionBarMenuItem.ActionBarMenuItemSearchListener() {
             @Override
             public void onSearchExpand() {
                 searching = true;
