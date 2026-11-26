@@ -500,7 +500,7 @@ public class WallpapersListActivity extends BaseFragment implements Notification
         });
 
         hasOwnBackground = true;
-        simpleActionBar.setBackButtonImage(R.drawable.ic_ab_back);
+        simpleActionBar.setBackButtonImage(R.drawable.solar_msg_back);
         if (currentType == TYPE_ALL) {
             simpleActionBar.setTitle(LocaleController.getString(R.string.ChatBackground));
         } else if (currentType == TYPE_CHANNEL_PATTERNS) {
@@ -663,7 +663,7 @@ public class WallpapersListActivity extends BaseFragment implements Notification
 
         if (currentType == TYPE_ALL) {
             SimpleActionBarMenu menu = simpleActionBar.createMenu();
-            searchItem = menu.addItem(0, R.drawable.outline_header_search).setIsSearchField(true).setActionBarMenuItemSearchListener(new ActionBarMenuItem.ActionBarMenuItemSearchListener() {
+            searchItem = menu.addItem(0, R.drawable.solar_msg_search).setIsSearchField(true).setActionBarMenuItemSearchListener(new ActionBarMenuItem.ActionBarMenuItemSearchListener() {
                 @Override
                 public void onSearchExpand() {
                     listView.setAdapter(searchAdapter);
@@ -695,8 +695,8 @@ public class WallpapersListActivity extends BaseFragment implements Notification
             final SimpleActionBarMenu actionMode = simpleActionBar.createActionMode();
 
 
-            actionMode.addItemWithWidth(forward, R.drawable.msg_forward, dp(54), LocaleController.getString(R.string.Forward));
-            actionMode.addItemWithWidth(delete, R.drawable.msg_delete, dp(54), LocaleController.getString(R.string.Delete));
+            actionMode.addItemWithWidth(forward, R.drawable.solar_msg_share, dp(54), LocaleController.getString(R.string.Forward));
+            actionMode.addItemWithWidth(delete, R.drawable.solar_msg_delete, dp(54), LocaleController.getString(R.string.Delete));
 
             selectedWallPapers.clear();
         }
@@ -1836,13 +1836,13 @@ public class WallpapersListActivity extends BaseFragment implements Notification
                 case 0: {
                     TextCell textCell = (TextCell) holder.itemView;
                     if (position == uploadImageRow) {
-                        textCell.setTextAndIcon(LocaleController.getString(R.string.SelectFromGallery), R.drawable.msg_photos, true);
+                        textCell.setTextAndIcon(LocaleController.getString(R.string.SelectFromGallery), R.drawable.solar_msg_camera, true);
                     } else if (position == setColorRow) {
-                        textCell.setTextAndIcon(LocaleController.getString(R.string.SetColor), R.drawable.msg_palette, false);
+                        textCell.setTextAndIcon(LocaleController.getString(R.string.SetColor), R.drawable.solar_msg_theme, false);
                     } else if (position == resetRow) {
                         textCell.setText(LocaleController.getString(R.string.ResetChatBackgrounds), false);
                     } else if (position == galleryRow) {
-                        textCell.setTextAndIcon("Choose from gallery", R.drawable.msg_background, false);
+                        textCell.setTextAndIcon("Choose from gallery", R.drawable.solar_msg_theme, false);
                         textCell.setLockLevel(false, 10);
                     }
                     break;
