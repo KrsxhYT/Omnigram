@@ -199,7 +199,7 @@ public class ChangeUsernameActivity extends BaseFragment {
     public View createView(Context context) {
         setHasOwnBackground(true);
 
-        simpleActionBar.setBackButtonImage(R.drawable.ic_ab_back);
+        simpleActionBar.setBackButtonImage(R.drawable.solar_msg_back);
         simpleActionBar.setTitle(LocaleController.getString(R.string.Username));
         simpleActionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
             @Override
@@ -940,8 +940,8 @@ public class ChangeUsernameActivity extends BaseFragment {
             addView(activeView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.TOP, 70, 23, 0, 0));
 
             linkDrawables = new Drawable[] {
-                ContextCompat.getDrawable(context, R.drawable.msg_link_1).mutate(),
-                ContextCompat.getDrawable(context, R.drawable.msg_link_2).mutate()
+                ContextCompat.getDrawable(context, R.drawable.solar_msg_link).mutate(),
+                ContextCompat.getDrawable(context, R.drawable.solar_msg_link).mutate()
             };
             linkDrawables[0].setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY));
             linkDrawables[1].setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY));
