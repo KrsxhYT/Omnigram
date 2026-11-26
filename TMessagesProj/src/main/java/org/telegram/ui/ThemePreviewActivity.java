@@ -652,7 +652,7 @@ public class ThemePreviewActivity extends BaseFragment implements DownloadContro
 
 
         ActionBarMenu menu = actionBar.createMenu();
-        final ActionBarMenuItem item = menu.addItem(0, R.drawable.outline_header_search).setIsSearchField(true).setActionBarMenuItemSearchListener(new ActionBarMenuItem.ActionBarMenuItemSearchListener() {
+        final ActionBarMenuItem item = menu.addItem(0, R.drawable.solar_msg_search).setIsSearchField(true).setActionBarMenuItemSearchListener(new ActionBarMenuItem.ActionBarMenuItemSearchListener() {
             @Override
             public void onSearchExpand() {
 
@@ -724,7 +724,7 @@ public class ThemePreviewActivity extends BaseFragment implements DownloadContro
         page1.addView(listView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT, Gravity.LEFT | Gravity.TOP));
 
         floatingButton = new FragmentFloatingButton(context, resourceProvider);
-        floatingButton.setImageResource(R.drawable.floating_pencil);
+        floatingButton.setImageResource(R.drawable.solar_msg_edit);
         page1.addView(floatingButton, FragmentFloatingButton.createDefaultLayoutParams());
 
         dialogsAdapter = new DialogsAdapter(context);
@@ -1073,11 +1073,11 @@ public class ThemePreviewActivity extends BaseFragment implements DownloadContro
                 if (currentWallpaper instanceof WallpapersListActivity.FileWallpaper) {
                     WallpapersListActivity.FileWallpaper fileWallpaper = (WallpapersListActivity.FileWallpaper) currentWallpaper;
                     if (fileWallpaper.originalPath != null) {
-                        menu2.addItem(OPTION_PHOTO_EDIT, R.drawable.msg_header_draw);
+                        menu2.addItem(OPTION_PHOTO_EDIT, R.drawable.solar_msg_theme);
                     }
                 }
                 if (dialogId == 0 && (BuildVars.DEBUG_PRIVATE_VERSION && Theme.getActiveTheme().getAccent(false) != null || currentWallpaper instanceof WallpapersListActivity.ColorWallpaper && !Theme.DEFAULT_BACKGROUND_SLUG.equals(((WallpapersListActivity.ColorWallpaper) currentWallpaper).slug) || currentWallpaper instanceof TLRPC.TL_wallPaper)) {
-                    menu2.addItem(5, R.drawable.msg_header_share);
+                    menu2.addItem(5, R.drawable.solar_msg_share);
                 }
                 if (dialogId != 0 && shouldShowDayNightIcon) {
                     sunDrawable = new RLottieDrawable(R.raw.sun, dp(28), dp(28), true, null);
@@ -1469,7 +1469,7 @@ public class ThemePreviewActivity extends BaseFragment implements DownloadContro
                     SpannableStringBuilder text = new SpannableStringBuilder("");
                     if (!getUserConfig().isPremium()) {
                         text.append("l ");
-                        text.setSpan(new ColoredImageSpan(R.drawable.msg_mini_lock3), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        text.setSpan(new ColoredImageSpan(R.drawable.solar_ghost), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
                     text.append(LocaleController.formatString(R.string.ApplyWallpaperForMeAndPeer, UserObject.getUserName(user)));
                     applyButton2.setText(text);
@@ -2421,7 +2421,7 @@ public class ThemePreviewActivity extends BaseFragment implements DownloadContro
                 if (boostsStatus != null && boostsStatus.level < getCustomWallpaperLevelMin()) {
                     SpannableStringBuilder text = new SpannableStringBuilder("l");
                     if (lockSpan == null) {
-                        lockSpan = new ColoredImageSpan(R.drawable.mini_switch_lock);
+                        lockSpan = new ColoredImageSpan(R.drawable.solar_ghost);
                         lockSpan.setTopOffset(1);
                     }
                     text.setSpan(lockSpan, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
