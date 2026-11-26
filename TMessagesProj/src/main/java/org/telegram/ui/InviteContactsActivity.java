@@ -366,7 +366,7 @@ public class InviteContactsActivity extends BaseFragment implements Notification
         selectedContacts.clear();
         currentDeletingSpan = null;
 
-        simpleActionBar.setBackButtonImage(R.drawable.ic_ab_back);
+        simpleActionBar.setBackButtonImage(R.drawable.solar_msg_back);
         simpleActionBar.setTitle(getString(R.string.InviteFriends));
         simpleActionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
             @Override
@@ -378,7 +378,7 @@ public class InviteContactsActivity extends BaseFragment implements Notification
         });
 
         final SimpleActionBarMenu menu = simpleActionBar.createMenu();
-        searchItem = menu.addItem(search_button, R.drawable.outline_header_search);
+        searchItem = menu.addItem(search_button, R.drawable.solar_msg_search);
         searchItem.setContentDescription(getString(R.string.Search));
         searchItem.setIsSearchField(true).setActionBarMenuItemSearchListener(new ActionBarMenuItem.ActionBarMenuItemSearchListener() {
             @Override
@@ -627,7 +627,7 @@ public class InviteContactsActivity extends BaseFragment implements Notification
             if (viewType == 1) {
                 final TextCell textCell = new TextCell(context);
                 textCell.setColors(Theme.key_windowBackgroundWhiteBlackText, Theme.key_windowBackgroundWhiteBlackText);
-                textCell.setTextAndValueAndIcon(LocaleController.getString(R.string.ShareTelegram2), "", R.drawable.msg_shareout, false);
+                textCell.setTextAndValueAndIcon(LocaleController.getString(R.string.ShareTelegram2), "", R.drawable.solar_msg_share, false);
                 view = textCell;
             } else if (viewType == 2) {
                 view = new ShadowSectionCell(context, 12);
