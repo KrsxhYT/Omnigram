@@ -560,7 +560,7 @@ public class ChatRightsEditActivity extends BaseFragment implements Notification
     public View createView(Context context) {
         setHasOwnBackground(true);
 
-        simpleActionBar.setBackButtonImage(R.drawable.ic_ab_back);
+        simpleActionBar.setBackButtonImage(R.drawable.solar_msg_back);
 
         if (currentType == TYPE_ADMIN) {
             simpleActionBar.setTitle(LocaleController.getString(R.string.EditAdmin));
