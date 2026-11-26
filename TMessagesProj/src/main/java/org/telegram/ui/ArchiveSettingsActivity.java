@@ -56,7 +56,7 @@ public class ArchiveSettingsActivity extends BaseFragment implements Notificatio
     public View createView(Context context) {
         setHasOwnBackground(true);
 
-        simpleActionBar.setBackButtonImage(R.drawable.ic_ab_back);
+        simpleActionBar.setBackButtonImage(R.drawable.solar_msg_back);
         simpleActionBar.setTitle(LocaleController.getString(R.string.ArchiveSettings));
         simpleActionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
             @Override
@@ -110,7 +110,7 @@ public class ArchiveSettingsActivity extends BaseFragment implements Notificatio
                     }));
                     layout.textView.setSingleLine(false);
                     layout.textView.setPadding(0, dp(4), 0, dp(4));
-                    layout.imageView.setImageResource(R.drawable.msg_settings_premium);
+                    layout.imageView.setImageResource(R.drawable.solar_msg_gift_premium);
                     Bulletin.make(this, layout, 3500).show();
 
                     AndroidUtilities.shakeViewSpring(view, shiftDp = -shiftDp);
