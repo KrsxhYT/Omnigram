@@ -324,7 +324,7 @@ public class ChannelCreateActivity extends BaseFragment implements NotificationC
             nameTextView.onDestroy();
         }
 
-        actionBar.setBackButtonImage(R.drawable.ic_ab_back);
+        actionBar.setBackButtonImage(R.drawable.solar_msg_back);
         actionBar.setAllowOverlayTitle(true);
 
         actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
@@ -408,7 +408,7 @@ public class ChannelCreateActivity extends BaseFragment implements NotificationC
         });
 
         ActionBarMenu menu = actionBar.createMenu();
-        Drawable checkmark = context.getResources().getDrawable(R.drawable.ic_ab_done).mutate();
+        Drawable checkmark = context.getResources().getDrawable(R.drawable.solar_msg_done).mutate();
         checkmark.setColorFilter(new PorterDuffColorFilter(Theme.getColor(Theme.key_actionBarDefaultIcon), PorterDuff.Mode.MULTIPLY));
         doneButtonDrawable = new CrossfadeDrawable(checkmark, doneButtonProgressDrawable = new CircularProgressDrawable(Theme.getColor(Theme.key_actionBarDefaultIcon)));
         doneButton = menu.addItemWithWidth(done_button, doneButtonDrawable, AndroidUtilities.dp(56), LocaleController.getString(R.string.Done));
