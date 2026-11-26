@@ -63,7 +63,7 @@ public class ChangeBioActivity extends BaseFragment {
 
     @Override
     public View createView(Context context) {
-        actionBar.setBackButtonImage(R.drawable.ic_ab_back);
+        actionBar.setBackButtonImage(R.drawable.solar_msg_back);
         actionBar.setAllowOverlayTitle(true);
         actionBar.setTitle(LocaleController.getString(R.string.UserBio));
         actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
@@ -78,7 +78,7 @@ public class ChangeBioActivity extends BaseFragment {
         });
 
         ActionBarMenu menu = actionBar.createMenu();
-        doneButton = menu.addItemWithWidth(done_button, R.drawable.ic_ab_done, AndroidUtilities.dp(56));
+        doneButton = menu.addItemWithWidth(done_button, R.drawable.solar_msg_done, AndroidUtilities.dp(56));
         doneButton.setContentDescription(LocaleController.getString(R.string.Done));
 
         fragmentView = new LinearLayout(context);
